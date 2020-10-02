@@ -3,7 +3,6 @@
 [run]
 branch = True
 source = sglpy
-include = */sglpy/*
 omit =
     */setup.py
 
