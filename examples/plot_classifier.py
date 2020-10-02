@@ -1,44 +1,70 @@
 """
-============================
-Plotting Template Classifier
-============================
+======================================================
+Logistic Sparse Group Lasso for grouped sparse signals
+======================================================
 
-An example plot of :class:`sglpy.template.TemplateClassifier`
+Estimates a Sparse Group Lasso logistic regression model on a simulated
+sparse signal. The estimated important features are compared with the
+ground-truth.
+
 """
+print(__doc__)
+
 import numpy as np
 from matplotlib import pyplot as plt
-from sglpy import TemplateClassifier
+from sglpy import LogisticSGLCV
+from sglpy.datasets import make_group_classification
 
-X = [[0, 0], [1, 1]]
-y = [0, 1]
-clf = TemplateClassifier()
-clf.fit(X, y)
-
-rng = np.random.RandomState(13)
-X_test = rng.rand(500, 2)
-y_pred = clf.predict(X_test)
-
-X_0 = X_test[y_pred == 0]
-X_1 = X_test[y_pred == 1]
-
-
-p0 = plt.scatter(0, 0, c="red", s=100)
-p1 = plt.scatter(1, 1, c="blue", s=100)
-
-ax0 = plt.scatter(X_0[:, 0], X_0[:, 1], c="crimson", s=50)
-ax1 = plt.scatter(X_1[:, 0], X_1[:, 1], c="deepskyblue", s=50)
-
-leg = plt.legend(
-    [p0, p1, ax0, ax1],
-    ["Point 0", "Point 1", "Class 0", "Class 1"],
-    loc="upper left",
-    fancybox=True,
-    scatterpoints=1,
+X, y, groups, idx = make_group_classification(
+    n_samples=100,
+    n_groups=20,
+    n_informative_groups=3,
+    n_features_per_group=20,
+    n_informative_per_group=6,
+    n_redundant_per_group=2,
+    n_repeated_per_group=2,
+    n_classes=2,
+    useful_indices=True,
+    random_state=42,
 )
-leg.get_frame().set_alpha(0.5)
 
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.xlim([-0.5, 1.5])
+_, n_features = X.shape
+
+model = LogisticSGLCV(
+    groups=groups, l1_ratio=[0.75, 0.85, 0.95], n_alphas=50, eps=1e-2, cv=3
+).fit(X, y)
+
+plt.plot(
+    np.arange(n_features),
+    model.coef_,
+    marker="o",
+    mfc="black",
+    mec=None,
+    ms=4,
+    mew=0,
+    label="Estimated coefficients",
+)
+
+plt.plot(
+    np.arange(n_features)[idx],
+    model.coef_[idx],
+    marker="o",
+    mfc=None,
+    mec="green",
+    ms=4,
+    mew=2,
+    label="Ground truth informative features",
+)
+
+plt.title("Estimated coefficients with ground truth imporant features highlighted")
+plt.legend(loc="best")
+plt.xlabel("Feature number")
+plt.ylabel("Coefs")
 
 plt.show()
+
+print("Indices of ground-truth informative features:")
+print(np.where(idx)[0])
+
+print("Indices of non-zero estimated coefs:")
+print(model.chosen_features_)
