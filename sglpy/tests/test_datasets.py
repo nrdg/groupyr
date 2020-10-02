@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import pytest
 
-from afqinsight.datasets import make_group_classification, make_group_regression
+from sglpy.datasets import make_group_classification, make_group_regression
 
 from sklearn.utils._testing import assert_array_almost_equal
 from sklearn.utils._testing import assert_raises

@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from afqinsight import SGL, SGLCV
-from afqinsight.datasets import make_group_regression
-from afqinsight.sgl import _alpha_grid
+from sglpy import SGL, SGLCV
+from sglpy.datasets import make_group_regression
+from sglpy.sgl import _alpha_grid
 
 from sklearn.utils._testing import assert_array_almost_equal
 
