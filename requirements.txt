@@ -1,12 +1,7 @@
-bokeh==2.2.0
 copt==0.8.4
-hyperopt==0.2.4
 ipywidgets==7.5.1
 matplotlib==3.3.0
 numpy==1.19.1
-palettable==3.3.0
-pandas==1.1.1
 scikit-learn==0.23.2
 scipy==1.5.2
-tables==3.6.1
 tqdm==4.48.2

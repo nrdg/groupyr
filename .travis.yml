@@ -35,7 +35,7 @@ script:
   - pytest -v doc/*rst
   - mkdir for_test
   - cd for_test
-  - pytest -v --cov=sglpy --pyargs sglpy
+  - pytest -v --cov=groupyr --pyargs groupyr
 
 after_success:
   - codecov

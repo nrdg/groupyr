@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from sglpy._prox import SparseGroupL1
+from groupyr._prox import SparseGroupL1
 
 proximal_penalties = [
     SparseGroupL1(0.5, 1.0, groups=[np.arange(16)]),

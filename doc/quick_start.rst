@@ -16,12 +16,12 @@ To create your package, you need to clone the ``project-template`` repository::
     $ git clone https://github.com/scikit-learn-contrib/project-template.git
 
 Before to reinitialize your git repository, you need to make the following
-changes. Replace all occurrences of ``sglpy`` and ``sglpy``
+changes. Replace all occurrences of ``groupyr`` and ``groupyr``
 with the name of you own contribution. You can find all the occurrences using
 the following command::
 
-    $ git grep sglpy
-    $ git grep sglpy
+    $ git grep groupyr
+    $ git grep groupyr
 
 To remove the history of the template package, you need to remove the `.git`
 directory::

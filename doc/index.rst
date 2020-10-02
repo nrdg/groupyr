@@ -3,11 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to sglpy's documentation!
+Welcome to groupyr's documentation!
 ============================================
 
-This project is a reference implementation to anyone who wishes to develop
-scikit-learn compatible classes.
+groupyr is a scikit-learn compatible implementation of the sparse group lasso linear model.
 
 .. toctree::
    :maxdepth: 2
@@ -50,3 +49,17 @@ An example of API documentation.
 --------------------------------------
 
 A set of examples. It complements the `User Guide <user_guide.html>`_.
+
+References
+----------
+.. [1] Simon, N., Friedman, J., Hastie, T., & Tibshirani, R. (2013).
+    A sparse-group lasso. Journal of Computational and Graphical
+    Statistics, 22(2), 231-245.
+.. [2] Pedregosa et al. (2011). Scikit-learn: Machine Learning in Python.
+    Journal of Machine Learning Research, 12, 2825-2830.
+.. [3] Buitnick et al. (2013).
+    API design for machine learning software: experiences from the
+    scikit-learn project. ECML PKDD Workshop: Languages for Data Mining and
+    Machine Learning, 108-122.
+.. [4] Pedregosa et al. (2020). copt: composite optimization in Python.
+    doi:10.5281/zenodo.1283339, http://openopt.github.io/copt/

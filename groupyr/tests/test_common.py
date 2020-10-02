@@ -2,8 +2,8 @@ import pytest
 
 from sklearn.utils.estimator_checks import check_estimator
 
-from sglpy._base import SGLBaseEstimator
-from sglpy import LogisticSGL, LogisticSGLCV, SGL, SGLCV
+from groupyr._base import SGLBaseEstimator
+from groupyr import LogisticSGL, LogisticSGLCV, SGL, SGLCV
 
 
 @pytest.mark.parametrize(

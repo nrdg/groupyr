@@ -7,11 +7,11 @@ import os
 from setuptools import find_packages, setup
 
 # get __version__ from _version.py
-ver_file = os.path.join("sglpy", "_version.py")
+ver_file = os.path.join("groupyr", "_version.py")
 with open(ver_file) as f:
     exec(f.read())
 
-DISTNAME = "sglpy"
+DISTNAME = "groupyr"
 DESCRIPTION = "A template for scikit-learn compatible packages."
 with codecs.open("README.rst", encoding="utf-8-sig") as f:
     LONG_DESCRIPTION = f.read()

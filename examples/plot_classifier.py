@@ -12,8 +12,8 @@ print(__doc__)
 
 import numpy as np
 from matplotlib import pyplot as plt
-from sglpy import LogisticSGLCV
-from sglpy.datasets import make_group_classification
+from groupyr import LogisticSGLCV
+from groupyr.datasets import make_group_classification
 
 X, y, groups, idx = make_group_classification(
     n_samples=100,

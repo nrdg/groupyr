@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from sglpy import SGL, SGLCV
-from sglpy.datasets import make_group_regression
-from sglpy.sgl import _alpha_grid
+from groupyr import SGL, SGLCV
+from groupyr.datasets import make_group_regression
+from groupyr.sgl import _alpha_grid
 
 from sklearn.utils._testing import assert_array_almost_equal
 

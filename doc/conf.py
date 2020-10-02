@@ -75,7 +75,7 @@ plot_gallery = True
 master_doc = "index"
 
 # General information about the project.
-project = u"sglpy"
+project = u"groupyr"
 copyright = u"2016, Vighnesh Birodkar"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -83,7 +83,7 @@ copyright = u"2016, Vighnesh Birodkar"
 # built documents.
 #
 # The short X.Y version.
-from sglpy import __version__
+from groupyr import __version__
 
 version = __version__
 # The full version, including alpha/beta/rc tags.
@@ -321,9 +321,9 @@ intersphinx_mapping = {
 
 # sphinx-gallery configuration
 sphinx_gallery_conf = {
-    "doc_module": "sglpy",
+    "doc_module": "groupyr",
     "backreferences_dir": os.path.join("generated"),
-    "reference_url": {"sglpy": None},
+    "reference_url": {"groupyr": None},
 }
 
 

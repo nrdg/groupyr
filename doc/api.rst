@@ -1,34 +1,33 @@
-####################
-project-template API
-####################
+###################
+groupyr API Reference
+###################
 
-This is an example on how to document the API of your own project.
+.. currentmodule:: groupyr
 
-.. currentmodule:: sglpy
+Sparse Groups Lasso Estimators
+==============================
 
-Estimator
-=========
-
-.. autosummary::
+.. autoclass:: SGL
    :toctree: generated/
    :template: class.rst
 
-   TemplateEstimator
-
-Transformer
-===========
-
-.. autosummary::
+.. autoclass:: LogisticSGL
    :toctree: generated/
    :template: class.rst
 
-   TemplateTransformer
+Cross-validation Estimators
+===========================
 
-Predictor
-=========
-
-.. autosummary::
+.. autoclass:: SGLCV
    :toctree: generated/
    :template: class.rst
 
-    TemplateClassifier
+.. autoclass:: LogisticSGLCV
+   :toctree: generated/
+   :template: class.rst
+
+Dataset Generation
+==================
+
+.. automodule:: groupyr.datasets
+   :toctree: generated/

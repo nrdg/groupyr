@@ -8,16 +8,16 @@ lint: flake
 
 test:
     # Unit testing using pytest
-	pytest --pyargs sglpy --cov-report term-missing --cov-config .coveragerc --cov=sglpy -n auto
+	pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
 devtest:
     # Unit testing with the -x option, aborts testing after first failure
     # Useful for development when tests are long
-	pytest -x --pyargs sglpy --cov-report term-missing --cov-config .coveragerc --cov=sglpy -n auto
+	pytest -x --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
 test-no-cv-check:
     # Unit testing without the estimator checks for the CV estimators, which takes a long time
-	pytest --pyargs sglpy --cov-report term-missing --cov-config .coveragerc --cov=sglpy -k 'not test_all_estimators[SGLCV]' -k 'not test_all_estimators[LogisticSGLCV]' -n auto
+	pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -k 'not test_all_estimators[SGLCV]' -k 'not test_all_estimators[LogisticSGLCV]' -n auto
 
 clean: clean-build clean-pyc ## remove all build, test, coverage and Python artifacts
 

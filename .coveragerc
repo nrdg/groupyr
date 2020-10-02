@@ -2,7 +2,7 @@
 
 [run]
 branch = True
-source = sglpy
+source = groupyr
 omit =
     */setup.py
 
