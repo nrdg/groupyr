@@ -3,18 +3,25 @@ build: false
 environment:
   matrix:
     - PYTHON: "C:\\Miniconda3-x64"
-      PYTHON_VERSION: "3.5.x"
-      PYTHON_ARCH: "32"
-      NUMPY_VERSION: "1.13.1"
-      SCIPY_VERSION: "0.19.1"
-      SKLEARN_VERSION: "0.19.1"
-
-    - PYTHON: "C:\\Miniconda3-x64"
       PYTHON_VERSION: "3.6.x"
       PYTHON_ARCH: "64"
-      NUMPY_VERSION: "*"
-      SCIPY_VERSION: "*"
-      SKLEARN_VERSION: "*"
+      NUMPY_VERSION: "1.19.1"
+      SCIPY_VERSION: "1.5.2"
+      SKLEARN_VERSION: "0.23.2"
+
+    - PYTHON: "C:\\Miniconda3-x64"
+      PYTHON_VERSION: "3.7.x"
+      PYTHON_ARCH: "64"
+      NUMPY_VERSION: "1.19.1"
+      SCIPY_VERSION: "1.5.2"
+      SKLEARN_VERSION: "0.23.2"
+
+    - PYTHON: "C:\\Miniconda3-x64"
+      PYTHON_VERSION: "3.8.x"
+      PYTHON_ARCH: "64"
+      NUMPY_VERSION: "1.19.1"
+      SCIPY_VERSION: "1.5.2"
+      SKLEARN_VERSION: "0.23.2"
 
 install:
   # Prepend miniconda installed Python to the PATH of this build
