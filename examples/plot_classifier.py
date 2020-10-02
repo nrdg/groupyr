@@ -20,10 +20,11 @@ X, y, groups, idx = make_group_classification(
     n_groups=20,
     n_informative_groups=3,
     n_features_per_group=20,
-    n_informative_per_group=6,
-    n_redundant_per_group=2,
-    n_repeated_per_group=2,
+    n_informative_per_group=10,
+    n_redundant_per_group=0,
+    n_repeated_per_group=0,
     n_classes=2,
+    scale=100,
     useful_indices=True,
     random_state=42,
 )
@@ -39,26 +40,29 @@ plt.plot(
     model.coef_,
     marker="o",
     mfc="black",
-    mec=None,
-    ms=4,
+    mec="none",
+    ms=3,
     mew=0,
-    label="Estimated coefficients",
+    ls="",
+    label="coefficients",
 )
 
 plt.plot(
     np.arange(n_features)[idx],
     model.coef_[idx],
     marker="o",
-    mfc=None,
+    mfc="none",
     mec="green",
-    ms=4,
-    mew=2,
-    label="Ground truth informative features",
+    ms=5,
+    mew=3,
+    ls="",
+    label="informative features",
 )
 
 plt.title("Estimated coefficients with ground truth imporant features highlighted")
+
 plt.legend(loc="best")
-plt.xlabel("Feature number")
+plt.xlabel("Feature index")
 plt.ylabel("Coefs")
 
 plt.show()

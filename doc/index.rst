@@ -1,7 +1,7 @@
-groupyr: Sparse Group Lasso in Python
+Groupyr: Sparse Group Lasso in Python
 =====================================
 
-groupyr is a scikit-learn compatible implementation of the sparse group lasso
+Groupyr is a scikit-learn compatible implementation of the sparse group lasso
 linear model. It is intended for high-dimensional supervised learning
 problems where related covariates can be assigned to predefined groups.
 
@@ -44,7 +44,7 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
    quick_start
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :hidden:
    :caption: Documentation
 
@@ -61,30 +61,52 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
 `Getting started <quick_start.html>`_
 -------------------------------------
 
-Installation and basic usage instructions.
+See the `getting started <quick_start.html>`_ page for installation and basic usage instructions.
 
 `User Guide <user_guide.html>`_
 -------------------------------
 
-Further information on how to use groupyr.
+See the `user guide <user_guide.html>`_ for further information on how to use groupyr.
 
 `API Documentation <api.html>`_
 -------------------------------
 
-Detailed documentation of the API.
+See the `API Documentation <api.html>`_ for detailed documentation of the API.
 
 `Examples <auto_examples/index.html>`_
 --------------------------------------
 
-A set of introductory examples.
+And look at the `example gallery <auto_examples/index.html>`_ for a set of introductory examples.
 
-Credits
--------
+Citing groupyr
+--------------
 
-groupyr borrows heavily from scikit-learn [2]_ and relies on the copt
-optimization library [3]_. The groupyr logo is a flipped silhouette of an
-`image from J. E. Randall`_ and is licensed `CC BY-SA`_.
+If you use groupyr in a scientific publication, we would appreciate
+citations. 
 
+Richie-Halford, A., Narayan, M., and Rokem, A. `Groupyr: Sparse Group Lasso in Python`. DOI: TBD.
+
+Bibtex entry TBD
+
+Acknowledgements
+----------------
+
+Groupyr development is supported through a grant from the `Gordon and Betty
+Moore Foundation <https://www.moore.org/>`_ and from the `Alfred P. Sloan
+Foundation <https://sloan.org/>`_ to the `University of Washington eScience
+Institute <http://escience.washington.edu/>`_, as well as NIH Collaborative
+Research in Computational Neuroscience grant R01EB027585-01 through the National
+Institute of Biomedical Imaging and Bioengineering to Eleftherios Garyfallidis
+(Indiana University) and Ariel Rokem (University of Washington).
+
+The API design of groupyr was facilitated by the `scikit-learn project
+template`_ and it therefore borrows heavily from `scikit-learn`_ [2]_.
+groupyr relies on the copt optimization library [3]_ for its solver. The
+groupyr logo is a flipped silhouette of an `image from J. E. Randall`_ and is
+licensed `CC BY-SA`_.
+
+.. _scikit-learn project template: https://github.com/scikit-learn-contrib/project-template
+.. _scikit-learn: https://scikit-learn.org/stable/index.html
 .. _image from J. E. Randall: https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg
 .. _CC BY-SA: https://creativecommons.org/licenses/by-sa/3.0
 

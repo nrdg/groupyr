@@ -699,7 +699,7 @@ class LogisticSGLCV(LogisticSGL):
 
         - None, to use the default 5-fold cross-validation,
         - int, to specify the number of folds.
-        - :term:`CV splitter`,
+        - an sklearn `CV splitter <https://scikit-learn.org/stable/glossary.html#term-cv-splitter>`_,
         - An iterable yielding (train, test) splits as arrays of indices.
 
         For int/None inputs, :class:`KFold` is used.

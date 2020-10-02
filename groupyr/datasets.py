@@ -161,9 +161,9 @@ def make_group_classification(
 
     See also
     --------
-    make_classification: non-group-sparse version
-    make_blobs: simplified variant
-    make_multilabel_classification: unrelated generator for multilabel tasks
+    sklearn.datasets.make_classification: non-group-sparse version
+    sklearn.datasets.make_blobs: simplified variant
+    sklearn.datasets.make_multilabel_classification: unrelated generator for multilabel tasks
     """
     generator = check_random_state(random_state)
 
@@ -355,19 +355,9 @@ def make_group_regression(
     coef : array of shape [n_features]
         A numpy array containing true regression coefficient values. Returned only if `coef` is True.
 
-    Notes
-    -----
-    The algorithm is adapted from Guyon [1] and was designed to generate
-    the "Madelon" dataset.
-
-    References
-    ----------
-    .. [1] I. Guyon, "Design of experiments for the NIPS 2003 variable
-           selection benchmark", 2003.
-
     See also
     --------
-    make_regression: non-group-sparse version
+    sklearn.datasets.make_regression: non-group-sparse version
     """
     generator = check_random_state(random_state)
 
