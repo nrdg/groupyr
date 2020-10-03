@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>groupyr.datasets &mdash; groupyr 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/groupyr-logo.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/js/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> groupyr
+          
+
+          
+            
+            <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*groupyr* on GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">groupyr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>groupyr.datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for groupyr.datasets</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Generate samples of synthetic data sets</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span><span class="p">,</span> <span class="n">make_regression</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">shuffle</span> <span class="k">as</span> <span class="n">util_shuffle</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">def</span> <span class="nf">registered</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fn</span>
+
+
+<div class="viewcode-block" id="make_group_classification"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_classification">[docs]</a><span class="nd">@registered</span>
+<span class="k">def</span> <span class="nf">make_group_classification</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">n_groups</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">n_informative_groups</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_features_per_group</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">n_informative_per_group</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_redundant_per_group</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_repeated_per_group</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">flip_y</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">class_sep</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hypercube</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">shift</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">useful_indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a random n-class sparse group classification problem.</span>
+
+<span class="sd">    This initially creates clusters of points normally distributed (std=1)</span>
+<span class="sd">    about vertices of an ``n_informative``-dimensional hypercube with sides of</span>
+<span class="sd">    length ``2*class_sep`` and assigns an equal number of clusters to each</span>
+<span class="sd">    class. It introduces interdependence between these features and adds</span>
+<span class="sd">    various types of further noise to the data.</span>
+
+<span class="sd">    Prior to shuffling, ``X`` stacks a number of these primary &quot;informative&quot;</span>
+<span class="sd">    features, &quot;redundant&quot; linear combinations of these, &quot;repeated&quot; duplicates</span>
+<span class="sd">    of sampled features, and arbitrary noise for and remaining features.</span>
+<span class="sd">    This method uses sklearn.datasets.make_classification to construct a</span>
+<span class="sd">    giant unshuffled classification problem of size</span>
+<span class="sd">    ``n_groups * n_features_per_group`` and then distributes the returned</span>
+<span class="sd">    features to each group. It then optionally shuffles each group.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_samples : int, optional (default=100)</span>
+<span class="sd">        The number of samples.</span>
+
+<span class="sd">    n_groups : int, optional (default=10)</span>
+<span class="sd">        The number of feature groups.</span>
+
+<span class="sd">    n_informative_groups : int, optional (default=2)</span>
+<span class="sd">        The total number of informative groups. All other groups will be</span>
+<span class="sd">        just noise.</span>
+
+<span class="sd">    n_features_per_group : int, optional (default=20)</span>
+<span class="sd">        The total number of features_per_group. These comprise `n_informative`</span>
+<span class="sd">        informative features, `n_redundant` redundant features, `n_repeated`</span>
+<span class="sd">        duplicated features and `n_features-n_informative-n_redundant-</span>
+<span class="sd">        n_repeated` useless features drawn at random.</span>
+
+<span class="sd">    n_informative_per_group : int, optional (default=2)</span>
+<span class="sd">        The number of informative features_per_group. Each class is composed</span>
+<span class="sd">        of a number of gaussian clusters each located around the vertices of a</span>
+<span class="sd">        hypercube in a subspace of dimension `n_informative_per_group`. For</span>
+<span class="sd">        each cluster, informative features are drawn independently from</span>
+<span class="sd">        N(0, 1) and then randomly linearly combined within each cluster in</span>
+<span class="sd">        order to add covariance. The clusters are then placed on the vertices</span>
+<span class="sd">        of the hypercube.</span>
+
+<span class="sd">    n_redundant_per_group : int, optional (default=2)</span>
+<span class="sd">        The number of redundant features per group. These features are</span>
+<span class="sd">        generated as random linear combinations of the informative features.</span>
+
+<span class="sd">    n_repeated_per_group : int, optional (default=0)</span>
+<span class="sd">        The number of duplicated features per group, drawn randomly from the</span>
+<span class="sd">        informative and the redundant features.</span>
+
+<span class="sd">    n_classes : int, optional (default=2)</span>
+<span class="sd">        The number of classes (or labels) of the classification problem.</span>
+
+<span class="sd">    n_clusters_per_class : int, optional (default=2)</span>
+<span class="sd">        The number of clusters per class.</span>
+
+<span class="sd">    weights : list of floats or None (default=None)</span>
+<span class="sd">        The proportions of samples assigned to each class. If None, then</span>
+<span class="sd">        classes are balanced. Note that if `len(weights) == n_classes - 1`,</span>
+<span class="sd">        then the last class weight is automatically inferred.</span>
+<span class="sd">        More than `n_samples` samples may be returned if the sum of `weights`</span>
+<span class="sd">        exceeds 1.</span>
+
+<span class="sd">    flip_y : float, optional (default=0.01)</span>
+<span class="sd">        The fraction of samples whose class are randomly exchanged. Larger</span>
+<span class="sd">        values introduce noise in the labels and make the classification</span>
+<span class="sd">        task harder.</span>
+
+<span class="sd">    class_sep : float, optional (default=1.0)</span>
+<span class="sd">        The factor multiplying the hypercube size.  Larger values spread</span>
+<span class="sd">        out the clusters/classes and make the classification task easier.</span>
+
+<span class="sd">    hypercube : boolean, optional (default=True)</span>
+<span class="sd">        If True, the clusters are put on the vertices of a hypercube. If</span>
+<span class="sd">        False, the clusters are put on the vertices of a random polytope.</span>
+
+<span class="sd">    shift : float, array of shape [n_features] or None, optional (default=0.0)</span>
+<span class="sd">        Shift features by the specified value. If None, then features</span>
+<span class="sd">        are shifted by a random value drawn in [-class_sep, class_sep].</span>
+
+<span class="sd">    scale : float, array of shape [n_features] or None, optional (default=1.0)</span>
+<span class="sd">        Multiply features by the specified value. If None, then features</span>
+<span class="sd">        are scaled by a random value drawn in [1, 100]. Note that scaling</span>
+<span class="sd">        happens after shifting.</span>
+
+<span class="sd">    shuffle : boolean, optional (default=True)</span>
+<span class="sd">        Shuffle the samples and the features.</span>
+
+<span class="sd">    useful_indices : boolean, optional (default=False)</span>
+<span class="sd">        If True, a boolean array indicating useful features is returned</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X : array of shape [n_samples, n_features]</span>
+<span class="sd">        The generated samples.</span>
+
+<span class="sd">    y : array of shape [n_samples]</span>
+<span class="sd">        The integer labels for class membership of each sample.</span>
+
+<span class="sd">    groups : list of arrays</span>
+<span class="sd">        Each element is an array of feature indices that belong to that group</span>
+
+<span class="sd">    indices : array of shape [n_features]</span>
+<span class="sd">        A boolean array indicating which features are useful. Returned only</span>
+<span class="sd">        if `useful_indices` is True.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The algorithm is adapted from Guyon [1] and was designed to generate</span>
+<span class="sd">    the &quot;Madelon&quot; dataset.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] I. Guyon, &quot;Design of experiments for the NIPS 2003 variable</span>
+<span class="sd">           selection benchmark&quot;, 2003.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    sklearn.datasets.make_classification: non-group-sparse version</span>
+<span class="sd">    sklearn.datasets.make_blobs: simplified variant</span>
+<span class="sd">    sklearn.datasets.make_multilabel_classification: unrelated generator for multilabel tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="n">total_features</span> <span class="o">=</span> <span class="n">n_groups</span> <span class="o">*</span> <span class="n">n_features_per_group</span>
+    <span class="n">total_informative</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_informative_per_group</span>
+    <span class="n">total_redundant</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_redundant_per_group</span>
+    <span class="n">total_repeated</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_repeated_per_group</span>
+
+    <span class="c1"># Count features, clusters and samples</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">n_informative_per_group</span> <span class="o">+</span> <span class="n">n_redundant_per_group</span> <span class="o">+</span> <span class="n">n_repeated_per_group</span>
+        <span class="o">&gt;</span> <span class="n">n_features_per_group</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Number of informative, redundant and repeated features per group&quot;</span>
+            <span class="s2">&quot; must sum to less than the number of total features per group.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Generate a big classification problem for the total number of features</span>
+    <span class="c1"># The `shuffle` argument is False so that the feature matrix X has</span>
+    <span class="c1"># features stacked in the order: informative, redundant, repeated, useless</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+        <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+        <span class="n">n_features</span><span class="o">=</span><span class="n">total_features</span><span class="p">,</span>
+        <span class="n">n_informative</span><span class="o">=</span><span class="n">total_informative</span><span class="p">,</span>
+        <span class="n">n_redundant</span><span class="o">=</span><span class="n">total_redundant</span><span class="p">,</span>
+        <span class="n">n_repeated</span><span class="o">=</span><span class="n">total_repeated</span><span class="p">,</span>
+        <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span>
+        <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="n">n_clusters_per_class</span><span class="p">,</span>
+        <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+        <span class="n">flip_y</span><span class="o">=</span><span class="n">flip_y</span><span class="p">,</span>
+        <span class="n">class_sep</span><span class="o">=</span><span class="n">class_sep</span><span class="p">,</span>
+        <span class="n">hypercube</span><span class="o">=</span><span class="n">hypercube</span><span class="p">,</span>
+        <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">total_useful</span> <span class="o">=</span> <span class="n">total_informative</span> <span class="o">+</span> <span class="n">total_redundant</span> <span class="o">+</span> <span class="n">total_repeated</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">total_features</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">total_useful</span>
+
+    <span class="c1"># Evenly distribute the first `n_informative_groups * n_features_per_group`</span>
+    <span class="c1"># features into the first `n_informative_groups` groups</span>
+    <span class="n">n_info_grp_features</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_features_per_group</span>
+    <span class="n">idx_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_info_grp_features</span><span class="p">)</span>
+
+    <span class="n">idx_map_consolidated_2_grouped</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_info_grp_features</span><span class="p">,</span> <span class="n">n_informative_groups</span><span class="p">)]</span>
+            <span class="o">*</span> <span class="n">n_informative_groups</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">idx_range</span> <span class="o">//</span> <span class="n">n_features_per_group</span>
+    <span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">X</span><span class="p">[:,</span> <span class="n">idx_map_consolidated_2_grouped</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">n_info_grp_features</span><span class="p">:]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">useful_indices</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">idx_map_consolidated_2_grouped</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="n">n_info_grp_features</span><span class="p">:]]</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="c1"># Randomly permute samples</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">util_shuffle</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">)</span>
+
+        <span class="c1"># Permute the groups, maintaining the order within them group_idx_map</span>
+        <span class="c1"># maps feature indices to group indices. The group order is random</span>
+        <span class="c1"># but all features in a single group are adjacent</span>
+        <span class="n">group_idx_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features_per_group</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_groups</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_groups</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">permute_group_map</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_features_per_group</span><span class="p">),</span>
+                        <span class="n">size</span><span class="o">=</span><span class="n">n_features_per_group</span><span class="p">,</span>
+                        <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="o">+</span> <span class="n">group_idx_map</span> <span class="o">*</span> <span class="n">n_features_per_group</span>
+        <span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">permute_group_map</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">useful_indices</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="n">permute_group_map</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">group_idx_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features_per_group</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">group_idx_map</span> <span class="o">==</span> <span class="n">idx</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">)]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">useful_indices</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">idx</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span></div>
+
+
+<div class="viewcode-block" id="make_group_regression"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_regression">[docs]</a><span class="nd">@registered</span>
+<span class="k">def</span> <span class="nf">make_group_regression</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">n_groups</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">n_informative_groups</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">n_features_per_group</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">n_informative_per_group</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">effective_rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">noise</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">shift</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">coef</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a sparse group regression problem.</span>
+
+<span class="sd">    Prior to shuffling, ``X`` stacks a number of these primary &quot;informative&quot;</span>
+<span class="sd">    features, and arbitrary noise for and remaining features.</span>
+<span class="sd">    This method uses sklearn.datasets.make_regression to construct a</span>
+<span class="sd">    giant unshuffled regression problem of size</span>
+<span class="sd">    ``n_groups * n_features_per_group`` and then distributes the returned</span>
+<span class="sd">    features to each group. It then optionally shuffles each group.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_samples : int, optional (default=100)</span>
+<span class="sd">        The number of samples.</span>
+
+<span class="sd">    n_groups : int, optional (default=10)</span>
+<span class="sd">        The number of feature groups.</span>
+
+<span class="sd">    n_informative_groups : int, optional (default=2)</span>
+<span class="sd">        The total number of informative groups. All other groups will be</span>
+<span class="sd">        just noise.</span>
+
+<span class="sd">    n_features_per_group : int, optional (default=20)</span>
+<span class="sd">        The total number of features_per_group. These comprise `n_informative`</span>
+<span class="sd">        informative features, and `n_features-n_informative` useless</span>
+<span class="sd">        features drawn at random.</span>
+
+<span class="sd">    n_informative_per_group : int, optional (default=2)</span>
+<span class="sd">        The number of informative features_per_group that have a</span>
+<span class="sd">        non-zero regression coefficient.</span>
+
+<span class="sd">    effective_rank : int or None, optional (default=None)</span>
+<span class="sd">        If not None, provides the number of singular vectors to explain the</span>
+<span class="sd">        input data.</span>
+
+<span class="sd">    noise : float, optional (default=0.0)</span>
+<span class="sd">         The standard deviation of the gaussian noise applied to the output.</span>
+
+<span class="sd">    shuffle : boolean, optional (default=False)</span>
+<span class="sd">        Shuffle the samples and the features.</span>
+
+<span class="sd">    coef : boolean, optional (default=False)</span>
+<span class="sd">        If True, returns coefficient values used to generate samples via</span>
+<span class="sd">        sklearn.datasets.make_regression.</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X : array of shape [n_samples, n_features]</span>
+<span class="sd">        The generated samples.</span>
+
+<span class="sd">    y : array of shape [n_samples]</span>
+<span class="sd">        The integer labels for class membership of each sample.</span>
+
+<span class="sd">    groups : list of arrays</span>
+<span class="sd">        Each element is an array of feature indices that belong to that group</span>
+
+<span class="sd">    coef : array of shape [n_features]</span>
+<span class="sd">        A numpy array containing true regression coefficient values. Returned only if `coef` is True.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    sklearn.datasets.make_regression: non-group-sparse version</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="n">total_features</span> <span class="o">=</span> <span class="n">n_groups</span> <span class="o">*</span> <span class="n">n_features_per_group</span>
+    <span class="n">total_informative</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_informative_per_group</span>
+
+    <span class="k">if</span> <span class="n">coef</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">reg_coefs</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">n_features</span><span class="o">=</span><span class="n">total_features</span><span class="p">,</span>
+            <span class="n">n_informative</span><span class="o">=</span><span class="n">total_informative</span><span class="p">,</span>
+            <span class="n">effective_rank</span><span class="o">=</span><span class="n">effective_rank</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">coef</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">n_features</span><span class="o">=</span><span class="n">total_features</span><span class="p">,</span>
+            <span class="n">n_informative</span><span class="o">=</span><span class="n">total_informative</span><span class="p">,</span>
+            <span class="n">effective_rank</span><span class="o">=</span><span class="n">effective_rank</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">coef</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Evenly distribute the first `n_informative_groups * n_features_per_group`</span>
+    <span class="c1"># features into the first `n_informative_groups` groups</span>
+    <span class="n">n_info_grp_features</span> <span class="o">=</span> <span class="n">n_informative_groups</span> <span class="o">*</span> <span class="n">n_features_per_group</span>
+    <span class="n">idx_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_info_grp_features</span><span class="p">)</span>
+
+    <span class="n">idx_map_consolidated_2_grouped</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_info_grp_features</span><span class="p">,</span> <span class="n">n_informative_groups</span><span class="p">)]</span>
+            <span class="o">*</span> <span class="n">n_informative_groups</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">idx_range</span> <span class="o">//</span> <span class="n">n_features_per_group</span>
+    <span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">X</span><span class="p">[:,</span> <span class="n">idx_map_consolidated_2_grouped</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">n_info_grp_features</span><span class="p">:]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">group_idx_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features_per_group</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">)]</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">coef</span><span class="p">:</span>
+        <span class="n">reg_coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">reg_coefs</span><span class="p">[</span><span class="n">idx_map_consolidated_2_grouped</span><span class="p">],</span> <span class="n">reg_coefs</span><span class="p">[</span><span class="n">n_info_grp_features</span><span class="p">:]]</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Randomly permute samples and features</span>
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">util_shuffle</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">)</span>
+
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">total_features</span><span class="p">)</span>
+        <span class="n">generator</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">indices</span><span class="p">]</span>
+        <span class="n">reg_coefs</span> <span class="o">=</span> <span class="n">reg_coefs</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">group_idx_map</span> <span class="o">==</span> <span class="n">idx</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">coef</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">reg_coefs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Adam Richie-Halford
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

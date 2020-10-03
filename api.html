@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference &mdash; groupyr 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/groupyr-logo.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script src="_static/js/copybutton.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to groupyr" href="contributing.html" />
+    <link rel="prev" title="Getting help using groupyr" href="getting_help.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> groupyr
+          
+
+          
+            
+            <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_help.html">Getting help using <em>groupyr</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sparse-groups-lasso-estimators">Sparse Groups Lasso Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation-estimators">Cross-validation Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-generation">Dataset Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*groupyr* on GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">groupyr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sparse-groups-lasso-estimators">
+<h2>Sparse Groups Lasso Estimators<a class="headerlink" href="#sparse-groups-lasso-estimators" title="Permalink to this headline">¶</a></h2>
+<p>These are groupyr’s canonical estimators. <code class="docutils literal notranslate"><span class="pre">SGL</span></code> is intended for regression
+problems while <code class="docutils literal notranslate"><span class="pre">LogisticSGL</span></code> is intended for classification problems.</p>
+<dl class="py class">
+<dt id="groupyr.SGL">
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">SGL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">warm_start</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">suppress_solver_warnings</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">include_solver_trace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/sgl.html#SGL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.SGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>An sklearn compatible sparse group lasso regressor.</p>
+<p>This solves the sparse group lasso <a class="reference internal" href="#rcbd543aab8f7-1" id="id1">[1]</a> problem for a feature matrix
+partitioned into groups using the proximal gradient descent (PGD)
+algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>l1_ratio</strong><span class="classifier">float, default=1.0</span></dt><dd><p>Hyper-parameter : Combination between group lasso and lasso. l1_ratio=0
+gives the group lasso and l1_ratio=1 gives the lasso.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier">float, default=1.0</span></dt><dd><p>Hyper-parameter : overall regularization strength.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group. We set groups in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> so
+that it can be reused in model selection and CV routines.</p>
+</dd>
+<dt><strong>scale_l2_by</strong><span class="classifier">[“group_length”, None], default=”group_length”</span></dt><dd><p>Scaling technique for the group-wise L2 penalty.
+By default, <code class="docutils literal notranslate"><span class="pre">scale_l2_by=&quot;group_length</span></code> and the L2 penalty is
+scaled by the square root of the group length so that each variable
+has the same effect on the penalty. This may not be appropriate for
+one-hot encoded features and <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> would be more
+appropriate for that case. <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> will also reproduce
+ElasticNet results when all features belong to one group.</p>
+</dd>
+<dt><strong>fit_intercept</strong><span class="classifier">bool, default=True</span></dt><dd><p>Specifies if a constant (a.k.a. bias or intercept) should be
+added to the linear predictor (X &#64; coef + intercept).</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>Maximum number of iterations for PGD solver.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, default=1e-7</span></dt><dd><p>Stopping criterion. Convergence tolerance for PGD algorithm.</p>
+</dd>
+<dt><strong>warm_start</strong><span class="classifier">bool, default=False</span></dt><dd><p>If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, reuse the solution of the previous call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+as initialization for <code class="docutils literal notranslate"><span class="pre">coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">intercept_</span></code>.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int, default=0</span></dt><dd><p>Verbosity flag for PGD solver. Any positive integer will produce
+verbose output</p>
+</dd>
+<dt><strong>suppress_solver_warnings</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, suppress convergence warnings from PGD solver.
+This is useful for hyperparameter tuning when some combinations
+of hyperparameters may not converge.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rcbd543aab8f7-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
+“A Sparse-Group Lasso,” Journal of Computational and Graphical
+Statistics, vol. 22:2, pp. 231-245, 2012
+DOI: 10.1080/10618600.2012.681250</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>coef_</strong><span class="classifier">array of shape (n_features,)</span></dt><dd><p>Estimated coefficients for the linear predictor (<cite>X &#64; coef_ +
+intercept_</cite>).</p>
+</dd>
+<dt><strong>intercept_</strong><span class="classifier">float</span></dt><dd><p>Intercept (a.k.a. bias) added to linear predictor.</p>
+</dd>
+<dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>Actual number of iterations used in the solver.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="groupyr.LogisticSGL">
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">LogisticSGL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">warm_start</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">suppress_solver_warnings</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">include_solver_trace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/logistic.html#LogisticSGL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.LogisticSGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>An sklearn compatible sparse group lasso classifier.</p>
+<p>This solves the sparse group lasso <a class="reference internal" href="#rd799dd0ca6ec-1" id="id3">[1]</a> problem for a feature matrix
+partitioned into groups using the proximal gradient descent (PGD)
+algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>l1_ratio</strong><span class="classifier">float, default=1.0</span></dt><dd><p>Hyper-parameter : Combination between group lasso and lasso. l1_ratio=0
+gives the group lasso and l1_ratio=1 gives the lasso.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier">float, default=0.0</span></dt><dd><p>Hyper-parameter : overall regularization strength.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group. We set groups in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> so
+that it can be reused in model selection and CV routines.</p>
+</dd>
+<dt><strong>scale_l2_by</strong><span class="classifier">[“group_length”, None], default=”group_length”</span></dt><dd><p>Scaling technique for the group-wise L2 penalty.
+By default, <code class="docutils literal notranslate"><span class="pre">scale_l2_by=&quot;group_length</span></code> and the L2 penalty is
+scaled by the square root of the group length so that each variable
+has the same effect on the penalty. This may not be appropriate for
+one-hot encoded features and <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> would be more
+appropriate for that case. <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> will also reproduce
+ElasticNet results when all features belong to one group.</p>
+</dd>
+<dt><strong>fit_intercept</strong><span class="classifier">bool, default=True</span></dt><dd><p>Specifies if a constant (a.k.a. bias or intercept) should be
+added to the linear predictor (X &#64; coef + intercept).</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>Maximum number of iterations for PGD solver.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, default=1e-7</span></dt><dd><p>Stopping criterion. Convergence tolerance for PGD algorithm.</p>
+</dd>
+<dt><strong>warm_start</strong><span class="classifier">bool, default=False</span></dt><dd><p>If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, reuse the solution of the previous call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+as initialization for <code class="docutils literal notranslate"><span class="pre">coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">intercept_</span></code>.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int, default=0</span></dt><dd><p>Verbosity flag for PGD solver. Any positive integer will produce
+verbose output</p>
+</dd>
+<dt><strong>suppress_solver_warnings</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, suppress convergence warnings from PGD solver.
+This is useful for hyperparameter tuning when some combinations
+of hyperparameters may not converge.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rd799dd0ca6ec-1"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
+“A Sparse-Group Lasso,” Journal of Computational and Graphical
+Statistics, vol. 22:2, pp. 231-245, 2012
+DOI: 10.1080/10618600.2012.681250</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>classes_</strong><span class="classifier">ndarray of shape (n_classes, )</span></dt><dd><p>A list of class labels known to the classifier.</p>
+</dd>
+<dt><strong>coef_</strong><span class="classifier">array of shape (n_features,)</span></dt><dd><p>Estimated coefficients for the linear predictor (<cite>X &#64; coef_ +
+intercept_</cite>).</p>
+</dd>
+<dt><strong>intercept_</strong><span class="classifier">float</span></dt><dd><p>Intercept (a.k.a. bias) added to linear predictor.</p>
+</dd>
+<dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>Actual number of iterations used in the solver.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="cross-validation-estimators">
+<h2>Cross-validation Estimators<a class="headerlink" href="#cross-validation-estimators" title="Permalink to this headline">¶</a></h2>
+<p>These estimators have built-in cross-validation capabilities to find the best
+values of the hyperparameters <code class="docutils literal notranslate"><span class="pre">alpha</span></code> and <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code>. These are more
+efficient than using the canonical estimators with grid search because they
+make use of warm-starting.</p>
+<dl class="py class">
+<dt id="groupyr.SGLCV">
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">SGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/sgl.html#SGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.SGLCV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for iterative SGL model fitting along a regularization path</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>l1_ratio</strong><span class="classifier">float or list of float, default=1.0</span></dt><dd><p>float between 0 and 1 passed to SGL (scaling between group lasso and
+lasso penalties). For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">0</span></code> the penalty is the group lasso
+penalty. For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">1</span></code> it is the lasso penalty. For <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span>
+<span class="pre">l1_ratio</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>, the penalty is a combination of group lasso and
+lasso. This parameter can be a list, in which case the different
+values are tested by cross-validation and the one giving the best
+prediction score is used. Note that a good choice of list of values
+will depend on the problem. For problems where we expect strong
+overall sparsity and would like to encourage grouping, put more
+values close to 1 (i.e. Lasso). In contrast, if we expect strong
+group-wise sparsity, but only mild sparsity within groups, put more
+values close to 0 (i.e. group lasso).</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group. We set groups in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> so
+that it can be reused in model selection and CV routines.</p>
+</dd>
+<dt><strong>scale_l2_by</strong><span class="classifier">[“group_length”, None], default=”group_length”</span></dt><dd><p>Scaling technique for the group-wise L2 penalty.
+By default, <code class="docutils literal notranslate"><span class="pre">scale_l2_by=&quot;group_length</span></code> and the L2 penalty is
+scaled by the square root of the group length so that each variable
+has the same effect on the penalty. This may not be appropriate for
+one-hot encoded features and <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> would be more
+appropriate for that case. <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> will also reproduce
+ElasticNet results when all features belong to one group.</p>
+</dd>
+<dt><strong>eps</strong><span class="classifier">float, default=1e-3</span></dt><dd><p>Length of the path. <code class="docutils literal notranslate"><span class="pre">eps=1e-3</span></code> means that
+<code class="docutils literal notranslate"><span class="pre">alpha_min</span> <span class="pre">/</span> <span class="pre">alpha_max</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>.</p>
+</dd>
+<dt><strong>n_alphas</strong><span class="classifier">int, default=100</span></dt><dd><p>Number of alphas along the regularization path, used for each l1_ratio.</p>
+</dd>
+<dt><strong>alphas</strong><span class="classifier">ndarray, default=None</span></dt><dd><p>List of alphas where to compute the models.
+If None alphas are set automatically</p>
+</dd>
+<dt><strong>fit_intercept</strong><span class="classifier">bool, default=True</span></dt><dd><p>whether to calculate the intercept for this model. If set
+to false, no intercept will be used in calculations
+(i.e. data is expected to be centered).</p>
+</dd>
+<dt><strong>normalize</strong><span class="classifier">bool, default=False</span></dt><dd><p>This parameter is ignored when <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> is set to False.
+If True, the regressors X will be normalized before regression by
+subtracting the mean and dividing by the l2-norm.
+If you wish to standardize, please use
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v0.23)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>The maximum number of iterations</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, default=1e-7</span></dt><dd><p>The tolerance for the SGL solver</p>
+</dd>
+<dt><strong>cv</strong><span class="classifier">int, cross-validation generator or iterable, default=None</span></dt><dd><p>Determines the cross-validation splitting strategy.
+Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross-validation,</p></li>
+<li><p>int, to specify the number of folds.</p></li>
+<li><p>an sklearn <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cv-splitter">CV splitter</a>,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, <code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code> is used.</p>
+<p>Refer to the scikit-learn User Guide for the various
+cross-validation strategies that can be used here.</p>
+</dd>
+<dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool or int, default=0</span></dt><dd><p>Amount of verbosity.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int, default=None</span></dt><dd><p>Number of CPUs to use during the cross validation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance, default=None</span></dt><dd><p>The seed of the pseudo random number generator that selects a random
+feature to update. Used when <code class="docutils literal notranslate"><span class="pre">selection</span></code> == ‘random’.
+Pass an int for reproducible output across multiple function calls.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgl_path</span></code></dt><dd></dd>
+<dt><a class="reference internal" href="#groupyr.SGL" title="groupyr.SGL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SGL</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>alpha_</strong><span class="classifier">float</span></dt><dd><p>The amount of penalization chosen by cross validation</p>
+</dd>
+<dt><strong>l1_ratio_</strong><span class="classifier">float</span></dt><dd><p>The compromise between l1 and l2 penalization chosen by
+cross validation</p>
+</dd>
+<dt><strong>coef_</strong><span class="classifier">ndarray of shape (n_features,) or (n_targets, n_features)</span></dt><dd><p>Parameter vector (w in the cost function formula),</p>
+</dd>
+<dt><strong>intercept_</strong><span class="classifier">float or ndarray of shape (n_targets, n_features)</span></dt><dd><p>Independent term in the decision function.</p>
+</dd>
+<dt><strong>mse_path_</strong><span class="classifier">ndarray of shape (n_l1_ratio, n_alpha, n_folds)</span></dt><dd><p>Mean square error for the test set on each fold, varying l1_ratio and
+alpha.</p>
+</dd>
+<dt><strong>alphas_</strong><span class="classifier">ndarray of shape (n_alphas,) or (n_l1_ratio, n_alphas)</span></dt><dd><p>The grid of alphas used for fitting, for each l1_ratio.</p>
+</dd>
+<dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>number of iterations run by the proximal gradient descent solver to
+reach the specified tolerance for the optimal alpha.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="groupyr.LogisticSGLCV">
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">LogisticSGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">scoring</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/logistic.html#LogisticSGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.LogisticSGLCV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for iterative Logistic SGL model fitting along a regularization path</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>l1_ratio</strong><span class="classifier">float or list of float, default=1.0</span></dt><dd><p>float between 0 and 1 passed to SGL (scaling between group lasso and
+lasso penalties). For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">0</span></code> the penalty is the group lasso
+penalty. For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">1</span></code> it is the lasso penalty. For <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span>
+<span class="pre">l1_ratio</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>, the penalty is a combination of group lasso and
+lasso. This parameter can be a list, in which case the different
+values are tested by cross-validation and the one giving the best
+prediction score is used. Note that a good choice of list of values
+will depend on the problem. For problems where we expect strong
+overall sparsity and would like to encourage grouping, put more
+values close to 1 (i.e. Lasso). In contrast, if we expect strong
+group-wise sparsity, but only mild sparsity within groups, put more
+values close to 0 (i.e. group lasso).</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group. We set groups in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> so
+that it can be reused in model selection and CV routines.</p>
+</dd>
+<dt><strong>scale_l2_by</strong><span class="classifier">[“group_length”, None], default=”group_length”</span></dt><dd><p>Scaling technique for the group-wise L2 penalty.
+By default, <code class="docutils literal notranslate"><span class="pre">scale_l2_by=&quot;group_length</span></code> and the L2 penalty is
+scaled by the square root of the group length so that each variable
+has the same effect on the penalty. This may not be appropriate for
+one-hot encoded features and <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> would be more
+appropriate for that case. <code class="docutils literal notranslate"><span class="pre">scale_l2_by=None</span></code> will also reproduce
+ElasticNet results when all features belong to one group.</p>
+</dd>
+<dt><strong>eps</strong><span class="classifier">float, default=1e-3</span></dt><dd><p>Length of the path. <code class="docutils literal notranslate"><span class="pre">eps=1e-3</span></code> means that
+<code class="docutils literal notranslate"><span class="pre">alpha_min</span> <span class="pre">/</span> <span class="pre">alpha_max</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>.</p>
+</dd>
+<dt><strong>n_alphas</strong><span class="classifier">int, default=100</span></dt><dd><p>Number of alphas along the regularization path, used for each l1_ratio.</p>
+</dd>
+<dt><strong>alphas</strong><span class="classifier">ndarray, default=None</span></dt><dd><p>List of alphas where to compute the models.
+If None alphas are set automatically</p>
+</dd>
+<dt><strong>fit_intercept</strong><span class="classifier">bool, default=True</span></dt><dd><p>whether to calculate the intercept for this model. If set
+to false, no intercept will be used in calculations
+(i.e. data is expected to be centered).</p>
+</dd>
+<dt><strong>normalize</strong><span class="classifier">bool, default=False</span></dt><dd><p>This parameter is ignored when <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> is set to False.
+If True, the regressors X will be normalized before regression by
+subtracting the mean and dividing by the l2-norm.
+If you wish to standardize, please use
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v0.23)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>The maximum number of iterations</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, default=1e-7</span></dt><dd><p>The tolerance for the SGL solver</p>
+</dd>
+<dt><strong>scoring</strong><span class="classifier">callable, default=None</span></dt><dd><p>A string (see sklearn model evaluation documentation) or a scorer
+callable object / function with signature <code class="docutils literal notranslate"><span class="pre">scorer(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>.
+For a list of scoring functions that can be used, look at
+<cite>sklearn.metrics</cite>. The default scoring option used is accuracy_score.</p>
+</dd>
+<dt><strong>cv</strong><span class="classifier">int, cross-validation generator or iterable, default=None</span></dt><dd><p>Determines the cross-validation splitting strategy.
+Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross-validation,</p></li>
+<li><p>int, to specify the number of folds.</p></li>
+<li><p>an sklearn <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cv-splitter">CV splitter</a>,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, <code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code> is used.</p>
+<p>Refer to the scikit-learn User Guide for the various
+cross-validation strategies that can be used here.</p>
+</dd>
+<dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool or int, default=False</span></dt><dd><p>Amount of verbosity.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int, default=None</span></dt><dd><p>Number of CPUs to use during the cross validation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">logistic_sgl_path</span></code></dt><dd></dd>
+<dt><a class="reference internal" href="#groupyr.LogisticSGL" title="groupyr.LogisticSGL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogisticSGL</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>alpha_</strong><span class="classifier">float</span></dt><dd><p>The amount of penalization chosen by cross validation</p>
+</dd>
+<dt><strong>l1_ratio_</strong><span class="classifier">float</span></dt><dd><p>The compromise between l1 and l2 penalization chosen by
+cross validation</p>
+</dd>
+<dt><strong>classes_</strong><span class="classifier">ndarray of shape (n_classes, )</span></dt><dd><p>A list of class labels known to the classifier.</p>
+</dd>
+<dt><strong>coef_</strong><span class="classifier">array of shape (n_features,)</span></dt><dd><p>Estimated coefficients for the linear predictor (<cite>X &#64; coef_ +
+intercept_</cite>).</p>
+</dd>
+<dt><strong>intercept_</strong><span class="classifier">float</span></dt><dd><p>Intercept (a.k.a. bias) added to linear predictor.</p>
+</dd>
+<dt><strong>scoring_path_</strong><span class="classifier">ndarray of shape (n_l1_ratio, n_alpha, n_folds)</span></dt><dd><p>Classification score for the test set on each fold, varying l1_ratio and
+alpha.</p>
+</dd>
+<dt><strong>alphas_</strong><span class="classifier">ndarray of shape (n_alphas,) or (n_l1_ratio, n_alphas)</span></dt><dd><p>The grid of alphas used for fitting, for each l1_ratio.</p>
+</dd>
+<dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>number of iterations run by the proximal gradient descent solver to
+reach the specified tolerance for the optimal alpha.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="dataset-generation">
+<h2>Dataset Generation<a class="headerlink" href="#dataset-generation" title="Permalink to this headline">¶</a></h2>
+<p>Use these functions to generate synthetic sparse grouped data.</p>
+<dl class="py function">
+<dt id="groupyr.datasets.make_group_classification">
+<code class="sig-prename descclassname">groupyr.datasets.</code><code class="sig-name descname">make_group_classification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_samples</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">n_groups</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">n_informative_groups</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_features_per_group</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">n_informative_per_group</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_redundant_per_group</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_repeated_per_group</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">n_classes</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_clusters_per_class</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">flip_y</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">class_sep</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">hypercube</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">shift</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">shuffle</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">useful_indices</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/datasets.html#make_group_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.datasets.make_group_classification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a random n-class sparse group classification problem.</p>
+<p>This initially creates clusters of points normally distributed (std=1)
+about vertices of an <code class="docutils literal notranslate"><span class="pre">n_informative</span></code>-dimensional hypercube with sides of
+length <code class="docutils literal notranslate"><span class="pre">2*class_sep</span></code> and assigns an equal number of clusters to each
+class. It introduces interdependence between these features and adds
+various types of further noise to the data.</p>
+<p>Prior to shuffling, <code class="docutils literal notranslate"><span class="pre">X</span></code> stacks a number of these primary “informative”
+features, “redundant” linear combinations of these, “repeated” duplicates
+of sampled features, and arbitrary noise for and remaining features.
+This method uses sklearn.datasets.make_classification to construct a
+giant unshuffled classification problem of size
+<code class="docutils literal notranslate"><span class="pre">n_groups</span> <span class="pre">*</span> <span class="pre">n_features_per_group</span></code> and then distributes the returned
+features to each group. It then optionally shuffles each group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_samples</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>The number of samples.</p>
+</dd>
+<dt><strong>n_groups</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>The number of feature groups.</p>
+</dd>
+<dt><strong>n_informative_groups</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The total number of informative groups. All other groups will be
+just noise.</p>
+</dd>
+<dt><strong>n_features_per_group</strong><span class="classifier">int, optional (default=20)</span></dt><dd><p>The total number of features_per_group. These comprise <cite>n_informative</cite>
+informative features, <cite>n_redundant</cite> redundant features, <cite>n_repeated</cite>
+duplicated features and <cite>n_features-n_informative-n_redundant-
+n_repeated</cite> useless features drawn at random.</p>
+</dd>
+<dt><strong>n_informative_per_group</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of informative features_per_group. Each class is composed
+of a number of gaussian clusters each located around the vertices of a
+hypercube in a subspace of dimension <cite>n_informative_per_group</cite>. For
+each cluster, informative features are drawn independently from
+N(0, 1) and then randomly linearly combined within each cluster in
+order to add covariance. The clusters are then placed on the vertices
+of the hypercube.</p>
+</dd>
+<dt><strong>n_redundant_per_group</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of redundant features per group. These features are
+generated as random linear combinations of the informative features.</p>
+</dd>
+<dt><strong>n_repeated_per_group</strong><span class="classifier">int, optional (default=0)</span></dt><dd><p>The number of duplicated features per group, drawn randomly from the
+informative and the redundant features.</p>
+</dd>
+<dt><strong>n_classes</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of classes (or labels) of the classification problem.</p>
+</dd>
+<dt><strong>n_clusters_per_class</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of clusters per class.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">list of floats or None (default=None)</span></dt><dd><p>The proportions of samples assigned to each class. If None, then
+classes are balanced. Note that if <cite>len(weights) == n_classes - 1</cite>,
+then the last class weight is automatically inferred.
+More than <cite>n_samples</cite> samples may be returned if the sum of <cite>weights</cite>
+exceeds 1.</p>
+</dd>
+<dt><strong>flip_y</strong><span class="classifier">float, optional (default=0.01)</span></dt><dd><p>The fraction of samples whose class are randomly exchanged. Larger
+values introduce noise in the labels and make the classification
+task harder.</p>
+</dd>
+<dt><strong>class_sep</strong><span class="classifier">float, optional (default=1.0)</span></dt><dd><p>The factor multiplying the hypercube size.  Larger values spread
+out the clusters/classes and make the classification task easier.</p>
+</dd>
+<dt><strong>hypercube</strong><span class="classifier">boolean, optional (default=True)</span></dt><dd><p>If True, the clusters are put on the vertices of a hypercube. If
+False, the clusters are put on the vertices of a random polytope.</p>
+</dd>
+<dt><strong>shift</strong><span class="classifier">float, array of shape [n_features] or None, optional (default=0.0)</span></dt><dd><p>Shift features by the specified value. If None, then features
+are shifted by a random value drawn in [-class_sep, class_sep].</p>
+</dd>
+<dt><strong>scale</strong><span class="classifier">float, array of shape [n_features] or None, optional (default=1.0)</span></dt><dd><p>Multiply features by the specified value. If None, then features
+are scaled by a random value drawn in [1, 100]. Note that scaling
+happens after shifting.</p>
+</dd>
+<dt><strong>shuffle</strong><span class="classifier">boolean, optional (default=True)</span></dt><dd><p>Shuffle the samples and the features.</p>
+</dd>
+<dt><strong>useful_indices</strong><span class="classifier">boolean, optional (default=False)</span></dt><dd><p>If True, a boolean array indicating useful features is returned</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance or None, optional (default=None)</span></dt><dd><p>If int, random_state is the seed used by the random number generator;
+If RandomState instance, random_state is the random number generator;
+If None, the random number generator is the RandomState instance used
+by <cite>np.random</cite>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array of shape [n_samples, n_features]</span></dt><dd><p>The generated samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array of shape [n_samples]</span></dt><dd><p>The integer labels for class membership of each sample.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of arrays</span></dt><dd><p>Each element is an array of feature indices that belong to that group</p>
+</dd>
+<dt><strong>indices</strong><span class="classifier">array of shape [n_features]</span></dt><dd><p>A boolean array indicating which features are useful. Returned only
+if <cite>useful_indices</cite> is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_classification</span></code></a></dt><dd><p>non-group-sparse version</p>
+</dd>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_blobs</span></code></a></dt><dd><p>simplified variant</p>
+</dd>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_multilabel_classification.html#sklearn.datasets.make_multilabel_classification" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_multilabel_classification</span></code></a></dt><dd><p>unrelated generator for multilabel tasks</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The algorithm is adapted from Guyon [1] and was designed to generate
+the “Madelon” dataset.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r89cbf7c972e0-1"><span class="brackets">1</span></dt>
+<dd><p>I. Guyon, “Design of experiments for the NIPS 2003 variable
+selection benchmark”, 2003.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="groupyr.datasets.make_group_regression">
+<code class="sig-prename descclassname">groupyr.datasets.</code><code class="sig-name descname">make_group_regression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_samples</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">n_groups</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">n_informative_groups</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">n_features_per_group</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">n_informative_per_group</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">effective_rank</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">noise</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">shift</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">shuffle</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">coef</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/datasets.html#make_group_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.datasets.make_group_regression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a sparse group regression problem.</p>
+<p>Prior to shuffling, <code class="docutils literal notranslate"><span class="pre">X</span></code> stacks a number of these primary “informative”
+features, and arbitrary noise for and remaining features.
+This method uses sklearn.datasets.make_regression to construct a
+giant unshuffled regression problem of size
+<code class="docutils literal notranslate"><span class="pre">n_groups</span> <span class="pre">*</span> <span class="pre">n_features_per_group</span></code> and then distributes the returned
+features to each group. It then optionally shuffles each group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_samples</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>The number of samples.</p>
+</dd>
+<dt><strong>n_groups</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>The number of feature groups.</p>
+</dd>
+<dt><strong>n_informative_groups</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The total number of informative groups. All other groups will be
+just noise.</p>
+</dd>
+<dt><strong>n_features_per_group</strong><span class="classifier">int, optional (default=20)</span></dt><dd><p>The total number of features_per_group. These comprise <cite>n_informative</cite>
+informative features, and <cite>n_features-n_informative</cite> useless
+features drawn at random.</p>
+</dd>
+<dt><strong>n_informative_per_group</strong><span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of informative features_per_group that have a
+non-zero regression coefficient.</p>
+</dd>
+<dt><strong>effective_rank</strong><span class="classifier">int or None, optional (default=None)</span></dt><dd><p>If not None, provides the number of singular vectors to explain the
+input data.</p>
+</dd>
+<dt><strong>noise</strong><span class="classifier">float, optional (default=0.0)</span></dt><dd><p>The standard deviation of the gaussian noise applied to the output.</p>
+</dd>
+<dt><strong>shuffle</strong><span class="classifier">boolean, optional (default=False)</span></dt><dd><p>Shuffle the samples and the features.</p>
+</dd>
+<dt><strong>coef</strong><span class="classifier">boolean, optional (default=False)</span></dt><dd><p>If True, returns coefficient values used to generate samples via
+sklearn.datasets.make_regression.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance or None, optional (default=None)</span></dt><dd><p>If int, random_state is the seed used by the random number generator;
+If RandomState instance, random_state is the random number generator;
+If None, the random number generator is the RandomState instance used
+by <cite>np.random</cite>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array of shape [n_samples, n_features]</span></dt><dd><p>The generated samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array of shape [n_samples]</span></dt><dd><p>The integer labels for class membership of each sample.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of arrays</span></dt><dd><p>Each element is an array of feature indices that belong to that group</p>
+</dd>
+<dt><strong>coef</strong><span class="classifier">array of shape [n_features]</span></dt><dd><p>A numpy array containing true regression coefficient values. Returned only if <cite>coef</cite> is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_regression</span></code></a></dt><dd><p>non-group-sparse version</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to groupyr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_help.html" class="btn btn-neutral float-left" title="Getting help using groupyr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Adam Richie-Halford
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

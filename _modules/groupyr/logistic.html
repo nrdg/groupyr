@@ -1,0 +1,1307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>groupyr.logistic &mdash; groupyr 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/groupyr-logo.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/js/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> groupyr
+          
+
+          
+            
+            <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*groupyr* on GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">groupyr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>groupyr.logistic</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for groupyr.logistic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains logistic estimators based on the sparse group lasso</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.linear_model._base</span> <span class="kn">import</span> <span class="n">LinearClassifierMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">get_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">check_cv</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">safe_sparse_dot</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">_joblib_parallel_args</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">check_classification_targets</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">column_or_1d</span>
+
+<span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">SGLBaseEstimator</span>
+<span class="kn">from</span> <span class="nn">.sgl</span> <span class="kn">import</span> <span class="n">_alpha_grid</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span><span class="p">,</span> <span class="n">ProgressParallel</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">def</span> <span class="nf">registered</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fn</span>
+
+
+<div class="viewcode-block" id="LogisticSGL"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGL">[docs]</a><span class="nd">@registered</span>
+<span class="k">class</span> <span class="nc">LogisticSGL</span><span class="p">(</span><span class="n">SGLBaseEstimator</span><span class="p">,</span> <span class="n">LinearClassifierMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An sklearn compatible sparse group lasso classifier.</span>
+
+<span class="sd">    This solves the sparse group lasso [1]_ problem for a feature matrix</span>
+<span class="sd">    partitioned into groups using the proximal gradient descent (PGD)</span>
+<span class="sd">    algorithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    l1_ratio : float, default=1.0</span>
+<span class="sd">        Hyper-parameter : Combination between group lasso and lasso. l1_ratio=0</span>
+<span class="sd">        gives the group lasso and l1_ratio=1 gives the lasso.</span>
+
+<span class="sd">    alpha : float, default=0.0</span>
+<span class="sd">        Hyper-parameter : overall regularization strength.</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group. We set groups in ``__init__`` so</span>
+<span class="sd">        that it can be reused in model selection and CV routines.</span>
+
+<span class="sd">    scale_l2_by : [&quot;group_length&quot;, None], default=&quot;group_length&quot;</span>
+<span class="sd">        Scaling technique for the group-wise L2 penalty.</span>
+<span class="sd">        By default, ``scale_l2_by=&quot;group_length`` and the L2 penalty is</span>
+<span class="sd">        scaled by the square root of the group length so that each variable</span>
+<span class="sd">        has the same effect on the penalty. This may not be appropriate for</span>
+<span class="sd">        one-hot encoded features and ``scale_l2_by=None`` would be more</span>
+<span class="sd">        appropriate for that case. ``scale_l2_by=None`` will also reproduce</span>
+<span class="sd">        ElasticNet results when all features belong to one group.</span>
+
+<span class="sd">    fit_intercept : bool, default=True</span>
+<span class="sd">        Specifies if a constant (a.k.a. bias or intercept) should be</span>
+<span class="sd">        added to the linear predictor (X @ coef + intercept).</span>
+
+<span class="sd">    max_iter : int, default=1000</span>
+<span class="sd">        Maximum number of iterations for PGD solver.</span>
+
+<span class="sd">    tol : float, default=1e-7</span>
+<span class="sd">        Stopping criterion. Convergence tolerance for PGD algorithm.</span>
+
+<span class="sd">    warm_start : bool, default=False</span>
+<span class="sd">        If set to ``True``, reuse the solution of the previous call to ``fit``</span>
+<span class="sd">        as initialization for ``coef_`` and ``intercept_``.</span>
+
+<span class="sd">    verbose : int, default=0</span>
+<span class="sd">        Verbosity flag for PGD solver. Any positive integer will produce</span>
+<span class="sd">        verbose output</span>
+
+<span class="sd">    suppress_solver_warnings : bool, default=True</span>
+<span class="sd">        If True, suppress convergence warnings from PGD solver.</span>
+<span class="sd">        This is useful for hyperparameter tuning when some combinations</span>
+<span class="sd">        of hyperparameters may not converge.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    classes_ : ndarray of shape (n_classes, )</span>
+<span class="sd">        A list of class labels known to the classifier.</span>
+
+<span class="sd">    coef_ : array of shape (n_features,)</span>
+<span class="sd">        Estimated coefficients for the linear predictor (`X @ coef_ +</span>
+<span class="sd">        intercept_`).</span>
+
+<span class="sd">    intercept_ : float</span>
+<span class="sd">        Intercept (a.k.a. bias) added to linear predictor.</span>
+
+<span class="sd">    n_iter_ : int</span>
+<span class="sd">        Actual number of iterations used in the solver.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1]  Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,</span>
+<span class="sd">        &quot;A Sparse-Group Lasso,&quot; Journal of Computational and Graphical</span>
+<span class="sd">        Statistics, vol. 22:2, pp. 231-245, 2012</span>
+<span class="sd">        DOI: 10.1080/10618600.2012.681250</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
+        <span class="sd">&quot;&quot;&quot;Fit a linear model using the sparse group lasso</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix}, shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples.</span>
+
+<span class="sd">        y : array-like, shape (n_samples,)</span>
+<span class="sd">            The target values (class labels in classification, real numbers in</span>
+<span class="sd">            regression).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict confidence scores for samples.</span>
+
+<span class="sd">        The confidence score for a sample is the signed distance of that</span>
+<span class="sd">        sample to the hyperplane.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like or sparse matrix, shape (n_samples, n_features)</span>
+<span class="sd">            Samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array, shape=(n_samples,) if n_classes == 2 else (n_samples, n_classes)</span>
+<span class="sd">            Confidence scores per (sample, class) combination. In the binary</span>
+<span class="sd">            case, confidence score for self.classes_[1] where &gt;0 means this</span>
+<span class="sd">            class would be predicted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csr&quot;</span><span class="p">)</span>
+
+        <span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;X has </span><span class="si">%d</span><span class="s2"> features per sample; expecting </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_features</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">safe_sparse_dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span>
+        <span class="k">return</span> <span class="n">scores</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class labels for samples in X.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array_like or sparse matrix, shape (n_samples, n_features)</span>
+<span class="sd">            Samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        C : array, shape [n_samples]</span>
+<span class="sd">            Predicted class label per sample.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Probability estimates.</span>
+
+<span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
+
+<span class="sd">        Else use a one-vs-rest approach, i.e calculate the probability of</span>
+<span class="sd">        each class assuming it to be positive using the logistic function.</span>
+<span class="sd">        and normalize these values across all the classes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Vector to be scored, where `n_samples` is the number of samples and</span>
+<span class="sd">            `n_features` is the number of features.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        T : array-like of shape (n_samples, n_classes)</span>
+<span class="sd">            Returns the probability of the sample for each class in the model,</span>
+<span class="sd">            where classes are ordered as they are in ``self.classes_``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_predict_proba_lr</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict logarithm of probability estimates.</span>
+
+<span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Vector to be scored, where `n_samples` is the number of samples and</span>
+<span class="sd">            `n_features` is the number of features.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        T : array-like of shape (n_samples, n_classes)</span>
+<span class="sd">            Returns the log-probability of the sample for each class in the</span>
+<span class="sd">            model, where classes are ordered as they are in ``self.classes_``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;binary_only&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;requires_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<span class="k">def</span> <span class="nf">logistic_sgl_path</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale_l2_by</span><span class="o">=</span><span class="s2">&quot;group_length&quot;</span><span class="p">,</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">n_alphas</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">alphas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">Xy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute a Logistic SGL model for a list of regularization parameters.</span>
+
+<span class="sd">    This is an implementation that uses the result of the previous model</span>
+<span class="sd">    to speed up computations along the regularization path, making it faster</span>
+<span class="sd">    than calling LogisticSGL for the different parameters without warm start.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+<span class="sd">        Training data. Pass directly as Fortran-contiguous data to avoid</span>
+<span class="sd">        unnecessary memory duplication.</span>
+
+<span class="sd">    y : {array-like, sparse matrix} of shape (n_samples,)</span>
+<span class="sd">        Target values.</span>
+
+<span class="sd">    l1_ratio : float, default=0.5</span>
+<span class="sd">        Number between 0 and 1 passed to SGL estimator (scaling between the</span>
+<span class="sd">        group lasso and lasso penalties). ``l1_ratio=1`` corresponds to the</span>
+<span class="sd">        Lasso.</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    scale_l2_by : [&quot;group_length&quot;, None], default=&quot;group_length&quot;</span>
+<span class="sd">        Scaling technique for the group-wise L2 penalty.</span>
+<span class="sd">        By default, ``scale_l2_by=&quot;group_length`` and the L2 penalty is</span>
+<span class="sd">        scaled by the square root of the group length so that each variable</span>
+<span class="sd">        has the same effect on the penalty. This may not be appropriate for</span>
+<span class="sd">        one-hot encoded features and ``scale_l2_by=None`` would be more</span>
+<span class="sd">        appropriate for that case. ``scale_l2_by=None`` will also reproduce</span>
+<span class="sd">        ElasticNet results when all features belong to one group.</span>
+
+<span class="sd">    eps : float, default=1e-3</span>
+<span class="sd">        Length of the path. ``eps=1e-3`` means that</span>
+<span class="sd">        ``alpha_min / alpha_max = 1e-3``.</span>
+
+<span class="sd">    n_alphas : int, default=100</span>
+<span class="sd">        Number of alphas along the regularization path.</span>
+
+<span class="sd">    alphas : ndarray, default=None</span>
+<span class="sd">        List of alphas where to compute the models.</span>
+<span class="sd">        If None alphas are set automatically.</span>
+
+<span class="sd">    Xy : array-like of shape (n_features,), default=None</span>
+<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed.</span>
+
+<span class="sd">    normalize : bool, default=False</span>
+<span class="sd">        This parameter is ignored when ``fit_intercept`` is set to False.</span>
+<span class="sd">        If True, the regressors X will be normalized before regression by</span>
+<span class="sd">        subtracting the mean and dividing by the l2-norm.</span>
+<span class="sd">        If you wish to standardize, please use</span>
+<span class="sd">        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
+<span class="sd">        on an estimator with ``normalize=False``.</span>
+
+<span class="sd">    copy_X : bool, default=True</span>
+<span class="sd">        If ``True``, X will be copied; else, it may be overwritten.</span>
+
+<span class="sd">    verbose : bool or int, default=False</span>
+<span class="sd">        Amount of verbosity.</span>
+
+<span class="sd">    check_input : bool, default=True</span>
+<span class="sd">        Skip input validation checks, assuming there are handled by the</span>
+<span class="sd">        caller when check_input=False.</span>
+
+<span class="sd">    **params : kwargs</span>
+<span class="sd">        Keyword arguments passed to the LogisticSGL estimator</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)</span>
+<span class="sd">        List of coefficients for the Logistic Regression model. If</span>
+<span class="sd">        fit_intercept is set to True then the second dimension will be</span>
+<span class="sd">        n_features + 1, where the last item represents the intercept.</span>
+
+<span class="sd">    alphas : ndarray</span>
+<span class="sd">        Grid of alphas used for cross-validation.</span>
+
+<span class="sd">    n_iter : array of shape (n_alphas,)</span>
+<span class="sd">        Actual number of iteration for each alpha.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Preprocessing.</span>
+    <span class="k">if</span> <span class="n">check_input</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csc&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span>
+            <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="n">copy_X</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csc&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">Xy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Xy should be a 1d contiguous array</span>
+            <span class="n">Xy</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+                <span class="n">Xy</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="n">fit_intercept</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fit_intercept&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classes</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Multiclass classification is not currently implemented. We suggest &quot;</span>
+            <span class="s2">&quot;using the `sklearn.multiclass.OneVsRestClassifier` to wrap the &quot;</span>
+            <span class="s2">&quot;`LogisticSGL` or `LogisticSGLCV` estimators.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">_alpha_grid</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">Xy</span><span class="o">=</span><span class="n">Xy</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+            <span class="n">scale_l2_by</span><span class="o">=</span><span class="n">scale_l2_by</span><span class="p">,</span>
+            <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
+            <span class="n">fit_intercept</span><span class="o">=</span><span class="n">fit_intercept</span><span class="p">,</span>
+            <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+            <span class="n">n_alphas</span><span class="o">=</span><span class="n">n_alphas</span><span class="p">,</span>
+            <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
+            <span class="n">copy_X</span><span class="o">=</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">LogisticSGL</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">alphas</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># make sure alphas are properly ordered</span>
+
+    <span class="n">n_alphas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">)</span>
+    <span class="n">tol</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tol&quot;</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)</span>
+    <span class="n">max_iter</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_iter&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">n_iters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_alphas</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fit_intercept</span><span class="p">:</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_features</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LogisticSGL</span><span class="p">(</span>
+        <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+        <span class="n">scale_l2_by</span><span class="o">=</span><span class="n">scale_l2_by</span><span class="p">,</span>
+        <span class="n">fit_intercept</span><span class="o">=</span><span class="n">fit_intercept</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">suppress_solver_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_solver_trace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">alpha_sequence</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Reg path&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">n_alphas</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alpha_sequence</span> <span class="o">=</span> <span class="n">alphas</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alpha_sequence</span><span class="p">):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fit_intercept</span><span class="p">:</span>
+            <span class="n">coefs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">coefs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+
+        <span class="n">n_iters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path: </span><span class="si">%03i</span><span class="s2"> out of </span><span class="si">%03i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">n_iters</span>
+
+
+<span class="c1"># helper function for LogisticSGLCV</span>
+<span class="k">def</span> <span class="nf">logistic_sgl_scoring_path</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">train</span><span class="p">,</span>
+    <span class="n">test</span><span class="p">,</span>
+    <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale_l2_by</span><span class="o">=</span><span class="s2">&quot;group_length&quot;</span><span class="p">,</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">n_alphas</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">alphas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">Xy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes scores across logistic SGL path</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+<span class="sd">        Training data. Pass directly as Fortran-contiguous data to avoid</span>
+<span class="sd">        unnecessary memory duplication.</span>
+
+<span class="sd">    y : {array-like, sparse matrix} of shape (n_samples,)</span>
+<span class="sd">        Target values.</span>
+
+<span class="sd">    train : list of indices</span>
+<span class="sd">        The indices of the train set.</span>
+
+<span class="sd">    test : list of indices</span>
+<span class="sd">        The indices of the test set.</span>
+
+<span class="sd">    l1_ratio : float, default=0.5</span>
+<span class="sd">        Number between 0 and 1 passed to SGL estimator (scaling between the</span>
+<span class="sd">        group lasso and lasso penalties). ``l1_ratio=1`` corresponds to the</span>
+<span class="sd">        Lasso.</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    scale_l2_by : [&quot;group_length&quot;, None], default=&quot;group_length&quot;</span>
+<span class="sd">        Scaling technique for the group-wise L2 penalty.</span>
+<span class="sd">        By default, ``scale_l2_by=&quot;group_length`` and the L2 penalty is</span>
+<span class="sd">        scaled by the square root of the group length so that each variable</span>
+<span class="sd">        has the same effect on the penalty. This may not be appropriate for</span>
+<span class="sd">        one-hot encoded features and ``scale_l2_by=None`` would be more</span>
+<span class="sd">        appropriate for that case. ``scale_l2_by=None`` will also reproduce</span>
+<span class="sd">        ElasticNet results when all features belong to one group.</span>
+
+<span class="sd">    eps : float, default=1e-3</span>
+<span class="sd">        Length of the path. ``eps=1e-3`` means that</span>
+<span class="sd">        ``alpha_min / alpha_max = 1e-3``.</span>
+
+<span class="sd">    n_alphas : int, default=100</span>
+<span class="sd">        Number of alphas along the regularization path.</span>
+
+<span class="sd">    alphas : ndarray, default=None</span>
+<span class="sd">        List of alphas where to compute the models.</span>
+<span class="sd">        If None alphas are set automatically.</span>
+
+<span class="sd">    Xy : array-like of shape (n_features,), default=None</span>
+<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed.</span>
+
+<span class="sd">    normalize : bool, default=False</span>
+<span class="sd">        This parameter is ignored when ``fit_intercept`` is set to False.</span>
+<span class="sd">        If True, the regressors X will be normalized before regression by</span>
+<span class="sd">        subtracting the mean and dividing by the l2-norm.</span>
+<span class="sd">        If you wish to standardize, please use</span>
+<span class="sd">        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
+<span class="sd">        on an estimator with ``normalize=False``.</span>
+
+<span class="sd">    copy_X : bool, default=True</span>
+<span class="sd">        If ``True``, X will be copied; else, it may be overwritten.</span>
+
+<span class="sd">    verbose : bool or int, default=False</span>
+<span class="sd">        Amount of verbosity.</span>
+
+<span class="sd">    check_input : bool, default=True</span>
+<span class="sd">        Skip input validation checks, assuming there are handled by the</span>
+<span class="sd">        caller when check_input=False.</span>
+
+<span class="sd">    scoring : callable, default=None</span>
+<span class="sd">        A string (see sklearn model evaluation documentation) or a scorer</span>
+<span class="sd">        callable object / function with signature ``scorer(estimator, X, y)``.</span>
+<span class="sd">        For a list of scoring functions that can be used, look at</span>
+<span class="sd">        `sklearn.metrics`. The default scoring option used is accuracy_score.</span>
+
+<span class="sd">    **params : kwargs</span>
+<span class="sd">        Keyword arguments passed to the SGL estimator</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)</span>
+<span class="sd">        List of coefficients for the Logistic Regression model. If</span>
+<span class="sd">        fit_intercept is set to True then the second dimension will be</span>
+<span class="sd">        n_features + 1, where the last item represents the intercept.</span>
+
+<span class="sd">    alphas : ndarray</span>
+<span class="sd">        Grid of alphas used for cross-validation.</span>
+
+<span class="sd">    scores : ndarray of shape (n_alphas,)</span>
+<span class="sd">        Scores obtained for each alpha.</span>
+
+<span class="sd">    n_iter : ndarray of shape(n_alphas,)</span>
+<span class="sd">        Actual number of iteration for each Cs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
+    <span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
+
+    <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">logistic_sgl_path</span><span class="p">(</span>
+        <span class="n">X_train</span><span class="p">,</span>
+        <span class="n">y_train</span><span class="p">,</span>
+        <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+        <span class="n">scale_l2_by</span><span class="o">=</span><span class="n">scale_l2_by</span><span class="p">,</span>
+        <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+        <span class="n">n_alphas</span><span class="o">=</span><span class="n">n_alphas</span><span class="p">,</span>
+        <span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span>
+        <span class="n">Xy</span><span class="o">=</span><span class="n">Xy</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
+        <span class="n">copy_X</span><span class="o">=</span><span class="n">copy_X</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">check_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">fit_intercept</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fit_intercept&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">max_iter</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_iter&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">tol</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tol&quot;</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LogisticSGL</span><span class="p">(</span>
+        <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+        <span class="n">scale_l2_by</span><span class="o">=</span><span class="n">scale_l2_by</span><span class="p">,</span>
+        <span class="n">fit_intercept</span><span class="o">=</span><span class="n">fit_intercept</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">suppress_solver_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_solver_trace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># The score method of LogisticSGL has a classes_ attribute</span>
+    <span class="c1"># that is assigned during fit(). We don&#39;t call fit here so</span>
+    <span class="c1"># we must assign it first</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">scoring</span> <span class="o">=</span> <span class="n">get_scorer</span><span class="p">(</span><span class="n">scoring</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">coefs</span><span class="o">.</span><span class="n">T</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fit_intercept</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="n">scoring</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scoring</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="n">n_iter</span>
+
+
+<span class="c1"># TODO: Test alpha_grid with X^T dot logit(y) to see if it works</span>
+<div class="viewcode-block" id="LogisticSGLCV"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGLCV">[docs]</a><span class="nd">@registered</span>
+<span class="k">class</span> <span class="nc">LogisticSGLCV</span><span class="p">(</span><span class="n">LogisticSGL</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for iterative Logistic SGL model fitting along a regularization path</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    l1_ratio : float or list of float, default=1.0</span>
+<span class="sd">        float between 0 and 1 passed to SGL (scaling between group lasso and</span>
+<span class="sd">        lasso penalties). For ``l1_ratio = 0`` the penalty is the group lasso</span>
+<span class="sd">        penalty. For ``l1_ratio = 1`` it is the lasso penalty. For ``0 &lt;</span>
+<span class="sd">        l1_ratio &lt; 1``, the penalty is a combination of group lasso and</span>
+<span class="sd">        lasso. This parameter can be a list, in which case the different</span>
+<span class="sd">        values are tested by cross-validation and the one giving the best</span>
+<span class="sd">        prediction score is used. Note that a good choice of list of values</span>
+<span class="sd">        will depend on the problem. For problems where we expect strong</span>
+<span class="sd">        overall sparsity and would like to encourage grouping, put more</span>
+<span class="sd">        values close to 1 (i.e. Lasso). In contrast, if we expect strong</span>
+<span class="sd">        group-wise sparsity, but only mild sparsity within groups, put more</span>
+<span class="sd">        values close to 0 (i.e. group lasso).</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group. We set groups in ``__init__`` so</span>
+<span class="sd">        that it can be reused in model selection and CV routines.</span>
+
+<span class="sd">    scale_l2_by : [&quot;group_length&quot;, None], default=&quot;group_length&quot;</span>
+<span class="sd">        Scaling technique for the group-wise L2 penalty.</span>
+<span class="sd">        By default, ``scale_l2_by=&quot;group_length`` and the L2 penalty is</span>
+<span class="sd">        scaled by the square root of the group length so that each variable</span>
+<span class="sd">        has the same effect on the penalty. This may not be appropriate for</span>
+<span class="sd">        one-hot encoded features and ``scale_l2_by=None`` would be more</span>
+<span class="sd">        appropriate for that case. ``scale_l2_by=None`` will also reproduce</span>
+<span class="sd">        ElasticNet results when all features belong to one group.</span>
+
+<span class="sd">    eps : float, default=1e-3</span>
+<span class="sd">        Length of the path. ``eps=1e-3`` means that</span>
+<span class="sd">        ``alpha_min / alpha_max = 1e-3``.</span>
+
+<span class="sd">    n_alphas : int, default=100</span>
+<span class="sd">        Number of alphas along the regularization path, used for each l1_ratio.</span>
+
+<span class="sd">    alphas : ndarray, default=None</span>
+<span class="sd">        List of alphas where to compute the models.</span>
+<span class="sd">        If None alphas are set automatically</span>
+
+<span class="sd">    fit_intercept : bool, default=True</span>
+<span class="sd">        whether to calculate the intercept for this model. If set</span>
+<span class="sd">        to false, no intercept will be used in calculations</span>
+<span class="sd">        (i.e. data is expected to be centered).</span>
+
+<span class="sd">    normalize : bool, default=False</span>
+<span class="sd">        This parameter is ignored when ``fit_intercept`` is set to False.</span>
+<span class="sd">        If True, the regressors X will be normalized before regression by</span>
+<span class="sd">        subtracting the mean and dividing by the l2-norm.</span>
+<span class="sd">        If you wish to standardize, please use</span>
+<span class="sd">        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
+<span class="sd">        on an estimator with ``normalize=False``.</span>
+
+<span class="sd">    max_iter : int, default=1000</span>
+<span class="sd">        The maximum number of iterations</span>
+
+<span class="sd">    tol : float, default=1e-7</span>
+<span class="sd">        The tolerance for the SGL solver</span>
+
+<span class="sd">    scoring : callable, default=None</span>
+<span class="sd">        A string (see sklearn model evaluation documentation) or a scorer</span>
+<span class="sd">        callable object / function with signature ``scorer(estimator, X, y)``.</span>
+<span class="sd">        For a list of scoring functions that can be used, look at</span>
+<span class="sd">        `sklearn.metrics`. The default scoring option used is accuracy_score.</span>
+
+<span class="sd">    cv : int, cross-validation generator or iterable, default=None</span>
+<span class="sd">        Determines the cross-validation splitting strategy.</span>
+<span class="sd">        Possible inputs for cv are:</span>
+
+<span class="sd">        - None, to use the default 5-fold cross-validation,</span>
+<span class="sd">        - int, to specify the number of folds.</span>
+<span class="sd">        - an sklearn `CV splitter &lt;https://scikit-learn.org/stable/glossary.html#term-cv-splitter&gt;`_,</span>
+<span class="sd">        - An iterable yielding (train, test) splits as arrays of indices.</span>
+
+<span class="sd">        For int/None inputs, :class:`KFold` is used.</span>
+
+<span class="sd">        Refer to the scikit-learn User Guide for the various</span>
+<span class="sd">        cross-validation strategies that can be used here.</span>
+
+<span class="sd">    copy_X : bool, default=True</span>
+<span class="sd">        If ``True``, X will be copied; else, it may be overwritten.</span>
+
+<span class="sd">    verbose : bool or int, default=False</span>
+<span class="sd">        Amount of verbosity.</span>
+
+<span class="sd">    n_jobs : int, default=None</span>
+<span class="sd">        Number of CPUs to use during the cross validation.</span>
+<span class="sd">        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">        ``-1`` means using all processors.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha_ : float</span>
+<span class="sd">        The amount of penalization chosen by cross validation</span>
+
+<span class="sd">    l1_ratio_ : float</span>
+<span class="sd">        The compromise between l1 and l2 penalization chosen by</span>
+<span class="sd">        cross validation</span>
+
+<span class="sd">    classes_ : ndarray of shape (n_classes, )</span>
+<span class="sd">        A list of class labels known to the classifier.</span>
+
+<span class="sd">    coef_ : array of shape (n_features,)</span>
+<span class="sd">        Estimated coefficients for the linear predictor (`X @ coef_ +</span>
+<span class="sd">        intercept_`).</span>
+
+<span class="sd">    intercept_ : float</span>
+<span class="sd">        Intercept (a.k.a. bias) added to linear predictor.</span>
+
+<span class="sd">    scoring_path_ : ndarray of shape (n_l1_ratio, n_alpha, n_folds)</span>
+<span class="sd">        Classification score for the test set on each fold, varying l1_ratio and</span>
+<span class="sd">        alpha.</span>
+
+<span class="sd">    alphas_ : ndarray of shape (n_alphas,) or (n_l1_ratio, n_alphas)</span>
+<span class="sd">        The grid of alphas used for fitting, for each l1_ratio.</span>
+
+<span class="sd">    n_iter_ : int</span>
+<span class="sd">        number of iterations run by the proximal gradient descent solver to</span>
+<span class="sd">        reach the specified tolerance for the optimal alpha.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    logistic_sgl_path</span>
+<span class="sd">    LogisticSGL</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">scale_l2_by</span><span class="o">=</span><span class="s2">&quot;group_length&quot;</span><span class="p">,</span>
+        <span class="n">eps</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">n_alphas</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">alphas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_l2_by</span> <span class="o">=</span> <span class="n">scale_l2_by</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_alphas</span> <span class="o">=</span> <span class="n">n_alphas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">=</span> <span class="n">alphas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span> <span class="o">=</span> <span class="n">fit_intercept</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">scoring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model</span>
+
+<span class="sd">        Fit is on grid of alphas and best alpha estimated by cross-validation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+<span class="sd">            Training data. Pass directly as Fortran-contiguous data</span>
+<span class="sd">            to avoid unnecessary memory duplication. If y is mono-output,</span>
+<span class="sd">            X can be sparse.</span>
+
+<span class="sd">        y : array-like of shape (n_samples,) or (n_samples, n_targets)</span>
+<span class="sd">            Target values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># This makes sure that there is no duplication in memory.</span>
+        <span class="c1"># Dealing right with copy_X is important in the following:</span>
+        <span class="c1"># Multiple functions touch X and subsamples of X and can induce a</span>
+        <span class="c1"># lot of duplication of memory</span>
+        <span class="n">copy_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span>
+
+        <span class="n">check_y_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">sparse</span><span class="o">.</span><span class="n">isspmatrix</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="c1"># Keep a reference to X</span>
+            <span class="n">reference_to_old_X</span> <span class="o">=</span> <span class="n">X</span>
+            <span class="c1"># Let us not impose fortran ordering so far: it is</span>
+            <span class="c1"># not useful for the cross-validation loop and will be done</span>
+            <span class="c1"># by the model fitting itself</span>
+
+            <span class="c1"># Need to validate separately here.</span>
+            <span class="c1"># We can&#39;t pass multi_ouput=True because that would allow y to be</span>
+            <span class="c1"># csr. We also want to allow y to be 64 or 32 but check_X_y only</span>
+            <span class="c1"># allows to convert for 64.</span>
+            <span class="n">check_X_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csc&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">validate_separately</span><span class="o">=</span><span class="p">(</span><span class="n">check_X_params</span><span class="p">,</span> <span class="n">check_y_params</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">sparse</span><span class="o">.</span><span class="n">isspmatrix</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">reference_to_old_X</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">may_share_memory</span><span class="p">(</span>
+                    <span class="n">reference_to_old_X</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">data</span>
+                <span class="p">):</span>
+                    <span class="c1"># X is a sparse matrix and has been copied</span>
+                    <span class="n">copy_X</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">may_share_memory</span><span class="p">(</span><span class="n">reference_to_old_X</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+                <span class="c1"># X has been copied</span>
+                <span class="n">copy_X</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">del</span> <span class="n">reference_to_old_X</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Need to validate separately here.</span>
+            <span class="c1"># We can&#39;t pass multi_ouput=True because that would allow y to be</span>
+            <span class="c1"># csr. We also want to allow y to be 64 or 32 but check_X_y only</span>
+            <span class="c1"># allows to convert for 64.</span>
+            <span class="n">check_X_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csc&quot;</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span>
+                <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">,</span>
+                <span class="n">copy</span><span class="o">=</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">validate_separately</span><span class="o">=</span><span class="p">(</span><span class="n">check_X_params</span><span class="p">,</span> <span class="n">check_y_params</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">copy_X</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;y has 0 samples: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">check_classification_targets</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Encode for string labels</span>
+        <span class="n">label_encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># The original class labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">classes_</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LogisticSGL</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;X and y have inconsistent dimensions (</span><span class="si">%d</span><span class="s2"> != </span><span class="si">%d</span><span class="s2">)&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># All LogisticSGLCV parameters except &quot;cv&quot; and &quot;n_jobs&quot; are acceptable</span>
+        <span class="n">path_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="n">l1_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">path_params</span><span class="p">[</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">])</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span>
+        <span class="n">n_l1_ratio</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">_alpha_grid</span><span class="p">(</span>
+                    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                    <span class="n">Xy</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+                    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+                    <span class="n">scale_l2_by</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_l2_by</span><span class="p">,</span>
+                    <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
+                    <span class="n">fit_intercept</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span><span class="p">,</span>
+                    <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span>
+                    <span class="n">n_alphas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_alphas</span><span class="p">,</span>
+                    <span class="n">normalize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">,</span>
+                    <span class="n">copy_X</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">l1_ratio</span> <span class="ow">in</span> <span class="n">l1_ratios</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Making sure alphas is properly ordered.</span>
+            <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">alphas</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># We want n_alphas to be the number of alphas used for each l1_ratio.</span>
+        <span class="n">n_alphas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;n_alphas&quot;</span><span class="p">:</span> <span class="n">n_alphas</span><span class="p">})</span>
+
+        <span class="c1"># We are not computing in parallel, we can modify X</span>
+        <span class="c1"># inplace in the folds</span>
+        <span class="k">if</span> <span class="n">effective_n_jobs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">path_params</span><span class="p">[</span><span class="s2">&quot;copy_X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">path_params</span><span class="p">[</span><span class="s2">&quot;verbose&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># init cross-validation generator</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">check_cv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">)</span>
+
+        <span class="c1"># Compute path for all folds and compute MSE to get the best alpha</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cv&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="n">groups</span><span class="p">})</span>
+
+        <span class="c1"># We do a double for loop folded in one, in order to be able to</span>
+        <span class="c1"># iterate in parallel on l1_ratio and folds</span>
+        <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">logistic_sgl_scoring_path</span><span class="p">)(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span>
+                <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+                <span class="n">l1_ratio</span><span class="o">=</span><span class="n">this_l1_ratio</span><span class="p">,</span>
+                <span class="n">alphas</span><span class="o">=</span><span class="n">this_alphas</span><span class="p">,</span>
+                <span class="n">Xy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">return_n_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">path_params</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">this_l1_ratio</span><span class="p">,</span> <span class="n">this_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">folds</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">-</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">parallel_verbosity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+
+        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">ProgressParallel</span><span class="p">(</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
+            <span class="n">use_tqdm</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">),</span>
+            <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;L1 ratios * CV folds&quot;</span><span class="p">,</span>
+            <span class="n">total</span><span class="o">=</span><span class="n">n_l1_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">_joblib_parallel_args</span><span class="p">(</span><span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">),</span>
+        <span class="p">)(</span><span class="n">jobs</span><span class="p">)</span>
+
+        <span class="n">coefs_paths</span><span class="p">,</span> <span class="n">alphas_paths</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">n_iters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">score_paths</span><span class="p">)</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">alphas_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">alphas_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">n_iters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_iters</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">coefs_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">coefs_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">))</span>
+
+        <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scoring_path_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">l1_alphas</span><span class="p">,</span> <span class="n">score_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">mean_score</span><span class="p">):</span>
+            <span class="n">i_best_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">score_alphas</span><span class="p">)</span>
+            <span class="n">this_best_score</span> <span class="o">=</span> <span class="n">score_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">this_best_score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
+                <span class="n">best_alpha</span> <span class="o">=</span> <span class="n">l1_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
+                <span class="n">best_l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
+                <span class="n">best_score</span> <span class="o">=</span> <span class="n">this_best_score</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio_</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="n">best_alpha</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n_l1_ratio</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Remove duplicate alphas in case alphas is provided.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Refit the model with the parameters selected</span>
+        <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">value</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">common_params</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">best_alpha</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the score using the `scoring` option on the given</span>
+<span class="sd">        test data and labels.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            Test samples.</span>
+
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            True labels for X.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score : float</span>
+<span class="sd">            Score of self.predict(X) wrt. y.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scoring</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="ow">or</span> <span class="s2">&quot;accuracy&quot;</span>
+        <span class="n">scoring</span> <span class="o">=</span> <span class="n">get_scorer</span><span class="p">(</span><span class="n">scoring</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">chosen_features_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An index array of chosen features&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sparsity_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A boolean array indicating which features survived regularization&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">!=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">like_nonzero_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A boolean array indicating which features are zero or close to zero</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rtol : float</span>
+<span class="sd">            Relative tolerance. Any features that are larger in magnitude</span>
+<span class="sd">            than ``rtol`` times the mean coefficient value are considered</span>
+<span class="sd">            nonzero-like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mean_abs_coef</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">rtol</span> <span class="o">*</span> <span class="n">mean_abs_coef</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">chosen_groups_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A set of the group IDs that survived regularization&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group_mask</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">bool</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span>
+            <span class="p">]</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">group_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove columns corresponding to zeroed-out coefficients&quot;&quot;&quot;</span>
+        <span class="c1"># Check is fit had been called</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;is_fitted_&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Input validation</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Check that the input is of the same shape as the one passed</span>
+        <span class="c1"># during fit.</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shape of input is different from what was seen in `fit`&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparsity_mask_</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;binary_only&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;requires_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Adam Richie-Halford
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
