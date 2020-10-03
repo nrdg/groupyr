@@ -371,7 +371,7 @@ def sgl_path(
     verbose=False,
     return_n_iter=False,
     check_input=True,
-    **params
+    **params,
 ):
     """
     Compute sparse group lasso path
@@ -889,7 +889,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             use_tqdm=bool(self.verbose),
             desc="L1 ratios * CV folds",
             total=n_l1_ratio * len(folds),
-            **_joblib_parallel_args(prefer="threads")
+            **_joblib_parallel_args(prefer="threads"),
         )(jobs)
 
         mse_paths = np.reshape(mse_paths, (n_l1_ratio, len(folds), -1))

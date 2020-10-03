@@ -8,8 +8,6 @@ sparse signal. The estimated important features are compared with the
 ground-truth.
 
 """
-print(__doc__)
-
 import numpy as np
 from matplotlib import pyplot as plt
 from groupyr import LogisticSGLCV
