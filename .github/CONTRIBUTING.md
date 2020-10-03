@@ -203,7 +203,7 @@ but those accepted fastest will follow a workflow similar to the following:
    A member of the development team will review your changes to confirm
    that they can be merged into the main code base.<br />
    Pull request titles should begin with a descriptive prefix
-   (for example, `ENH: Adding another template`):
+   (for example, `ENH: Adding another estimator class`):
 
    - `ENH`: enhancements or new features ([example][enh_ex])
    - `FIX`: bug fixes ([example][fix_ex])
