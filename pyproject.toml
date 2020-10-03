@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+[tools.setuptools_scm]
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+exclude = '''
+
+(
+  /(
+      \.eggs
+    | \.git
+    | \.github
+    | \.idea
+    | \.ipynb_checkpoints
+    | \.hg
+    | \.pytest_cache
+    | \.tox
+    | \.venv
+    | groupyr.egg-info
+    | doc
+    | build
+    | dist
+  )/
+  | foo.py  # also separately exclude a file named foo.py in the
+            # root of the project. This file doesn't exists but
+            # we leave this here as a hint to our future selves.
+)
+'''

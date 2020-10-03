@@ -166,7 +166,7 @@ but those accepted fastest will follow a workflow similar to the following:
    `Shell git fetch upstream git checkout master git merge upstream/master `
 
 1. **Install a development version of _groupyr_ so that your local changes are reflected in your local tests**<br />
-   You can install a development version of cloudknot by navigating to the root of your _groupyr_ repository and then typing
+   You can install a development version of _groupyr_ by navigating to the root of your _groupyr_ repository and then typing
 
    ```Shell
    pip install -e .[dev]
