@@ -37,26 +37,16 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
 :math:`\lambda` controls the strength of the regularization.
 
 .. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Getting Started
-
-   quick_start
-
-.. toctree::
    :maxdepth: 3
    :hidden:
-   :caption: Documentation
 
+   install
    user_guide
-   api
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Tutorial - Examples
-
    auto_examples/index
+   getting_help
+   api
+   contributing
+   *groupyr* on GitHub <https://github.com/richford/groupyr>
 
 `Getting started <quick_start.html>`_
 -------------------------------------

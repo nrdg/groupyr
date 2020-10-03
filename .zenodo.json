@@ -1,0 +1,35 @@
+{
+  "contributors": [
+    {
+      "affiliation": "The University of Washington",
+      "name": "Rokem, Ariel",
+      "orcid": "0000-0003-0679-1985",
+      "type": "Researcher"
+    },
+    {
+      "affiliation": "Stanford University",
+      "name": "Narayan, Manjari",
+      "orcid": "0000-0001-5348-270X",
+      "type": "Researcher"
+    }
+  ],
+  "creators": [
+    {
+      "affiliation": "The University of Washington",
+      "name": "Richie-Halford, Adam",
+      "orcid": "0000-0001-9276-9084"
+    }
+  ],
+  "description": "<p>groupyr is a Python library for regression and classification using the Sparse Group Lasso method.</p>",
+  "keywords": ["machine-learning", "regression", "regularization"],
+  "license": "BSD-3-Clause",
+  "related_identifiers": [
+    {
+      "identifier": "http://richford.github.io/groupyr",
+      "relation": "isPartOf",
+      "scheme": "url"
+    }
+  ],
+  "title": "groupyr: Sparse Group Lasso in Python",
+  "upload_type": "software"
+}
