@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     data = [" ".join(line.strip().split()[1:-1]) for line in lines if "%" in line]
 
-    # load zenodo from master
+    # load zenodo from main
     zenodo_file = Path(".zenodo.json")
     zenodo = json.loads(zenodo_file.read_text())
     zen_names = [

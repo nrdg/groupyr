@@ -33,6 +33,6 @@ done
 
 git add CHANGES.rst RELEASE.rst
 git commit -m "Update CHANGES.rst and RELEASE.rst"
-git push "${REPO}" master
+git push "${REPO}" main
 git tag "${VERSION}" -F RELEASE.rst
 git push "${REPO}" "${VERSION}"

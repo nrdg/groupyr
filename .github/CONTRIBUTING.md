@@ -162,8 +162,13 @@ but those accepted fastest will follow a workflow similar to the following:
    ```
 
    Make sure to [keep your fork up to date][link_updateupstreamwiki] with the upstream repository.<br />
-   For example, to update your master branch on your local cloned repository:
-   `Shell git fetch upstream git checkout master git merge upstream/master `
+   For example, to update your main branch on your local cloned repository:
+
+   ```Shell
+   git fetch upstream
+   git checkout main
+   git merge upstream/main
+   ```
 
 1. **Install a development version of _groupyr_ so that your local changes are reflected in your local tests**<br />
    You can install a development version of _groupyr_ by navigating to the root of your _groupyr_ repository and then typing
@@ -177,7 +182,7 @@ but those accepted fastest will follow a workflow similar to the following:
 
    ```Shell
    git fetch upstream  # Always start with an updated upstream
-   git checkout -b fix/bug-1222 upstream/master
+   git checkout -b fix/bug-1222 upstream/main
    ```
 
    Please consider using appropriate branch names as those listed below, and mind that some of them
@@ -253,7 +258,7 @@ acknowledge that any contributions will be licensed under the same terms.
 
 _groupyr_ pushes a development version to
 [Test-PyPI](https://test.pypi.org/) on every pull request merged into
-the master branch. To release a new version of _groupyr_, use the `publish_release.sh` script from the root directory, i.e.:
+the main branch. To release a new version of _groupyr_, use the `publish_release.sh` script from the root directory, i.e.:
 
 ```Shell
 .maintenance/publish_release.sh <version_number>
