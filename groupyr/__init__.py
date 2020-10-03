@@ -2,7 +2,7 @@ from . import datasets  # noqa
 from . import utils  # noqa
 from .sgl import *  # noqa
 from .logistic import *  # noqa
-from ._version import __version__  # noqa
+from ._version import version as __version__  # noqa
 
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
