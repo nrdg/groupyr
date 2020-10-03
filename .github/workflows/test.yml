@@ -29,7 +29,10 @@ jobs:
           black --check .
       - name: Test
         run: |
-          make test
+          mkdir ~/for_test
+          cp .coveragerc ~/for_test/.coveragerc
+          cd ~/for_test
+          pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
       - name: Coveralls Parallel
         run: |
           coveralls
