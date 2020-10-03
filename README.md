@@ -6,8 +6,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/richford/groupyr/badge.svg?branch=main)](https://coveralls.io/github/richford/groupyr?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-
-<!-- [![DOI](https://zenodo.org/badge/102051437.svg)](https://zenodo.org/badge/latestdoi/102051437) -->
+[![DOI](https://zenodo.org/badge/300933639.svg)](https://zenodo.org/badge/latestdoi/300933639)
 
 _groupyr_ is a Python library for penalized regression of grouped covariates.
 This is the _groupyr_ development site. You can view the source code, file new issues, and contribute to _groupyr_'s development. If you just want to learn how to install and use _groupyr_, please look at the [_groupyr_ documentation](https://richford.github.io/groupyr/).
