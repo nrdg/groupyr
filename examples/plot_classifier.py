@@ -32,7 +32,7 @@ X, y, groups, idx = make_group_classification(
 _, n_features = X.shape
 
 model = LogisticSGLCV(
-    groups=groups, l1_ratio=[0.75, 0.85, 0.95], n_alphas=50, eps=1e-2, cv=3
+    groups=groups, l1_ratio=[0.80, 0.90], n_alphas=40, tol=1e-3, eps=1e-2, cv=3
 ).fit(X, y)
 
 plt.plot(
