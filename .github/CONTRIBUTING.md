@@ -139,7 +139,7 @@ but those accepted fastest will follow a workflow similar to the following:
    carry out.<br /> [This blog][link_pushpullblog] is a nice explanation of
    why putting this work in up front is so useful to everyone involved.
 
-1. **[Fork][link_fork] the [groupyr repository][groupyr] to your profile.**<br />
+1. **[Fork][link_fork] the [groupyr repository][link_groupyr] to your profile.**<br />
    This is now your own unique copy of _groupyr_.
    Changes here won't effect anyone else's work, so it's a safe space to
    explore edits to the code!
@@ -185,11 +185,15 @@ but those accepted fastest will follow a workflow similar to the following:
    git checkout -b fix/bug-1222 upstream/main
    ```
 
-   Please consider using appropriate branch names as those listed below, and mind that some of them
-   are special (e.g., `doc/` and `docs/`):
-   _ `fix/<some-identifier>`: for bugfixes
-   _ `enh/<feature-name>`: for new features \* `doc/<some-identifier>`: for documentation improvements.
-   You should name all your documentation branches with the prefix `doc/` or `docs/`
+   Please consider using appropriate branch names as those listed below:
+
+   | Branch name             | Use case                       |
+   | ----------------------- | ------------------------------ |
+   | `fix/<some-identifier>` | for bugfixes                   |
+   | `enh/<feature-name>`    | for new features               |
+   | `doc/<some-identifier>` | for documentation improvements |
+
+   You should name all your documentation branches with the prefix `doc/`
    as that will preempt triggering the full battery of continuous integration tests.
 
 1. **Make the changes you've discussed, following the [_groupyr_ coding style guide](#groupyr-coding-style-guide).**<br />
@@ -254,7 +258,7 @@ docstrings.
 _groupyr_ is licensed under the BSD license. By contributing to _groupyr_, you
 acknowledge that any contributions will be licensed under the same terms.
 
-## Reminder note for maintainers
+### Reminder note for maintainers
 
 _groupyr_ pushes a development version to
 [Test-PyPI](https://test.pypi.org/) on every pull request merged into
