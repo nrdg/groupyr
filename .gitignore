@@ -1,3 +1,6 @@
+# Temporary version file
+groupyr/_version.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -65,3 +68,6 @@ doc/generated/
 
 # PyBuilder
 target/
+
+# Mac OS files
+**.DS_Store
