@@ -1,6 +1,6 @@
 ![groupyr logo](https://raw.githubusercontent.com/richford/groupyr/main/doc/images/groupyr-logo-large.svg)
 
-<h2 align="center">_groupyr_: Sparse Group Lasso in Python</h2>
+# _groupyr_: Sparse Group Lasso in Python
 
 [![Build Status](https://github.com/richford/groupyr/workflows/build/badge.svg)](https://github.com/richford/groupyr/workflows/test/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/richford/groupyr/badge.svg?branch=main)](https://coveralls.io/github/richford/groupyr?branch=main)
