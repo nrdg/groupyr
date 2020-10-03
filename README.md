@@ -42,6 +42,5 @@ therefore borrows heavily from
 [scikit-learn](https://scikit-learn.org/stable/index.html). _groupyr_ relies
 on the [copt optimization library](http://openo.pt/copt/index.html) for its
 solver. The _groupyr_ logo is a flipped silhouette of an [image from J. E.
-Randall]
-(https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg)
-and is licensed [CC BY-SA] (https://creativecommons.org/licenses/by-sa/3.0).
+Randall](https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg)
+and is licensed [CC BY-SA](https://creativecommons.org/licenses/by-sa/3.0).
