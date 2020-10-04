@@ -2,7 +2,7 @@
 Contributing to *groupyr*
 #########################
 
-*groupyr* is an open-source software project. This means that you are welcome
+*Groupyr* is an open-source software project. This means that you are welcome
 to use it (see `LICENSE
 <https://github.com/richford/groupyr/blob/main/LICENSE>`_ for details).
 
