@@ -74,9 +74,22 @@ Citing groupyr
 If you use groupyr in a scientific publication, we would appreciate
 citations. 
 
-Richie-Halford, A., Narayan, M., and Rokem, A. `Groupyr: Sparse Group Lasso in Python`. DOI: TBD.
+Richie-Halford, A., Narayan, M., and Rokem, A.
+`Groupyr: Sparse Group Lasso in Python`.
+DOI:10.25080/Majora-4af1f417-001
 
-Bibtex entry TBD
+Bibtex entry::
+
+   @software{richie_halford_adam_2020_4064945,
+     author       = {Richie-Halford, Adam},
+     title        = {groupyr: Sparse Group Lasso in Python},
+     month        = oct,
+     year         = 2020,
+     publisher    = {Zenodo},
+     version      = {v0.1.1},
+     doi          = {10.5281/zenodo.4064945},
+     url          = {https://doi.org/10.5281/zenodo.4064945}
+   }
 
 Acknowledgements
 ----------------
