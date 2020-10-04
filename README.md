@@ -1,8 +1,8 @@
-![groupyr logo](https://raw.githubusercontent.com/richford/groupyr/main/doc/images/groupyr-logo-large.svg)
+![groupyr logo](https://raw.githubusercontent.com/richford/groupyr/main/doc/_static/groupyr-logo-large.svg)
 
 # _groupyr_: Sparse Group Lasso in Python
 
-[![Build Status](https://github.com/richford/groupyr/workflows/build/badge.svg)](https://github.com/richford/groupyr/workflows/test/badge.svg)
+[![Build Status](https://github.com/richford/groupyr/workflows/Test%20suite/badge.svg)](https://github.com/richford/groupyr/workflows/Test%20suite/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/richford/groupyr/badge.svg?branch=main)](https://coveralls.io/github/richford/groupyr?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
