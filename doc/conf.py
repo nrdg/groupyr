@@ -37,6 +37,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
+    "sphinx_rtd_theme",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
 ]
@@ -154,12 +155,12 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "images/groupyr-logo.svg"
+html_logo = "_static/groupyr-logo.svg"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "images/groupyr-logo.ico"
+html_favicon = "_static/groupyr-logo.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -236,7 +237,7 @@ latex_documents = [
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = "images/groupyr-logo.svg"
+latex_logo = "_static/groupyr-logo.svg"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
