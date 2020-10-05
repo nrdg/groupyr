@@ -5,15 +5,9 @@ from sklearn.datasets import make_classification, make_regression
 from sklearn.utils import check_random_state
 from sklearn.utils import shuffle as util_shuffle
 
-__all__ = []
+__all__ = ["make_group_classification", "make_group_regression"]
 
 
-def registered(fn):
-    __all__.append(fn.__name__)
-    return fn
-
-
-@registered
 def make_group_classification(
     n_samples=100,
     n_groups=20,
@@ -274,7 +268,6 @@ def make_group_classification(
         return X, y, groups
 
 
-@registered
 def make_group_regression(
     n_samples=100,
     n_groups=20,

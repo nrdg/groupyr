@@ -5,12 +5,7 @@ import numpy as np
 
 from itertools import compress
 
-__all__ = []
-
-
-def registered(fn):
-    __all__.append(fn.__name__)
-    return fn
+__all__ = ["SparseGroupL1"]
 
 
 def _soft_threshold(z, alpha):
@@ -45,7 +40,6 @@ def _soft_threshold(z, alpha):
     return np.fmax(z - alpha, 0) - np.fmax(-z - alpha, 0)
 
 
-@registered
 class SparseGroupL1(object):
     r"""Sparse group lasso penalty class for use with openopt/copt package.
 

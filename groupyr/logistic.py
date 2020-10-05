@@ -18,15 +18,9 @@ from ._base import SGLBaseEstimator
 from .sgl import _alpha_grid
 from .utils import check_groups, _ProgressParallel
 
-__all__ = []
+__all__ = ["LogisticSGL", "LogisticSGLCV"]
 
 
-def registered(fn):
-    __all__.append(fn.__name__)
-    return fn
-
-
-@registered
 class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
     """
     An sklearn compatible sparse group lasso classifier.
@@ -609,8 +603,6 @@ def logistic_sgl_scoring_path(
     return coefs, alphas, np.array(scores), n_iter
 
 
-# TODO: Test alpha_grid with X^T dot logit(y) to see if it works
-@registered
 class LogisticSGLCV(LogisticSGL):
     """Iterative Logistic SGL model fitting along a regularization path.
 
