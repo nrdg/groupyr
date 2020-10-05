@@ -214,14 +214,14 @@ but those accepted fastest will follow a workflow similar to the following:
    Pull request titles should begin with a descriptive prefix
    (for example, `ENH: Adding another estimator class`):
 
-   - `ENH`: enhancements or new features ([example][enh_ex])
-   - `FIX`: bug fixes ([example][fix_ex])
-   - `TST`: new or updated tests ([example][tst_ex])
-   - `DOC`: new or updated documentation ([example][doc_ex])
-   - `STY`: style changes ([example][sty_ex])
-   - `REF`: refactoring existing code ([example][ref_ex])
-   - `CI`: updates to continous integration infrastructure ([example][ci_ex])
-   - `MAINT`: general maintenance ([example][maint_ex])
+   - `ENH`: enhancements or new features ([example][ex_enh])
+   - `FIX`: bug fixes ([example][ex_fix])
+   - `TST`: new or updated tests ([example][ex_tst])
+   - `DOC`: new or updated documentation ([example][ex_doc])
+   - `STY`: style changes ([example][ex_sty])
+   - `REF`: refactoring existing code ([example][ex_ref])
+   - `CI`: updates to continous integration infrastructure ([example][ex_ci])
+   - `MAINT`: general maintenance ([example][ex_maint])
    - For works-in-progress, add the `WIP` tag in addition to the descriptive prefix.
      Pull-requests tagged with `WIP:` will not be merged until the tag is removed.
 
@@ -282,8 +282,9 @@ creating a release on GitHub.
     adapted based on its use in the README file for the
     [MetPy project](https://github.com/Unidata/MetPy).
 
-[ci_ex]: https://github.com/richford/groupyr/pull/8
-[doc_ex]: https://github.com/richford/groupyr/pull/10
+[ex_ci]: https://github.com/richford/groupyr/pull/8
+[ex_doc]: https://github.com/richford/groupyr/pull/10
+[ex_tst]: https://github.com/richford/groupyr/pull/11
 [link_add_commit_push]: https://help.github.com/articles/adding-a-file-to-a-repository-using-the-command-line
 [link_addremote]: https://help.github.com/articles/configuring-a-remote-for-a-fork
 [link_autofq]: https://autofq.org/

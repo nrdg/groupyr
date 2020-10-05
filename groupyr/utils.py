@@ -89,7 +89,7 @@ class _ProgressParallel(Parallel):
             return Parallel.__call__(self, *args, **kwargs)
 
     def print_progress(self):
-        if self._total is None:
+        if self._total is None:  # pragma: no cover
             self._pbar.total = self.n_dispatched_tasks
         self._pbar.n = self.n_completed_tasks
         self._pbar.refresh()
