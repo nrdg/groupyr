@@ -111,6 +111,7 @@ class SparseGroupL1(object):
         self.bias_index = bias_index
 
     def __call__(self, x):
+        """Return the Sparse L1 penalty."""
         penalty = (
             (1.0 - self.l1_ratio)
             * self.alpha
