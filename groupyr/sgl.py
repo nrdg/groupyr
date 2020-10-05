@@ -27,15 +27,9 @@ from ._base import SGLBaseEstimator
 from ._prox import _soft_threshold
 from .utils import check_groups, _ProgressParallel
 
-__all__ = []
+__all__ = ["SGL", "sgl_path", "SGLCV"]
 
 
-def registered(fn):
-    __all__.append(fn.__name__)
-    return fn
-
-
-@registered
 class SGL(SGLBaseEstimator, RegressorMixin, LinearModel):
     """An sklearn compatible sparse group lasso regressor.
 
@@ -349,7 +343,6 @@ def _alpha_grid(
     ]
 
 
-@registered
 def sgl_path(
     X,
     y,
@@ -553,7 +546,6 @@ def sgl_path(
     return alphas, coefs, dual_gaps
 
 
-@registered
 class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
     """Iterative SGL model fitting along a regularization path.
 

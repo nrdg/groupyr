@@ -26,11 +26,32 @@ def test_sgl_input_validation():
         SGL(l1_ratio=0.5, alpha=0.1, scale_l2_by="error").fit(X, y)
 
 
-def test_sgl_zero():
+def test_sgl_masks():
+    groups = [np.arange(5), np.arange(5, 10)]
+    model = SGL(groups=groups)
+    coefs_0 = np.concatenate([np.ones(5), np.zeros(5)])
+    model.coef_ = coefs_0
+    assert_array_almost_equal(model.chosen_features_, np.arange(5))
+    assert_array_almost_equal(model.sparsity_mask_, coefs_0 != 0)
+    assert_array_almost_equal(model.chosen_groups_, np.array([0]))
+
+    model.groups = None
+    assert_array_almost_equal(model.chosen_groups_, np.arange(5))
+
+    coefs_1 = np.concatenate([np.ones(5), np.ones(5) * 1e-7])
+    model.coef_ = coefs_1
+    assert_array_almost_equal(model.like_nonzero_mask_(rtol=2.1e-7), coefs_0 != 0)
+    assert all(model.like_nonzero_mask_(rtol=1e-8))  # nosec
+
+
+@pytest.mark.parametrize("suppress_warnings", [True, False])
+def test_sgl_zero(suppress_warnings):
     # Check that SGL can handle zero data without crashing
     X = [[0], [0], [0]]
     y = [0, 0, 0]
-    clf = SGL(l1_ratio=1.0, alpha=0.1).fit(X, y)
+    clf = SGL(l1_ratio=1.0, alpha=0.1, suppress_solver_warnings=suppress_warnings).fit(
+        X, y
+    )
     pred = clf.predict([[1], [2], [3]])
     assert_array_almost_equal(clf.coef_, [0])
     assert_array_almost_equal(pred, [0, 0, 0])

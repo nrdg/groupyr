@@ -20,13 +20,6 @@ from sklearn.utils.validation import (
 from ._prox import SparseGroupL1
 from .utils import check_groups
 
-__all__ = []
-
-
-def registered(fn):
-    __all__.append(fn.__name__)
-    return fn
-
 
 class SGLBaseEstimator(BaseEstimator, TransformerMixin):
     """
