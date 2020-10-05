@@ -31,10 +31,10 @@ ground-truth.
  .. code-block:: none
 
     Indices of ground-truth informative features:
-    [ 62  63  66  69  71  72  73  74  78  79 202 203 204 205 208 210 211 216
-     217 218 220 224 225 227 231 233 234 235 237 238]
+    [181 182 187 188 190 191 193 195 196 198 200 201 203 204 213 214 215 216
+     217 219 300 301 302 307 309 312 313 316 318 319]
     Indices of non-zero estimated coefs:
-    [ 62  66  72  73  79 234 235 237]
+    [181 182 188 190 191 204 216 217]
 
 
 
@@ -112,7 +112,7 @@ ground-truth.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  2.579 seconds)
+   **Total running time of the script:** ( 2 minutes  0.691 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_classifier.py:

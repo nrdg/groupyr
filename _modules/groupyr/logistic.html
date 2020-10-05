@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.2 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.1.3 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
             
           
@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*groupyr* on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*Groupyr* on GitHub</a></li>
 </ul>
 
             
@@ -165,9 +165,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for groupyr.logistic</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains logistic estimators based on the sparse group lasso</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Create logistic estimators based on the sparse group lasso.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span>
@@ -185,18 +183,12 @@
 
 <span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">SGLBaseEstimator</span>
 <span class="kn">from</span> <span class="nn">.sgl</span> <span class="kn">import</span> <span class="n">_alpha_grid</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span><span class="p">,</span> <span class="n">ProgressParallel</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span><span class="p">,</span> <span class="n">_ProgressParallel</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
-
-
-<span class="k">def</span> <span class="nf">registered</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">fn</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LogisticSGL&quot;</span><span class="p">,</span> <span class="s2">&quot;LogisticSGLCV&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="LogisticSGL"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGL">[docs]</a><span class="nd">@registered</span>
-<span class="k">class</span> <span class="nc">LogisticSGL</span><span class="p">(</span><span class="n">SGLBaseEstimator</span><span class="p">,</span> <span class="n">LinearClassifierMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="LogisticSGL"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGL">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGL</span><span class="p">(</span><span class="n">SGLBaseEstimator</span><span class="p">,</span> <span class="n">LinearClassifierMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An sklearn compatible sparse group lasso classifier.</span>
 
@@ -269,9 +261,6 @@
 <span class="sd">    n_iter_ : int</span>
 <span class="sd">        Actual number of iterations used in the solver.</span>
 
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1]  Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,</span>
@@ -282,7 +271,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
-        <span class="sd">&quot;&quot;&quot;Fit a linear model using the sparse group lasso</span>
+        <span class="sd">&quot;&quot;&quot;Fit a linear model using the sparse group lasso.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -301,8 +290,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Predict confidence scores for samples.</span>
+        <span class="sd">&quot;&quot;&quot;Predict confidence scores for samples.</span>
 
 <span class="sd">        The confidence score for a sample is the signed distance of that</span>
 <span class="sd">        sample to the hyperplane.</span>
@@ -333,8 +321,7 @@
         <span class="k">return</span> <span class="n">scores</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Predict class labels for samples in X.</span>
+        <span class="sd">&quot;&quot;&quot;Predict class labels for samples in X.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -355,8 +342,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Probability estimates.</span>
+        <span class="sd">&quot;&quot;&quot;Return classification probability estimates.</span>
 
 <span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
 
@@ -380,8 +366,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_predict_proba_lr</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Predict logarithm of probability estimates.</span>
+        <span class="sd">&quot;&quot;&quot;Predict logarithm of probability estimates.</span>
 
 <span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
 
@@ -627,7 +612,7 @@
     <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">params</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Computes scores across logistic SGL path</span>
+    <span class="sd">&quot;&quot;&quot;Compute scores across logistic SGL path.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -785,10 +770,8 @@
     <span class="k">return</span> <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="n">n_iter</span>
 
 
-<span class="c1"># TODO: Test alpha_grid with X^T dot logit(y) to see if it works</span>
-<div class="viewcode-block" id="LogisticSGLCV"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGLCV">[docs]</a><span class="nd">@registered</span>
-<span class="k">class</span> <span class="nc">LogisticSGLCV</span><span class="p">(</span><span class="n">LogisticSGL</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class for iterative Logistic SGL model fitting along a regularization path</span>
+<div class="viewcode-block" id="LogisticSGLCV"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGLCV">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGLCV</span><span class="p">(</span><span class="n">LogisticSGL</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Iterative Logistic SGL model fitting along a regularization path.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -915,7 +898,7 @@
 <span class="sd">        number of iterations run by the proximal gradient descent solver to</span>
 <span class="sd">        reach the specified tolerance for the optimal alpha.</span>
 
-<span class="sd">    See also</span>
+<span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    logistic_sgl_path</span>
 <span class="sd">    LogisticSGL</span>
@@ -956,7 +939,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model</span>
+        <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model.</span>
 
 <span class="sd">        Fit is on grid of alphas and best alpha estimated by cross-validation.</span>
 
@@ -1124,7 +1107,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
 
-        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">ProgressParallel</span><span class="p">(</span>
+        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">_ProgressParallel</span><span class="p">(</span>
             <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
             <span class="n">use_tqdm</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">),</span>
@@ -1183,8 +1166,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the score using the `scoring` option on the given</span>
-<span class="sd">        test data and labels.</span>
+        <span class="sd">&quot;&quot;&quot;Return the score using the `scoring` option on test data and labels.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1206,16 +1188,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">chosen_features_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;An index array of chosen features&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return an index array of chosen features.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sparsity_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A boolean array indicating which features survived regularization&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return boolean array indicating which features survived regularization.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">!=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">like_nonzero_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A boolean array indicating which features are zero or close to zero</span>
+        <span class="sd">&quot;&quot;&quot;Return boolean array indicating which features are zero or close to zero.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1229,7 +1211,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">chosen_groups_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A set of the group IDs that survived regularization&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return set of the group IDs that survived regularization.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">group_mask</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="nb">bool</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span><span class="p">)))</span>
@@ -1240,7 +1222,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove columns corresponding to zeroed-out coefficients&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Remove columns corresponding to zeroed-out coefficients.&quot;&quot;&quot;</span>
         <span class="c1"># Check is fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;is_fitted_&quot;</span><span class="p">)</span>
 

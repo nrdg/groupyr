@@ -46,7 +46,7 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
    getting_help
    api
    contributing
-   *groupyr* on GitHub <https://github.com/richford/groupyr>
+   *Groupyr* on GitHub <https://github.com/richford/groupyr>
 
 `Getting started <quick_start.html>`_
 -------------------------------------
@@ -76,19 +76,19 @@ citations.
 
 Richie-Halford, A., Narayan, M., and Rokem, A.
 `Groupyr: Sparse Group Lasso in Python`.
-DOI:10.25080/Majora-4af1f417-001
+DOI:10.5281/zenodo.4065037
 
 Bibtex entry::
 
-   @software{richie_halford_adam_2020_4064945,
-     author       = {Richie-Halford, Adam},
-     title        = {groupyr: Sparse Group Lasso in Python},
+   @software{richie-halford-groupyr,
+     author       = {{R}ichie-{H}alford, {A}dam and {N}arayan, {M}anjari and {R}okem, {A}riel},
+     title        = {{G}roupyr: {S}parse {G}roup {L}asso in {P}ython},
      month        = oct,
      year         = 2020,
      publisher    = {Zenodo},
-     version      = {v0.1.1},
-     doi          = {10.5281/zenodo.4064945},
-     url          = {https://doi.org/10.5281/zenodo.4064945}
+     version      = {v0.1.2},
+     doi          = {10.5281/zenodo.4065037},
+     url          = {http://doi.org/10.5281/zenodo.4065037}
    }
 
 Acknowledgements
@@ -104,7 +104,7 @@ Institute of Biomedical Imaging and Bioengineering to Eleftherios Garyfallidis
 
 The API design of groupyr was facilitated by the `scikit-learn project
 template`_ and it therefore borrows heavily from `scikit-learn`_ [2]_.
-groupyr relies on the copt optimization library [3]_ for its solver. The
+Groupyr relies on the copt optimization library [3]_ for its solver. The
 groupyr logo is a flipped silhouette of an `image from J. E. Randall`_ and is
 licensed `CC BY-SA`_.
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.datasets &mdash; groupyr 0.1.2 documentation</title>
+  <title>groupyr.datasets &mdash; groupyr 0.1.3 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
             
           
@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*groupyr* on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*Groupyr* on GitHub</a></li>
 </ul>
 
             
@@ -165,25 +165,17 @@
            <div itemprop="articleBody">
             
   <h1>Source code for groupyr.datasets</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Generate samples of synthetic data sets</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Generate samples of synthetic data sets.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span><span class="p">,</span> <span class="n">make_regression</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">shuffle</span> <span class="k">as</span> <span class="n">util_shuffle</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;make_group_classification&quot;</span><span class="p">,</span> <span class="s2">&quot;make_group_regression&quot;</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">registered</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">fn</span>
-
-
-<div class="viewcode-block" id="make_group_classification"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_classification">[docs]</a><span class="nd">@registered</span>
-<span class="k">def</span> <span class="nf">make_group_classification</span><span class="p">(</span>
+<div class="viewcode-block" id="make_group_classification"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_classification">[docs]</a><span class="k">def</span> <span class="nf">make_group_classification</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">n_groups</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
     <span class="n">n_informative_groups</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -326,7 +318,7 @@
 <span class="sd">    .. [1] I. Guyon, &quot;Design of experiments for the NIPS 2003 variable</span>
 <span class="sd">           selection benchmark&quot;, 2003.</span>
 
-<span class="sd">    See also</span>
+<span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    sklearn.datasets.make_classification: non-group-sparse version</span>
 <span class="sd">    sklearn.datasets.make_blobs: simplified variant</span>
@@ -443,8 +435,7 @@
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span></div>
 
 
-<div class="viewcode-block" id="make_group_regression"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_regression">[docs]</a><span class="nd">@registered</span>
-<span class="k">def</span> <span class="nf">make_group_regression</span><span class="p">(</span>
+<div class="viewcode-block" id="make_group_regression"><a class="viewcode-back" href="../../api.html#groupyr.datasets.make_group_regression">[docs]</a><span class="k">def</span> <span class="nf">make_group_regression</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">n_groups</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
     <span class="n">n_informative_groups</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -522,7 +513,7 @@
 <span class="sd">    coef : array of shape [n_features]</span>
 <span class="sd">        A numpy array containing true regression coefficient values. Returned only if `coef` is True.</span>
 
-<span class="sd">    See also</span>
+<span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    sklearn.datasets.make_regression: non-group-sparse version</span>
 <span class="sd">    &quot;&quot;&quot;</span>
