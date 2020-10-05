@@ -5,7 +5,8 @@ from groupyr import SGL, SGLCV
 from groupyr.datasets import make_group_regression
 from groupyr.sgl import _alpha_grid
 
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn.linear_model.tests.test_coordinate_descent import build_dataset
+from sklearn.utils._testing import assert_almost_equal, assert_array_almost_equal
 
 
 def test_sgl_input_validation():
@@ -47,47 +48,31 @@ def test_sgl_toy(loss):
     y = [-1, 0, 1]  # just a straight line
     T = [[2], [3], [4]]  # test sample
 
-    clf = SGL(alpha=1e-8)
+    tol = 1e-6
+
+    clf = SGL(alpha=1e-8, tol=tol)
     clf.fit(X, y, loss=loss)
     pred = clf.predict(T)
     assert_array_almost_equal(clf.coef_, [1])
     assert_array_almost_equal(pred, [2, 3, 4])
 
-    clf = SGL(alpha=0.1)
+    clf = SGL(alpha=0.1, tol=tol)
     clf.fit(X, y, loss=loss)
     pred = clf.predict(T)
     assert_array_almost_equal(clf.coef_, [0.85])
     assert_array_almost_equal(pred, [1.7, 2.55, 3.4])
 
-    clf = SGL(alpha=0.5)
+    clf = SGL(alpha=0.5, tol=tol)
     clf.fit(X, y, loss=loss)
     pred = clf.predict(T)
     assert_array_almost_equal(clf.coef_, [0.25])
     assert_array_almost_equal(pred, [0.5, 0.75, 1.0])
 
-    clf = SGL(alpha=1)
+    clf = SGL(alpha=1, tol=tol)
     clf.fit(X, y, loss=loss)
     pred = clf.predict(T)
     assert_array_almost_equal(clf.coef_, [0.0])
     assert_array_almost_equal(pred, [0, 0, 0])
-
-
-def build_dataset(n_samples=50, n_features=200, n_informative_features=10, n_targets=1):
-    """
-    build an ill-posed linear regression problem with many noisy features and
-    comparatively few samples
-    """
-    random_state = np.random.RandomState(0)
-    if n_targets > 1:
-        w = random_state.randn(n_features, n_targets)
-    else:
-        w = random_state.randn(n_features)
-    w[n_informative_features:] = 0.0
-    X = random_state.randn(n_samples, n_features)
-    y = np.dot(X, w)
-    X_test = random_state.randn(n_samples, n_features)
-    y_test = np.dot(X_test, w)
-    return X, y, X_test, y_test
 
 
 @pytest.mark.parametrize("fit_intercept", [True, False])
@@ -124,11 +109,12 @@ def test_warm_start(fit_intercept):
 
 
 def test_sgl_cv():
-    X, y, groups = make_group_regression(random_state=42)
+    X, y, X_test, y_test = build_dataset()
+    max_iter = 150
+    clf = SGLCV(n_alphas=10, eps=1e-3, max_iter=max_iter, cv=3).fit(X, y)
+    assert_almost_equal(clf.alpha_, 0.056, 2)
 
-    sglcv = SGLCV(l1_ratio=[0.5, 0.9, 1.0], groups=groups, cv=3).fit(X, y)
-
-    assert sglcv.score(X, y) > 0.99  # nosec
+    assert clf.score(X_test, y_test) > 0.99  # nosec
 
 
 @pytest.mark.parametrize("execution_number", range(5))

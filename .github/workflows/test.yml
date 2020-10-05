@@ -1,4 +1,4 @@
-name: Test suite
+name: Build
 
 on: [push, pull_request]
 
@@ -22,32 +22,20 @@ jobs:
           python -m pip install --upgrade pip --use-feature=2020-resolver
           python -m pip install coveralls --use-feature=2020-resolver
           python -m pip install .[dev] --use-feature=2020-resolver
-          python -m pip install black --use-feature=2020-resolver
           pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
       - name: Lint
         run: |
           flake8
           black --check .
+          pydocstyle
       - name: Test
         run: |
-          mkdir ~/for_test
-          cp .coveragerc ~/for_test/.coveragerc
-          cd ~/for_test
+          cp $(python -c 'import site; print(site.getsitepackages()[0])')/groupyr/_version.py groupyr/_version.py
           pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
-      - name: Coveralls Parallel
+      - name: Coveralls
         run: |
           coveralls
+        if: matrix.python-version == 3.8
         env:
-          COVERALLS_PARALLEL: true
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
-
-  finish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,4 @@
-"""
-This module contains base classes based on the sparse group lasso
-"""
+"""Create base classes based on the sparse group lasso."""
 import contextlib
 import copt as cp
 import numpy as np
@@ -108,9 +106,6 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
         debugging. If the ``include_solver_trace`` parameter is False, this
         attribute is ``None``.
 
-    Examples
-    --------
-
     References
     ----------
     .. [1]  Noah Simon, Jerome Friedman, Trevor Hastie & Robert Tibshirani,
@@ -147,7 +142,7 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
         self.include_solver_trace = include_solver_trace
 
     def fit(self, X, y, loss="squared_loss"):
-        """Fit a linear model using the sparse group lasso
+        """Fit a linear model using the sparse group lasso.
 
         Parameters
         ----------
@@ -291,16 +286,16 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
 
     @property
     def chosen_features_(self):
-        """An index array of chosen features"""
+        """Return an index array of chosen features."""
         return np.nonzero(self.coef_)[0]
 
     @property
     def sparsity_mask_(self):
-        """A boolean array indicating which features survived regularization"""
+        """Return boolean array indicating which features survived regularization."""
         return self.coef_ != 0
 
     def like_nonzero_mask_(self, rtol=1e-8):
-        """A boolean array indicating which features are zero or close to zero
+        """Return boolean array indicating which features are zero or close to zero.
 
         Parameters
         ----------
@@ -314,7 +309,7 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
 
     @property
     def chosen_groups_(self):
-        """A set of the group IDs that survived regularization"""
+        """Return set of the group IDs that survived regularization."""
         if self.groups is not None:
             group_mask = [
                 bool(set(grp).intersection(set(self.chosen_features_)))
@@ -325,7 +320,7 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
             return self.chosen_features_
 
     def transform(self, X):
-        """Remove columns corresponding to zeroed-out coefficients"""
+        """Remove columns corresponding to zeroed-out coefficients."""
         # Check is fit had been called
         check_is_fitted(self, "is_fitted_")
 

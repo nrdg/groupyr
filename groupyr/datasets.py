@@ -1,6 +1,4 @@
-"""
-Generate samples of synthetic data sets
-"""
+"""Generate samples of synthetic data sets."""
 import numpy as np
 
 from sklearn.datasets import make_classification, make_regression
@@ -159,7 +157,7 @@ def make_group_classification(
     .. [1] I. Guyon, "Design of experiments for the NIPS 2003 variable
            selection benchmark", 2003.
 
-    See also
+    See Also
     --------
     sklearn.datasets.make_classification: non-group-sparse version
     sklearn.datasets.make_blobs: simplified variant
@@ -355,7 +353,7 @@ def make_group_regression(
     coef : array of shape [n_features]
         A numpy array containing true regression coefficient values. Returned only if `coef` is True.
 
-    See also
+    See Also
     --------
     sklearn.datasets.make_regression: non-group-sparse version
     """
