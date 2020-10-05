@@ -1,6 +1,4 @@
-"""
-Define custom proximal operators for use with copt package
-"""
+"""Define custom proximal operators for use with copt package."""
 from __future__ import absolute_import, division, print_function
 
 import numpy as np
@@ -16,7 +14,7 @@ def registered(fn):
 
 
 def _soft_threshold(z, alpha):
-    """Apply the element-wise soft thresholding operator
+    r"""Apply the element-wise soft thresholding operator.
 
     The soft-thresholding operator is
 
@@ -49,7 +47,7 @@ def _soft_threshold(z, alpha):
 
 @registered
 class SparseGroupL1(object):
-    """Sparse group lasso penalty class for use with openopt/copt package.
+    r"""Sparse group lasso penalty class for use with openopt/copt package.
 
     Implements the sparse group lasso penalty [1]_
 
@@ -134,7 +132,7 @@ class SparseGroupL1(object):
         return penalty
 
     def prox(self, x, step_size):
-        """Return the proximal operator of the sparse group lasso penalty
+        r"""Return the proximal operator of the sparse group lasso penalty.
 
         For the sparse group lasso, we can decompose the penalty into
 

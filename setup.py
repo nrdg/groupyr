@@ -1,4 +1,4 @@
-"""A scikit-learn compatible library for penalized regression with grouped data"""
+"""A scikit-learn compatible library for penalized regression with grouped data."""
 from setuptools import setup
 import string
 import os.path as op
@@ -7,9 +7,7 @@ from setuptools_scm import get_version
 
 
 def local_version(version):
-    """
-    Patch in a version that can be uploaded to test PyPI
-    """
+    """Patch in a version that can be uploaded to test PyPI."""
     scm_version = get_version()
     if "dev" in scm_version:
         gh_in_int = []

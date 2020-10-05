@@ -1,6 +1,4 @@
-"""
-This module contains regression estimators based on the sparse group lasso
-"""
+"""Create regression estimators based on the sparse group lasso."""
 import numpy as np
 
 from functools import partial
@@ -27,7 +25,7 @@ from sklearn.utils.validation import (
 
 from ._base import SGLBaseEstimator
 from ._prox import _soft_threshold
-from .utils import check_groups, ProgressParallel
+from .utils import check_groups, _ProgressParallel
 
 __all__ = []
 
@@ -39,8 +37,7 @@ def registered(fn):
 
 @registered
 class SGL(SGLBaseEstimator, RegressorMixin, LinearModel):
-    """
-    An sklearn compatible sparse group lasso regressor.
+    """An sklearn compatible sparse group lasso regressor.
 
     This solves the sparse group lasso [1]_ problem for a feature matrix
     partitioned into groups using the proximal gradient descent (PGD)
@@ -108,9 +105,6 @@ class SGL(SGLBaseEstimator, RegressorMixin, LinearModel):
     n_iter_ : int
         Actual number of iterations used in the solver.
 
-    Examples
-    --------
-
     References
     ----------
     .. [1]  Noah Simon, Jerome Friedman, Trevor Hastie & Robert Tibshirani,
@@ -121,7 +115,7 @@ class SGL(SGLBaseEstimator, RegressorMixin, LinearModel):
     """
 
     def fit(self, X, y, loss="squared_loss"):
-        """Fit a linear model using the sparse group lasso
+        """Fit a linear model using the sparse group lasso.
 
         Parameters
         ----------
@@ -178,7 +172,7 @@ def _alpha_grid(
     copy_X=True,
     model=SGL,
 ):
-    """Compute the grid of alpha values for elastic net parameter search
+    """Compute the grid of alpha values for elastic net parameter search.
 
     Parameters
     ----------
@@ -374,7 +368,7 @@ def sgl_path(
     **params,
 ):
     """
-    Compute sparse group lasso path
+    Compute sparse group lasso path.
 
     We use the previous solution as the initial guess for subsequent alpha values
 
@@ -561,7 +555,7 @@ def sgl_path(
 
 @registered
 class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
-    """Class for iterative SGL model fitting along a regularization path
+    """Iterative SGL model fitting along a regularization path.
 
     Parameters
     ----------
@@ -683,7 +677,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         number of iterations run by the proximal gradient descent solver to
         reach the specified tolerance for the optimal alpha.
 
-    See also
+    See Also
     --------
     sgl_path
     SGL
@@ -722,7 +716,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         self.n_jobs = n_jobs
 
     def fit(self, X, y):
-        """Fit sparse group lasso linear model
+        """Fit sparse group lasso linear model.
 
         Fit is on grid of alphas and best alpha estimated by cross-validation.
 
@@ -883,7 +877,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         else:
             parallel_verbosity = self.verbose
 
-        mse_paths = ProgressParallel(
+        mse_paths = _ProgressParallel(
             n_jobs=self.n_jobs,
             verbose=parallel_verbosity,
             use_tqdm=bool(self.verbose),
@@ -937,16 +931,16 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
 
     @property
     def chosen_features_(self):
-        """An index array of chosen features"""
+        """Return index array of chosen features."""
         return np.nonzero(self.coef_)[0]
 
     @property
     def sparsity_mask_(self):
-        """A boolean array indicating which features survived regularization"""
+        """Return boolean array indicating which features survived regularization."""
         return self.coef_ != 0
 
     def like_nonzero_mask_(self, rtol=1e-8):
-        """A boolean array indicating which features are zero or close to zero
+        """Return boolean array indicating which features are zero or close to zero.
 
         Parameters
         ----------
@@ -960,7 +954,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
 
     @property
     def chosen_groups_(self):
-        """A set of the group IDs that survived regularization"""
+        """Return set of the group IDs that survived regularization."""
         if self.groups is not None:
             group_mask = [
                 bool(set(grp).intersection(set(self.chosen_features_)))
@@ -971,7 +965,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             return self.chosen_features_
 
     def transform(self, X):
-        """Remove columns corresponding to zeroed-out coefficients"""
+        """Remove columns corresponding to zeroed-out coefficients."""
         # Check is fit had been called
         check_is_fitted(self, "is_fitted_")
 

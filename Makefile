@@ -3,6 +3,7 @@
 flake:
 	flake8
 	black --check .
+	pydocstyle
 
 lint: flake
 

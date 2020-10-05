@@ -1,6 +1,4 @@
-"""
-This module contains logistic estimators based on the sparse group lasso
-"""
+"""Create logistic estimators based on the sparse group lasso."""
 import numpy as np
 
 from joblib import delayed, effective_n_jobs
@@ -18,7 +16,7 @@ from sklearn.utils.validation import check_array, check_is_fitted, column_or_1d
 
 from ._base import SGLBaseEstimator
 from .sgl import _alpha_grid
-from .utils import check_groups, ProgressParallel
+from .utils import check_groups, _ProgressParallel
 
 __all__ = []
 
@@ -102,9 +100,6 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
     n_iter_ : int
         Actual number of iterations used in the solver.
 
-    Examples
-    --------
-
     References
     ----------
     .. [1]  Noah Simon, Jerome Friedman, Trevor Hastie & Robert Tibshirani,
@@ -115,7 +110,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
     """
 
     def fit(self, X, y):  # pylint: disable=arguments-differ
-        """Fit a linear model using the sparse group lasso
+        """Fit a linear model using the sparse group lasso.
 
         Parameters
         ----------
@@ -134,8 +129,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         return super().fit(X=X, y=y, loss="log")
 
     def decision_function(self, X):
-        """
-        Predict confidence scores for samples.
+        """Predict confidence scores for samples.
 
         The confidence score for a sample is the signed distance of that
         sample to the hyperplane.
@@ -166,8 +160,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         return scores
 
     def predict(self, X):
-        """
-        Predict class labels for samples in X.
+        """Predict class labels for samples in X.
 
         Parameters
         ----------
@@ -188,8 +181,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         return self.classes_[indices]
 
     def predict_proba(self, X):
-        """
-        Probability estimates.
+        """Return classification probability estimates.
 
         The returned estimates for all classes are ordered by the label of classes.
 
@@ -213,8 +205,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         return super()._predict_proba_lr(X)
 
     def predict_log_proba(self, X):
-        """
-        Predict logarithm of probability estimates.
+        """Predict logarithm of probability estimates.
 
         The returned estimates for all classes are ordered by the label of classes.
 
@@ -460,7 +451,7 @@ def logistic_sgl_scoring_path(
     scoring=None,
     **params,
 ):
-    """Computes scores across logistic SGL path
+    """Compute scores across logistic SGL path.
 
     Parameters
     ----------
@@ -621,7 +612,7 @@ def logistic_sgl_scoring_path(
 # TODO: Test alpha_grid with X^T dot logit(y) to see if it works
 @registered
 class LogisticSGLCV(LogisticSGL):
-    """Class for iterative Logistic SGL model fitting along a regularization path
+    """Iterative Logistic SGL model fitting along a regularization path.
 
     Parameters
     ----------
@@ -748,7 +739,7 @@ class LogisticSGLCV(LogisticSGL):
         number of iterations run by the proximal gradient descent solver to
         reach the specified tolerance for the optimal alpha.
 
-    See also
+    See Also
     --------
     logistic_sgl_path
     LogisticSGL
@@ -789,7 +780,7 @@ class LogisticSGLCV(LogisticSGL):
         self.n_jobs = n_jobs
 
     def fit(self, X, y):
-        """Fit logistic sparse group lasso linear model
+        """Fit logistic sparse group lasso linear model.
 
         Fit is on grid of alphas and best alpha estimated by cross-validation.
 
@@ -957,7 +948,7 @@ class LogisticSGLCV(LogisticSGL):
         else:
             parallel_verbosity = self.verbose
 
-        score_paths = ProgressParallel(
+        score_paths = _ProgressParallel(
             n_jobs=self.n_jobs,
             verbose=parallel_verbosity,
             use_tqdm=bool(self.verbose),
@@ -1016,8 +1007,7 @@ class LogisticSGLCV(LogisticSGL):
         return self
 
     def score(self, X, y):
-        """Returns the score using the `scoring` option on the given
-        test data and labels.
+        """Return the score using the `scoring` option on test data and labels.
 
         Parameters
         ----------
@@ -1039,16 +1029,16 @@ class LogisticSGLCV(LogisticSGL):
 
     @property
     def chosen_features_(self):
-        """An index array of chosen features"""
+        """Return an index array of chosen features."""
         return np.nonzero(self.coef_)[0]
 
     @property
     def sparsity_mask_(self):
-        """A boolean array indicating which features survived regularization"""
+        """Return boolean array indicating which features survived regularization."""
         return self.coef_ != 0
 
     def like_nonzero_mask_(self, rtol=1e-8):
-        """A boolean array indicating which features are zero or close to zero
+        """Return boolean array indicating which features are zero or close to zero.
 
         Parameters
         ----------
@@ -1062,7 +1052,7 @@ class LogisticSGLCV(LogisticSGL):
 
     @property
     def chosen_groups_(self):
-        """A set of the group IDs that survived regularization"""
+        """Return set of the group IDs that survived regularization."""
         if self.groups is not None:
             group_mask = [
                 bool(set(grp).intersection(set(self.chosen_features_)))
@@ -1073,7 +1063,7 @@ class LogisticSGLCV(LogisticSGL):
             return self.chosen_features_
 
     def transform(self, X):
-        """Remove columns corresponding to zeroed-out coefficients"""
+        """Remove columns corresponding to zeroed-out coefficients."""
         # Check is fit had been called
         check_is_fitted(self, "is_fitted_")
 

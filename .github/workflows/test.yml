@@ -22,12 +22,12 @@ jobs:
           python -m pip install --upgrade pip --use-feature=2020-resolver
           python -m pip install coveralls --use-feature=2020-resolver
           python -m pip install .[dev] --use-feature=2020-resolver
-          python -m pip install black --use-feature=2020-resolver
           pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
       - name: Lint
         run: |
           flake8
           black --check .
+          pydocstyle
       - name: Test
         run: |
           mkdir ~/for_test
