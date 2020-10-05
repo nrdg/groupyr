@@ -2,7 +2,7 @@
 
 # _Groupyr_: Sparse Group Lasso in Python
 
-[![Build Status](https://github.com/richford/groupyr/workflows/Test%20suite/badge.svg)](https://github.com/richford/groupyr/workflows/Test%20suite/badge.svg)
+[![Build Status](https://github.com/richford/groupyr/workflows/Build/badge.svg)](https://github.com/richford/groupyr/workflows/Build/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/richford/groupyr/badge.svg?branch=main)](https://coveralls.io/github/richford/groupyr?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
