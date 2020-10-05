@@ -34,6 +34,8 @@ jobs:
           cp .coveragerc ~/for_test/.coveragerc
           cd ~/for_test
           pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
+          cd -
+          mv ~/for_test/.coverage .
           coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
