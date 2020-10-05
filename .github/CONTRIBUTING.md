@@ -47,7 +47,7 @@ Already know what you're looking for in this guide? Jump to the following sectio
 
 ## Joining the conversation
 
-_Groupyr_ is primarily maintained by a [collaborative research group][autofq].
+_Groupyr_ is primarily maintained by a [collaborative research group][link_autofq].
 But we maintain this software as an open project. This means that we welcome
 contributions from people outside our group and we make sure to give
 contributors from outside our group credit in presentations of the work. In
@@ -65,15 +65,15 @@ help you _git_ started!
 Some of our favorites include the [git Handbook][link_handbook] and
 the [Software Carpentry introduction to git][link_swc_intro].
 
-On GitHub, You'll use [Markdown][markdown] to chat in issues and pull
+On GitHub, You'll use [Markdown][link_markdown] to chat in issues and pull
 requests. You can think of Markdown as a few little symbols around your text
 that will allow GitHub to render the text with a little bit of formatting.
 For example, you could write words as bold (`**bold**`), or in italics
-(`*italics*`), or as a [link][rick_roll]
+(`*italics*`), or as a [link][link_rick_roll]
 (`[link](https://youtu.be/dQw4w9WgXcQ)`) to another webpage.
 
 GitHub has a really helpful page for getting started with [writing and
-formatting Markdown on GitHub][writing_formatting_github].
+formatting Markdown on GitHub][link_writing_formatting_github].
 
 ## Understanding issues
 
@@ -282,35 +282,36 @@ creating a release on GitHub.
     adapted based on its use in the README file for the
     [MetPy project](https://github.com/Unidata/MetPy).
 
-[link_github]: https://github.com/
-[link_groupyr]: https://github.com/richford/groupyr
-[link_signupinstructions]: https://help.github.com/articles/signing-up-for-a-new-github-account
-[link_git]: https://git-scm.com/
-[link_handbook]: https://guides.github.com/introduction/git-handbook/
-[link_swc_intro]: http://swcarpentry.github.io/git-novice/
-[writing_formatting_github]: https://help.github.com/articles/getting-started-with-writing-and-formatting-on-github
-[markdown]: https://daringfireball.net/projects/markdown
-[rick_roll]: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-[autofq]: https://autofq.org/
-[link_issues]: https://github.com/richford/groupyr/issues
-[link_labels]: https://github.com/richford/groupyr/labels
-[link_discussingissues]: https://help.github.com/articles/discussing-projects-in-issues-and-pull-requests
-[link_bugs]: https://github.com/richford/groupyr/labels/bug
-[link_firstissue]: https://github.com/richford/groupyr/labels/good%20first%20issue
-[link_enhancement]: https://github.com/richford/groupyr/labels/enhancement
-[link_pullrequest]: https://help.github.com/articles/creating-a-pull-request-from-a-fork
-[link_fork]: https://help.github.com/articles/fork-a-repo/
-[link_clone]: https://help.github.com/articles/cloning-a-repository
-[link_githubedit]: https://help.github.com/articles/editing-files-in-your-repository
-[link_texteditor]: https://en.wikipedia.org/wiki/Text_editor
-[link_vscode]: https://code.visualstudio.com/
-[link_addremote]: https://help.github.com/articles/configuring-a-remote-for-a-fork
-[link_pushpullblog]: https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/
-[link_branches]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
+[ci_ex]: https://github.com/richford/groupyr/pull/8
 [link_add_commit_push]: https://help.github.com/articles/adding-a-file-to-a-repository-using-the-command-line
-[link_updateupstreamwiki]: https://help.github.com/articles/syncing-a-fork/
-[link_np_docstring]: https://numpydoc.readthedocs.io/en/latest/format.html
-[link_sphinx]: http://www.sphinx-doc.org/en/master/
+[link_addremote]: https://help.github.com/articles/configuring-a-remote-for-a-fork
+[link_autofq]: https://autofq.org/
 [link_bedevere]: https://github.com/search?q=commenter%3Abedevere-bot+soft+cushions
 [link_bedevere_video]: https://youtu.be/XnS49c9KZw8?t=1m7s
 [link_black]: https://black.readthedocs.io/en/stable/
+[link_branches]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
+[link_bugs]: https://github.com/richford/groupyr/labels/bug
+[link_clone]: https://help.github.com/articles/cloning-a-repository
+[link_discussingissues]: https://help.github.com/articles/discussing-projects-in-issues-and-pull-requests
+[link_enhancement]: https://github.com/richford/groupyr/labels/enhancement
+[link_firstissue]: https://github.com/richford/groupyr/labels/good%20first%20issue
+[link_fork]: https://help.github.com/articles/fork-a-repo/
+[link_git]: https://git-scm.com/
+[link_github]: https://github.com/
+[link_githubedit]: https://help.github.com/articles/editing-files-in-your-repository
+[link_groupyr]: https://github.com/richford/groupyr
+[link_handbook]: https://guides.github.com/introduction/git-handbook/
+[link_issues]: https://github.com/richford/groupyr/issues
+[link_labels]: https://github.com/richford/groupyr/labels
+[link_markdown]: https://daringfireball.net/projects/markdown
+[link_np_docstring]: https://numpydoc.readthedocs.io/en/latest/format.html
+[link_pullrequest]: https://help.github.com/articles/creating-a-pull-request-from-a-fork
+[link_pushpullblog]: https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/
+[link_rick_roll]: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+[link_signupinstructions]: https://help.github.com/articles/signing-up-for-a-new-github-account
+[link_sphinx]: http://www.sphinx-doc.org/en/master/
+[link_swc_intro]: http://swcarpentry.github.io/git-novice/
+[link_texteditor]: https://en.wikipedia.org/wiki/Text_editor
+[link_updateupstreamwiki]: https://help.github.com/articles/syncing-a-fork/
+[link_vscode]: https://code.visualstudio.com/
+[link_writing_formatting_github]: https://help.github.com/articles/getting-started-with-writing-and-formatting-on-github
