@@ -33,6 +33,7 @@ jobs:
           cp $(python -c 'import site; print(site.getsitepackages()[0])')/groupyr/_version.py groupyr/_version.py
           pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
       - name: Coveralls
+        run: |
           coveralls
         if: matrix.python-version == 3.8
         env:
