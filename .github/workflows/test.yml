@@ -30,12 +30,8 @@ jobs:
           pydocstyle
       - name: Test
         run: |
-          mkdir ~/for_test
-          cp .coveragerc ~/for_test/.coveragerc
-          cd ~/for_test
+          cp $(python -c 'import site; print(site.getsitepackages()[0])')/groupyr/_version.py groupyr/_version.py
           pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
-          cd -
-          mv ~/for_test/.coverage .
           coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +42,6 @@ jobs:
   finish:
     needs: build
     runs-on: ubuntu-latest
-    container: python:3-slim
     steps:
       - name: Coveralls Finished
         run: |
