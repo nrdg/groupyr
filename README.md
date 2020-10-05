@@ -30,10 +30,9 @@ _Groupyr_ development is supported through a grant from the [Gordon
 and Betty Moore Foundation](https://www.moore.org/) and from the
 [Alfred P. Sloan Foundation](https://sloan.org/) to the [University of
 Washington eScience Institute](http://escience.washington.edu/), as
-well as NIH Collaborative Research in Computational Neuroscience grant
-R01EB027585-01 through the National Institute of Biomedical Imaging and
-Bioengineering to Eleftherios Garyfallidis (Indiana University) and
-Ariel Rokem (University of Washington).
+well as
+[NIMH BRAIN Initiative grant 1RF1MH121868-01](https://projectreporter.nih.gov/project_info_details.cfm?aid=9886761&icde=46874320&ddparam=&ddvalue=&ddsub=&cr=2&csb=default&cs=ASC&pball=)
+to Ariel Rokem (University of Washington).
 
 The API design of _groupyr_ was facilitated by the [scikit-learn project
 template](https://github.com/scikit-learn-contrib/project-template) and it
