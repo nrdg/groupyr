@@ -283,6 +283,7 @@ creating a release on GitHub.
     [MetPy project](https://github.com/Unidata/MetPy).
 
 [ci_ex]: https://github.com/richford/groupyr/pull/8
+[doc_ex]: https://github.com/richford/groupyr/pull/10
 [link_add_commit_push]: https://help.github.com/articles/adding-a-file-to-a-repository-using-the-command-line
 [link_addremote]: https://help.github.com/articles/configuring-a-remote-for-a-fork
 [link_autofq]: https://autofq.org/
