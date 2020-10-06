@@ -230,7 +230,7 @@ def make_group_classification(
         group_idx_map = np.concatenate(
             [
                 np.ones(n_features_per_group, dtype=np.int32) * i
-                for i in np.random.choice(
+                for i in generator.choice(
                     np.arange(n_groups), size=n_groups, replace=False
                 )
             ]
@@ -239,7 +239,7 @@ def make_group_classification(
         permute_group_map = (
             np.concatenate(
                 [
-                    np.random.choice(
+                    generator.choice(
                         np.arange(n_features_per_group),
                         size=n_features_per_group,
                         replace=False,
@@ -413,7 +413,9 @@ def make_group_regression(
         indices = np.arange(total_features)
         generator.shuffle(indices)
         X[:, :] = X[:, indices]
-        reg_coefs = reg_coefs[indices]
+        group_idx_map = group_idx_map[indices]
+        if coef:
+            reg_coefs = reg_coefs[indices]
 
     X = np.ascontiguousarray(X)
     groups = [np.where(group_idx_map == idx)[0] for idx in range(n_groups)]

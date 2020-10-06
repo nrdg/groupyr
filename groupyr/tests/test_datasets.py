@@ -146,3 +146,29 @@ def test_make_group_regression():
         n_informative_per_group=1,
     )  # n_informative=3
     assert X.shape == (100, 1)  # nosec
+
+
+@pytest.mark.parametrize(
+    "make_dataset", [make_group_classification, make_group_regression]
+)
+@pytest.mark.parametrize("shuffle", [True, False])
+def test_random_state_returns_same_data(make_dataset, shuffle):
+    X0, y0, groups0 = make_dataset(random_state=42, shuffle=shuffle)
+    X1, y1, groups1 = make_dataset(random_state=42, shuffle=shuffle)
+
+    assert_array_almost_equal(X0, X1)
+    assert_array_almost_equal(y0, y1)
+    assert_array_almost_equal(groups0, groups1)
+
+    if make_dataset == make_group_regression:
+        kwargs = {"coef": True, "shuffle": shuffle}
+    elif make_dataset == make_group_classification:
+        kwargs = {"useful_indices": True, "shuffle": shuffle}
+
+    X0, y0, groups0, coef_idx0 = make_dataset(random_state=42, **kwargs)
+    X1, y1, groups1, coef_idx1 = make_dataset(random_state=42, **kwargs)
+
+    assert_array_almost_equal(X0, X1)
+    assert_array_almost_equal(y0, y1)
+    assert_array_almost_equal(groups0, groups1)
+    assert_array_almost_equal(coef_idx0, coef_idx1)
