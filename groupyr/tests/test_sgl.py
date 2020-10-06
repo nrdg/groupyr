@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from groupyr import SGL, SGLCV
+from groupyr import SGL, SGLCV, LogisticSGLCV
 from groupyr.datasets import make_group_regression
 from groupyr.sgl import _alpha_grid
 
@@ -25,10 +25,14 @@ def test_sgl_input_validation():
     with pytest.raises(ValueError):
         SGL(l1_ratio=0.5, alpha=0.1, scale_l2_by="error").fit(X, y)
 
+    with pytest.raises(ValueError):
+        _alpha_grid(X, y, l1_ratio=0.5, scale_l2_by="error")
 
-def test_sgl_masks():
+
+@pytest.mark.parametrize("Estimator", [SGL, SGLCV, LogisticSGLCV])
+def test_sgl_masks(Estimator):
     groups = [np.arange(5), np.arange(5, 10)]
-    model = SGL(groups=groups)
+    model = Estimator(groups=groups)
     coefs_0 = np.concatenate([np.ones(5), np.zeros(5)])
     model.coef_ = coefs_0
     assert_array_almost_equal(model.chosen_features_, np.arange(5))
@@ -134,15 +138,43 @@ def test_sgl_cv():
     max_iter = 150
     clf = SGLCV(n_alphas=10, eps=1e-3, max_iter=max_iter, cv=3).fit(X, y)
     assert_almost_equal(clf.alpha_, 0.056, 2)
-
     assert clf.score(X_test, y_test) > 0.99  # nosec
+
+    alphas = np.copy(clf.alphas_)
+    np.random.default_rng().shuffle(alphas)
+    clf2 = SGLCV(alphas=alphas, max_iter=max_iter, cv=3, n_jobs=2).fit(X, y)
+    assert_array_almost_equal(clf.alphas_, clf2.alphas_)
 
 
 @pytest.mark.parametrize("execution_number", range(5))
 @pytest.mark.parametrize("l1_ratio", np.random.default_rng(seed=42).uniform(size=4))
-def test_alpha_grid_starts_at_zero(execution_number, l1_ratio):
+@pytest.mark.parametrize("compute_Xy", [True, "ndim2", False])
+def test_alpha_grid_starts_at_zero(execution_number, l1_ratio, compute_Xy):
     X, y, groups = make_group_regression()
-    agrid = _alpha_grid(X, y, groups=groups, l1_ratio=l1_ratio, n_alphas=10)
+
+    if compute_Xy is True:
+        Xy = X.T.dot(y)
+    elif compute_Xy == "ndim2":
+        Xy = X.T.dot(y)[:, np.newaxis]
+    else:
+        Xy = None
+
+    agrid = _alpha_grid(X, y, Xy=Xy, groups=groups, l1_ratio=l1_ratio, n_alphas=10)
     model = SGL(groups=groups, l1_ratio=l1_ratio, alpha=agrid[0]).fit(X, y)
 
     assert model.chosen_features_.size == 0  # nosec
+
+
+def test_alpha_grid_float_resolution():
+    X = np.zeros((3, 3))
+    y = [1, 2, 3]
+    agrid = _alpha_grid(X, y, l1_ratio=0.5, n_alphas=5)
+    assert_array_almost_equal(agrid, np.ones(5) * np.finfo(float).resolution)
+
+
+def test_sglcv_value_errors():
+    X = [[0], [0], [0]]
+    y = [0, 0, 0]
+
+    with pytest.raises(ValueError):
+        SGLCV().fit(X, y + [0])

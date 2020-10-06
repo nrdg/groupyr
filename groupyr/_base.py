@@ -173,6 +173,9 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
                 "got {0}".format(self.l1_ratio)
             )
 
+        if y is None:
+            raise ValueError("requires y to be passed, but the target y is None")
+
         X, y = check_X_y(
             X,
             y,
