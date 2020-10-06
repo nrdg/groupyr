@@ -15,9 +15,16 @@ from rapidfuzz import fuzz, process
 import subprocess as sp
 
 # These ORCIDs should go last
-CREATORS_LAST = ["Richie-Halford, Adam"]
+CREATORS_FIRST = ["Richie-Halford, Adam"]
+CREATORS_LAST = ["Rokem, Ariel"]
 # for entries not found in line-contributions
-MISSING_ENTRIES = []
+MISSING_ENTRIES = [
+    {
+        "affiliation": "Stanford University",
+        "name": "Narayan, Manjari",
+        "orcid": "0000-0001-5348-270X",
+    }
+]
 
 if __name__ == "__main__":
     contrib_file = Path("line-contributors.txt")
@@ -50,7 +57,7 @@ if __name__ == "__main__":
     total_names = len(zen_names) + len(MISSING_ENTRIES)
 
     name_matches = []
-    position = 1
+    position = 1 + len(CREATORS_FIRST)
     for ele in data:
         match = process.extractOne(
             ele, zen_names, scorer=fuzz.token_sort_ratio, score_cutoff=80
@@ -64,11 +71,13 @@ if __name__ == "__main__":
             continue
 
         if val not in name_matches:
-            if val["name"] not in CREATORS_LAST:
+            if val["name"] not in CREATORS_LAST and val["name"] not in CREATORS_FIRST:
                 val["position"] = position
                 position += 1
-            else:
+            elif val["name"] in CREATORS_LAST:
                 val["position"] = total_names + CREATORS_LAST.index(val["name"])
+            elif val["name"] in CREATORS_FIRST:
+                val["position"] = CREATORS_FIRST.index(val["name"])
             name_matches.append(val)
 
     for missing in MISSING_ENTRIES:
