@@ -244,37 +244,17 @@ def _alpha_grid(
         )
 
     n_samples = len(y)
-    sparse_center = False
     if Xy is None:
-        X_sparse = sparse.isspmatrix(X)
-        sparse_center = X_sparse and (fit_intercept or normalize)
-        X = check_array(
-            X, accept_sparse="csc", copy=(copy_X and fit_intercept and not X_sparse)
-        )
-        if not X_sparse:
-            # X can be touched inplace thanks to the above line
-            X, y, _, _, _ = _preprocess_data(X, y, fit_intercept, normalize, copy=False)
+        X = check_array(X, accept_sparse=False, copy=(copy_X and fit_intercept))
+        X, y, _, _, _ = _preprocess_data(X, y, fit_intercept, normalize, copy=False)
         Xy = safe_sparse_dot(X.T, y, dense_output=True)
-
-        if sparse_center:
-            # Workaround to find alpha_max for sparse matrices.
-            # since we should not destroy the sparsity of such matrices.
-            _, _, X_offset, _, X_scale = _preprocess_data(
-                X, y, fit_intercept, normalize, return_mean=True
-            )
-            mean_dot = X_offset * np.sum(y)
 
     if Xy.ndim == 1:
         Xy = Xy[:, np.newaxis]
 
-    if sparse_center:
-        if fit_intercept:
-            Xy -= mean_dot[:, np.newaxis]
-        if normalize:
-            Xy /= X_scale[:, np.newaxis]
-
     groups = check_groups(groups, X, allow_overlap=False, fit_intercept=False)
 
+    print(scale_l2_by)
     if scale_l2_by not in ["group_length", None]:
         raise ValueError(
             "scale_l2_by must be 'group_length' or None; " "got {0}".format(scale_l2_by)
@@ -457,14 +437,14 @@ def sgl_path(
     if check_input:
         X = check_array(
             X,
-            accept_sparse="csc",
+            accept_sparse=False,
             dtype=[np.float64, np.float32],
             order="F",
             copy=copy_X,
         )
         y = check_array(
             y,
-            accept_sparse="csc",
+            accept_sparse=False,
             dtype=X.dtype.type,
             order="F",
             copy=False,
@@ -744,18 +724,12 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             # csr. We also want to allow y to be 64 or 32 but check_X_y only
             # allows to convert for 64.
             check_X_params = dict(
-                accept_sparse="csc", dtype=[np.float64, np.float32], copy=False
+                accept_sparse=False, dtype=[np.float64, np.float32], copy=False
             )
             X, y = self._validate_data(
                 X, y, validate_separately=(check_X_params, check_y_params)
             )
-            if sparse.isspmatrix(X):
-                if hasattr(reference_to_old_X, "data") and not np.may_share_memory(
-                    reference_to_old_X.data, X.data
-                ):
-                    # X is a sparse matrix and has been copied
-                    copy_X = False
-            elif not np.may_share_memory(reference_to_old_X, X):
+            if not np.may_share_memory(reference_to_old_X, X):
                 # X has been copied
                 copy_X = False
             del reference_to_old_X
@@ -765,7 +739,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             # csr. We also want to allow y to be 64 or 32 but check_X_y only
             # allows to convert for 64.
             check_X_params = dict(
-                accept_sparse="csc",
+                accept_sparse=False,
                 dtype=[np.float64, np.float32],
                 order="F",
                 copy=copy_X,
@@ -774,9 +748,6 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
                 X, y, validate_separately=(check_X_params, check_y_params)
             )
             copy_X = False
-
-        if y.shape[0] == 0:
-            raise ValueError("y has 0 samples: %r" % y)
 
         model = SGL()
         y = column_or_1d(y, warn=True)
@@ -833,7 +804,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         # "precompute" has no effect but it is expected by _path_residuals
         path_params["precompute"] = False
 
-        if isinstance(self.verbose, int):
+        if isinstance(self.verbose, int):  # pragma: no cover
             path_params["verbose"] = self.verbose - 1
 
         # init cross-validation generator
@@ -862,11 +833,11 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             for train, test in folds
         )
 
-        if isinstance(self.verbose, int):
+        if isinstance(self.verbose, int):  # pragma: no cover
             parallel_verbosity = self.verbose - 2
             if parallel_verbosity < 0:
                 parallel_verbosity = 0
-        else:
+        else:  # pragma: no cover
             parallel_verbosity = self.verbose
 
         mse_paths = _ProgressParallel(

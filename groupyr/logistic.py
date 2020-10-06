@@ -898,7 +898,7 @@ class LogisticSGLCV(LogisticSGL):
         if effective_n_jobs(self.n_jobs) > 1:
             path_params["copy_X"] = False
 
-        if isinstance(self.verbose, int):
+        if isinstance(self.verbose, int):  # pragma: no cover
             path_params["verbose"] = self.verbose - 1
 
         # init cross-validation generator
@@ -933,11 +933,11 @@ class LogisticSGLCV(LogisticSGL):
             for train, test in folds
         )
 
-        if isinstance(self.verbose, int):
+        if isinstance(self.verbose, int):  # pragma: no cover
             parallel_verbosity = self.verbose - 2
             if parallel_verbosity < 0:
                 parallel_verbosity = 0
-        else:
+        else:  # pragma: no cover
             parallel_verbosity = self.verbose
 
         score_paths = _ProgressParallel(
