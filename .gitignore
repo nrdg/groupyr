@@ -71,3 +71,6 @@ target/
 
 # Mac OS files
 **.DS_Store
+
+# Line contributors file
+line-contributors.txt
