@@ -326,14 +326,14 @@ def logistic_sgl_path(
     if check_input:
         X = check_array(
             X,
-            accept_sparse="csc",
+            accept_sparse=False,
             dtype=[np.float64, np.float32],
             order="F",
             copy=copy_X,
         )
         y = check_array(
             y,
-            accept_sparse="csc",
+            accept_sparse=False,
             dtype=X.dtype.type,
             order="F",
             copy=False,

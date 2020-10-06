@@ -284,6 +284,7 @@ creating a release on GitHub.
 
 [ex_ci]: https://github.com/richford/groupyr/pull/8
 [ex_doc]: https://github.com/richford/groupyr/pull/10
+[ex_fix]: https://github.com/richford/groupyr/pull/16
 [ex_tst]: https://github.com/richford/groupyr/pull/11
 [link_add_commit_push]: https://help.github.com/articles/adding-a-file-to-a-repository-using-the-command-line
 [link_addremote]: https://help.github.com/articles/configuring-a-remote-for-a-fork
