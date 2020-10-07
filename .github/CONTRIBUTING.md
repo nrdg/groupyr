@@ -177,6 +177,12 @@ but those accepted fastest will follow a workflow similar to the following:
    pip install -e .[dev]
    ```
 
+   [or][link_pythonmpip_1] [better][link_pythonmpip_2] [still][link_pythonmpip_3]
+
+   ```Shell
+   python -m pip install -e .[dev]
+   ```
+
 1. **Create a [new branch][link_branches] to develop and maintain the proposed code changes.**<br />
    For example:
 
@@ -311,6 +317,9 @@ creating a release on GitHub.
 [link_np_docstring]: https://numpydoc.readthedocs.io/en/latest/format.html
 [link_pullrequest]: https://help.github.com/articles/creating-a-pull-request-from-a-fork
 [link_pushpullblog]: https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/
+[link_pythonmpip_1]: https://adamj.eu/tech/2020/02/25/use-python-m-pip-everywhere/
+[link_pythonmpip_2]: https://snarky.ca/why-you-should-use-python-m-pip/
+[link_pythonmpip_3]: https://github.com/pypa/pip/issues/3164#issue-109993120
 [link_rick_roll]: https://www.youtube.com/watch?v=dQw4w9WgXcQ
 [link_signupinstructions]: https://help.github.com/articles/signing-up-for-a-new-github-account
 [link_sphinx]: http://www.sphinx-doc.org/en/master/
