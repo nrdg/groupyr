@@ -147,7 +147,7 @@ def test_sgl_cv():
 
 
 @pytest.mark.parametrize("execution_number", range(5))
-@pytest.mark.parametrize("l1_ratio", np.random.default_rng(seed=42).uniform(size=4))
+@pytest.mark.parametrize("l1_ratio", np.random.default_rng(seed=1729).uniform(size=4))
 @pytest.mark.parametrize("compute_Xy", [True, "ndim2", False])
 def test_alpha_grid_starts_at_zero(execution_number, l1_ratio, compute_Xy):
     X, y, groups = make_group_regression()
