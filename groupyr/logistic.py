@@ -902,7 +902,7 @@ class LogisticSGLCV(LogisticSGL):
             path_params["verbose"] = self.verbose - 1
 
         # init cross-validation generator
-        cv = check_cv(self.cv)
+        cv = check_cv(self.cv, classifier=True)
 
         # Compute path for all folds and compute MSE to get the best alpha
         folds = list(cv.split(X, y))
