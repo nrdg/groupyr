@@ -9,7 +9,7 @@
 [![DOI](https://zenodo.org/badge/300933639.svg)](https://zenodo.org/badge/latestdoi/300933639)
 
 _Groupyr_ is a Python library for penalized regression of grouped covariates.
-This is the _groupyr_ development site. You can view the source code, file new issues, and contribute to _groupyr_'s development. If you just want to learn how to install and use _groupyr_, please look at the [_groupyr_ documentation](https://richford.github.io/groupyr/).
+This is the _groupyr_ development site. You can view the source code, file new issues, and contribute to _groupyr_'s development. If you just want to learn how to install and use _groupyr_, please look at the [_groupyr_ documentation][link_groupyr_docs].
 
 ## Contributing
 
@@ -21,8 +21,24 @@ _groupyr_.
 
 ## Citing _groupyr_
 
-If you use _groupyr_ in a scientific publication, please see our [citation
-instructions](https://richford.github.io/groupyr/index.html#citing-groupyr).
+If you use _groupyr_ in a scientific publication, please see cite us:
+
+Richie-Halford, A., Narayan, M., and Rokem, A.
+[_Groupyr_: Sparse Group Lasso in Python][link_groupyr_docs].
+DOI:10.5281/zenodo.4067182
+
+```
+@software{richie-halford-groupyr,
+    author       = {{R}ichie-{H}alford, {A}dam and {N}arayan, {M}anjari and {R}okem, {A}riel},
+    title        = {{G}roupyr: {S}parse {G}roup {L}asso in {P}ython},
+    month        = oct,
+    year         = 2020,
+    publisher    = {Zenodo},
+    version      = {v0.1.3},
+    doi          = {10.5281/zenodo.4067182},
+    url          = {http://doi.org/10.5281/zenodo.4067182}
+}
+```
 
 ## Acknowledgements
 
@@ -42,3 +58,5 @@ on the [copt optimization library](http://openo.pt/copt/index.html) for its
 solver. The _groupyr_ logo is a flipped silhouette of an [image from J. E.
 Randall](https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg)
 and is licensed [CC BY-SA](https://creativecommons.org/licenses/by-sa/3.0).
+
+[link_groupyr_docs]: https://richford.github.io/groupyr/
