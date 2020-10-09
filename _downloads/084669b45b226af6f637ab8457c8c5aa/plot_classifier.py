@@ -24,7 +24,7 @@ X, y, groups, idx = make_group_classification(
     n_classes=2,
     scale=100,
     useful_indices=True,
-    random_state=42,
+    random_state=1729,
 )
 
 _, n_features = X.shape
