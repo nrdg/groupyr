@@ -7,21 +7,14 @@ from scipy import sparse
 from scipy.optimize import root_scalar
 from tqdm.auto import tqdm
 
-from sklearn.base import (
-    RegressorMixin,
-    TransformerMixin,
-)
+from sklearn.base import RegressorMixin, TransformerMixin
 from sklearn.linear_model._base import LinearModel, _preprocess_data
 from sklearn.linear_model._coordinate_descent import _alpha_grid as _lasso_alpha_grid
 from sklearn.linear_model._coordinate_descent import _path_residuals
 from sklearn.model_selection import check_cv
 from sklearn.utils.extmath import safe_sparse_dot
 from sklearn.utils.fixes import _joblib_parallel_args
-from sklearn.utils.validation import (
-    check_array,
-    check_is_fitted,
-    column_or_1d,
-)
+from sklearn.utils.validation import check_array, check_is_fitted, column_or_1d
 
 from ._base import SGLBaseEstimator
 from ._prox import _soft_threshold
@@ -254,7 +247,6 @@ def _alpha_grid(
 
     groups = check_groups(groups, X, allow_overlap=False, fit_intercept=False)
 
-    print(scale_l2_by)
     if scale_l2_by not in ["group_length", None]:
         raise ValueError(
             "scale_l2_by must be 'group_length' or None; " "got {0}".format(scale_l2_by)
