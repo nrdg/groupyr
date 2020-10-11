@@ -685,7 +685,7 @@ class LogisticSGLCV(LogisticSGL):
         - an sklearn `CV splitter <https://scikit-learn.org/stable/glossary.html#term-cv-splitter>`_,
         - An iterable yielding (train, test) splits as arrays of indices.
 
-        For int/None inputs, :class:`KFold` is used.
+        For int/None inputs, ``StratifiedKFold`` is used.
 
         Refer to the scikit-learn User Guide for the various
         cross-validation strategies that can be used here.

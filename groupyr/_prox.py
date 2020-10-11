@@ -103,6 +103,15 @@ class SparseGroupL1(object):
                 for grp_idx, feature_indices in enumerate(groups)
             ]
         )
+
+        n_features = np.unique(np.concatenate(groups)).size
+        if bias_index is not None:
+            n_features += 1
+
+        self.group_masks = np.full((len(groups), n_features), 0)
+        for row, grp in zip(self.group_masks, groups):
+            row[grp] = 1
+
         if scale_l2_by == "group_length":
             self.group_scale = np.sqrt([grp.size for grp in groups])
         else:
@@ -167,10 +176,7 @@ class SparseGroupL1(object):
         if self.bias_index is not None:
             out[self.bias_index] = x[self.bias_index]
 
-        norms = (
-            np.array([np.linalg.norm(l1_prox[grp]) for grp in self.groups])
-            / self.group_scale
-        )
+        norms = np.sqrt(self.group_masks.dot(l1_prox ** 2)) / self.group_scale
 
         norm_mask = norms > (1.0 - self.l1_ratio) * self.alpha * step_size
         all_norm = all(norm_mask)
