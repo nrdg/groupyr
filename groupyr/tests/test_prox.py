@@ -4,21 +4,19 @@ import pytest
 from groupyr._prox import SparseGroupL1
 
 proximal_penalties = [
-    SparseGroupL1(0.5, 1.0, groups=[np.arange(16)]),
-    SparseGroupL1(0.5, 1.0, groups=[np.arange(16)], bias_index=0),
-    SparseGroupL1(0.5, 1.0, groups=[np.arange(16)], scale_l2_by=None),
+    (SparseGroupL1(0.5, 1.0, groups=[np.arange(16)]), 16),
+    (SparseGroupL1(0.5, 1.0, groups=[np.arange(16)], scale_l2_by=None), 16),
+    (SparseGroupL1(0.5, 1.0, groups=[np.arange(16)], bias_index=16), 17),
 ]
 
 
-@pytest.mark.parametrize("penalty", proximal_penalties)
-def test_three_inequality(penalty):
+@pytest.mark.parametrize("penalty, n_features", proximal_penalties)
+def test_three_inequality(penalty, n_features):
     """Test the prox using the three point inequality
     The three-point inequality is described e.g., in Lemma 1.4
     in "Gradient-Based Algorithms with Applications to Signal
     Recovery Problems", Amir Beck and Marc Teboulle
     """
-    n_features = 16
-
     for _ in range(10):
         z = np.random.randn(n_features)
         u = np.random.randn(n_features)
