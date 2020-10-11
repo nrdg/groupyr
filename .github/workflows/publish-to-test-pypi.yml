@@ -17,6 +17,9 @@ jobs:
         pip install
         pep517
         --user
+    - name: Fetch tags
+      run: |
+        git fetch --tags
     - name: Build a binary wheel and a source tarball
       run: >-
         python -m
