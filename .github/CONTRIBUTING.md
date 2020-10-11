@@ -290,6 +290,7 @@ creating a release on GitHub.
 
 [ex_ci]: https://github.com/richford/groupyr/pull/8
 [ex_doc]: https://github.com/richford/groupyr/pull/10
+[ex_enh]: https://github.com/richford/groupyr/pull/23
 [ex_fix]: https://github.com/richford/groupyr/pull/16
 [ex_maint]: https://github.com/richford/groupyr/pull/17
 [ex_sty]: https://github.com/richford/groupyr/pull/21
