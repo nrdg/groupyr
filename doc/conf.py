@@ -233,7 +233,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "groupyr.tex", "groupyr Documentation", "Adam Richie-Halford", "manual",),
+    ("index", "groupyr.tex", "groupyr Documentation", "Adam Richie-Halford", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -261,7 +261,7 @@ latex_logo = "_static/groupyr-logo.svg"
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "groupyr", "groupyr Documentation", ["Adam Richie-Halford"], 1,)]
+man_pages = [("index", "groupyr", "groupyr Documentation", ["Adam Richie-Halford"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -281,7 +281,7 @@ texinfo_documents = [
         "groupyr",
         "Sparse group lasso in Python.",
         "Machine Learning",
-    ),
+    )
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -301,10 +301,12 @@ texinfo_documents = [
 # intersphinx configuration
 intersphinx_mapping = {
     "python": ("https://docs.python.org/{.major}".format(sys.version_info), None),
-    "numpy": ("https://docs.scipy.org/doc/numpy/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
     "matplotlib": ("https://matplotlib.org/", None),
-    "sklearn": ("http://scikit-learn.org/stable", None),
+    "sklearn": ("https://scikit-learn.org/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "joblib": ("https://joblib.readthedocs.io/en/latest/", None),
 }
 
 # sphinx-gallery configuration

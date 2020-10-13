@@ -64,7 +64,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         Maximum number of iterations for PGD solver.
 
     tol : float, default=1e-7
-        Stopping criterion. Convergence tolerance for PGD algorithm.
+        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver
 
     warm_start : bool, default=False
         If set to ``True``, reuse the solution of the previous call to ``fit``
@@ -606,6 +606,9 @@ def logistic_sgl_scoring_path(
 class LogisticSGLCV(LogisticSGL):
     """Iterative Logistic SGL model fitting along a regularization path.
 
+    See the scikit-learn glossary entry for `cross-validation estimator
+    <https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator>`_
+
     Parameters
     ----------
     l1_ratio : float or list of float, default=1.0
@@ -661,14 +664,14 @@ class LogisticSGLCV(LogisticSGL):
         If True, the regressors X will be normalized before regression by
         subtracting the mean and dividing by the l2-norm.
         If you wish to standardize, please use
-        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``
+        :class:`sklearn:sklearn.preprocessing.StandardScaler` before calling ``fit``
         on an estimator with ``normalize=False``.
 
     max_iter : int, default=1000
         The maximum number of iterations
 
     tol : float, default=1e-7
-        The tolerance for the SGL solver
+        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver
 
     scoring : callable, default=None
         A string (see sklearn model evaluation documentation) or a scorer
@@ -685,10 +688,11 @@ class LogisticSGLCV(LogisticSGL):
         - an sklearn `CV splitter <https://scikit-learn.org/stable/glossary.html#term-cv-splitter>`_,
         - An iterable yielding (train, test) splits as arrays of indices.
 
-        For int/None inputs, ``StratifiedKFold`` is used.
+        For int/None inputs, :class:`sklearn:sklearn.model_selection.StratifiedKFold` is used.
 
-        Refer to the scikit-learn User Guide for the various
-        cross-validation strategies that can be used here.
+        Refer to the :ref:`scikit-learn User Guide
+        <sklearn:cross_validation>` for the various cross-validation
+        strategies that can be used here.
 
     copy_X : bool, default=True
         If ``True``, X will be copied; else, it may be overwritten.
@@ -698,7 +702,7 @@ class LogisticSGLCV(LogisticSGL):
 
     n_jobs : int, default=None
         Number of CPUs to use during the cross validation.
-        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
+        ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.
         ``-1`` means using all processors.
 
     Attributes
