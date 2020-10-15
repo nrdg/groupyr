@@ -1,3 +1,8 @@
+v0.1.5 (October 15, 2020)
+=========================
+  * ENH: Speed up `SparseGroupL1.prox()` (#23)
+
+
 v0.1.4 (October 09, 2020)
 =========================
   * DOC: Update citation instructions (#22)
