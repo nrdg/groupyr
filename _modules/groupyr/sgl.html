@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.sgl &mdash; groupyr 0.1.4 documentation</title>
+  <title>groupyr.sgl &mdash; groupyr 0.1.5 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.1.5
               </div>
             
           
@@ -174,21 +174,14 @@
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">root_scalar</span>
 <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">RegressorMixin</span><span class="p">,</span>
-    <span class="n">TransformerMixin</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">RegressorMixin</span><span class="p">,</span> <span class="n">TransformerMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model._base</span> <span class="kn">import</span> <span class="n">LinearModel</span><span class="p">,</span> <span class="n">_preprocess_data</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model._coordinate_descent</span> <span class="kn">import</span> <span class="n">_alpha_grid</span> <span class="k">as</span> <span class="n">_lasso_alpha_grid</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model._coordinate_descent</span> <span class="kn">import</span> <span class="n">_path_residuals</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">check_cv</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">safe_sparse_dot</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">_joblib_parallel_args</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">check_array</span><span class="p">,</span>
-    <span class="n">check_is_fitted</span><span class="p">,</span>
-    <span class="n">column_or_1d</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">column_or_1d</span>
 
 <span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">SGLBaseEstimator</span>
 <span class="kn">from</span> <span class="nn">._prox</span> <span class="kn">import</span> <span class="n">_soft_threshold</span>
@@ -239,7 +232,7 @@
 <span class="sd">        Maximum number of iterations for PGD solver.</span>
 
 <span class="sd">    tol : float, default=1e-7</span>
-<span class="sd">        Stopping criterion. Convergence tolerance for PGD algorithm.</span>
+<span class="sd">        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver</span>
 
 <span class="sd">    warm_start : bool, default=False</span>
 <span class="sd">        If set to ``True``, reuse the solution of the previous call to ``fit``</span>
@@ -421,7 +414,6 @@
 
     <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">scale_l2_by</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">scale_l2_by</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;group_length&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;scale_l2_by must be &#39;group_length&#39; or None; &quot;</span> <span class="s2">&quot;got </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scale_l2_by</span><span class="p">)</span>
@@ -696,6 +688,9 @@
 <div class="viewcode-block" id="SGLCV"><a class="viewcode-back" href="../../api.html#groupyr.SGLCV">[docs]</a><span class="k">class</span> <span class="nc">SGLCV</span><span class="p">(</span><span class="n">LinearModel</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Iterative SGL model fitting along a regularization path.</span>
 
+<span class="sd">    See the scikit-learn glossary entry for `cross-validation estimator</span>
+<span class="sd">    &lt;https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator&gt;`_</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    l1_ratio : float or list of float, default=1.0</span>
@@ -751,14 +746,14 @@
 <span class="sd">        If True, the regressors X will be normalized before regression by</span>
 <span class="sd">        subtracting the mean and dividing by the l2-norm.</span>
 <span class="sd">        If you wish to standardize, please use</span>
-<span class="sd">        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
+<span class="sd">        :class:`sklearn:sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
 <span class="sd">        on an estimator with ``normalize=False``.</span>
 
 <span class="sd">    max_iter : int, default=1000</span>
 <span class="sd">        The maximum number of iterations</span>
 
 <span class="sd">    tol : float, default=1e-7</span>
-<span class="sd">        The tolerance for the SGL solver</span>
+<span class="sd">        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver</span>
 
 <span class="sd">    cv : int, cross-validation generator or iterable, default=None</span>
 <span class="sd">        Determines the cross-validation splitting strategy.</span>
@@ -769,10 +764,11 @@
 <span class="sd">        - an sklearn `CV splitter &lt;https://scikit-learn.org/stable/glossary.html#term-cv-splitter&gt;`_,</span>
 <span class="sd">        - An iterable yielding (train, test) splits as arrays of indices.</span>
 
-<span class="sd">        For int/None inputs, :class:`KFold` is used.</span>
+<span class="sd">        For int/None inputs, :class:`sklearn:sklearn.model_selection.KFold` is used.</span>
 
-<span class="sd">        Refer to the scikit-learn User Guide for the various</span>
-<span class="sd">        cross-validation strategies that can be used here.</span>
+<span class="sd">        Refer to the :ref:`scikit-learn User Guide</span>
+<span class="sd">        &lt;sklearn:cross_validation&gt;` for the various cross-validation</span>
+<span class="sd">        strategies that can be used here.</span>
 
 <span class="sd">    copy_X : bool, default=True</span>
 <span class="sd">        If ``True``, X will be copied; else, it may be overwritten.</span>
@@ -782,13 +778,8 @@
 
 <span class="sd">    n_jobs : int, default=None</span>
 <span class="sd">        Number of CPUs to use during the cross validation.</span>
-<span class="sd">        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">        ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.</span>
 <span class="sd">        ``-1`` means using all processors.</span>
-
-<span class="sd">    random_state : int, RandomState instance, default=None</span>
-<span class="sd">        The seed of the pseudo random number generator that selects a random</span>
-<span class="sd">        feature to update. Used when ``selection`` == &#39;random&#39;.</span>
-<span class="sd">        Pass an int for reproducible output across multiple function calls.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>

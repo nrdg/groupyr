@@ -19,7 +19,6 @@ ground-truth.
 
 
 
-
 .. image:: /auto_examples/images/sphx_glr_plot_classifier_001.png
     :alt: Estimated coefficients with ground truth imporant features highlighted
     :class: sphx-glr-single-img
@@ -31,8 +30,6 @@ ground-truth.
 
  .. code-block:: none
 
-    group_length
-    group_length
     Indices of ground-truth informative features:
     [200 201 203 205 208 209 211 212 214 217 240 243 244 245 246 251 252 256
      257 259 261 262 264 267 271 272 274 276 277 279]
@@ -115,7 +112,7 @@ ground-truth.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  49.754 seconds)
+   **Total running time of the script:** ( 0 minutes  43.860 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_classifier.py:

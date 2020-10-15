@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.4 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.1.5 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.1.5
               </div>
             
           
@@ -231,7 +231,7 @@
 <span class="sd">        Maximum number of iterations for PGD solver.</span>
 
 <span class="sd">    tol : float, default=1e-7</span>
-<span class="sd">        Stopping criterion. Convergence tolerance for PGD algorithm.</span>
+<span class="sd">        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver</span>
 
 <span class="sd">    warm_start : bool, default=False</span>
 <span class="sd">        If set to ``True``, reuse the solution of the previous call to ``fit``</span>
@@ -773,6 +773,9 @@
 <div class="viewcode-block" id="LogisticSGLCV"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGLCV">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGLCV</span><span class="p">(</span><span class="n">LogisticSGL</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Iterative Logistic SGL model fitting along a regularization path.</span>
 
+<span class="sd">    See the scikit-learn glossary entry for `cross-validation estimator</span>
+<span class="sd">    &lt;https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator&gt;`_</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    l1_ratio : float or list of float, default=1.0</span>
@@ -828,14 +831,14 @@
 <span class="sd">        If True, the regressors X will be normalized before regression by</span>
 <span class="sd">        subtracting the mean and dividing by the l2-norm.</span>
 <span class="sd">        If you wish to standardize, please use</span>
-<span class="sd">        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
+<span class="sd">        :class:`sklearn:sklearn.preprocessing.StandardScaler` before calling ``fit``</span>
 <span class="sd">        on an estimator with ``normalize=False``.</span>
 
 <span class="sd">    max_iter : int, default=1000</span>
 <span class="sd">        The maximum number of iterations</span>
 
 <span class="sd">    tol : float, default=1e-7</span>
-<span class="sd">        The tolerance for the SGL solver</span>
+<span class="sd">        Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver</span>
 
 <span class="sd">    scoring : callable, default=None</span>
 <span class="sd">        A string (see sklearn model evaluation documentation) or a scorer</span>
@@ -852,10 +855,11 @@
 <span class="sd">        - an sklearn `CV splitter &lt;https://scikit-learn.org/stable/glossary.html#term-cv-splitter&gt;`_,</span>
 <span class="sd">        - An iterable yielding (train, test) splits as arrays of indices.</span>
 
-<span class="sd">        For int/None inputs, :class:`KFold` is used.</span>
+<span class="sd">        For int/None inputs, :class:`sklearn:sklearn.model_selection.StratifiedKFold` is used.</span>
 
-<span class="sd">        Refer to the scikit-learn User Guide for the various</span>
-<span class="sd">        cross-validation strategies that can be used here.</span>
+<span class="sd">        Refer to the :ref:`scikit-learn User Guide</span>
+<span class="sd">        &lt;sklearn:cross_validation&gt;` for the various cross-validation</span>
+<span class="sd">        strategies that can be used here.</span>
 
 <span class="sd">    copy_X : bool, default=True</span>
 <span class="sd">        If ``True``, X will be copied; else, it may be overwritten.</span>
@@ -865,7 +869,7 @@
 
 <span class="sd">    n_jobs : int, default=None</span>
 <span class="sd">        Number of CPUs to use during the cross validation.</span>
-<span class="sd">        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">        ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.</span>
 <span class="sd">        ``-1`` means using all processors.</span>
 
 <span class="sd">    Attributes</span>
