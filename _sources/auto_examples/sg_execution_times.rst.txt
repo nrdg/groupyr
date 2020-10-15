@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:51.373** total execution time for **auto_examples** files:
+**01:13.942** total execution time for **auto_examples** files:
 
 +---------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_classifier.py` (``plot_classifier.py``) | 00:51.373 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_classifier.py` (``plot_classifier.py``) | 01:13.942 | 0.0 MB |
 +---------------------------------------------------------------------------+-----------+--------+
