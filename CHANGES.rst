@@ -1,3 +1,8 @@
+v0.1.6 (October 22, 2020)
+=========================
+  * DOC: Fix mathjax rendering in documentation (#27)
+
+
 v0.1.5 (October 15, 2020)
 =========================
   * ENH: Speed up `SparseGroupL1.prox()` (#23)
