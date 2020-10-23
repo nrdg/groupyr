@@ -43,6 +43,8 @@ extensions = [
     "sphinx_gallery.gen_gallery",
 ]
 
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+
 # this is needed for some reason...
 # see https://github.com/numpy/numpydoc/issues/69
 numpydoc_show_class_members = False
