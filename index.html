@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.1.5 documentation</title>
+  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.1.6 documentation</title>
   
 
   
@@ -36,6 +36,7 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
         <script src="_static/js/copybutton.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -69,7 +70,7 @@
             
             
               <div class="version">
-                0.1.5
+                0.1.6
               </div>
             
           
@@ -176,25 +177,25 @@ problems where related covariates can be assigned to predefined groups.</p>
 <h2>The Sparse Group Lasso<a class="headerlink" href="#the-sparse-group-lasso" title="Permalink to this headline">¶</a></h2>
 <p>The sparse group lasso <a class="footnote-reference brackets" href="#id12" id="id1">1</a> is a penalized regression model that combines the
 group lasso with the normal lasso penalty to promote both global sparsity and
-group-wise sparsity. It estimates a target variable <span class="math">\hat{y}</span> from a
-feature matrix <span class="math">\mathbf{X}</span>, using</p>
-<div class="math">
-<p><span class="math">\hat{y} = \mathbf{X} \hat{\beta},</span></p>
-</div><p>where the coefficients in <span class="math">\hat{\beta}</span> characterize the relationship
+group-wise sparsity. It estimates a target variable <span class="math notranslate nohighlight">\(\hat{y}\)</span> from a
+feature matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, using</p>
+<div class="math notranslate nohighlight">
+\[\hat{y} = \mathbf{X} \hat{\beta},\]</div>
+<p>where the coefficients in <span class="math notranslate nohighlight">\(\hat{\beta}\)</span> characterize the relationship
 between the features and the target and must satisfy <a class="footnote-reference brackets" href="#id12" id="id2">1</a></p>
-<div class="math">
-<p><span class="math">\hat{\beta} = \min_{\beta} \frac{1}{2}
+<div class="math notranslate nohighlight">
+\[\hat{\beta} = \min_{\beta} \frac{1}{2}
 || y - \sum_{\ell = 1}^{G} \mathbf{X}^{(\ell)} \beta^{(\ell)} ||_2^2
 + (1 - \alpha) \lambda \sum_{\ell = 1}^{G} \sqrt{p_{\ell}} ||\beta^{(\ell)}||_2
-+ \alpha) \lambda ||\beta||_1,</span></p>
-</div><p>where <span class="math">G</span> is the total number of groups, <span class="math">\mathbf{X}^{(\ell)}</span> is
-the submatrix of <span class="math">\mathbf{X}</span> with columns belonging to group
-<span class="math">\ell</span>, <span class="math">\beta^{(\ell)}</span> is the coefficient vector of group
-<span class="math">\ell</span>, and <span class="math">p_{\ell}</span> is the length of <span class="math">\beta^{(\ell)}</span>.
-The model hyperparameter <span class="math">\alpha</span> controls the combination of the
-group-lasso and the lasso, with <span class="math">\alpha=0</span> giving the group lasso fit
-and <span class="math">\alpha=1</span> yielding the lasso fit. The hyperparameter
-<span class="math">\lambda</span> controls the strength of the regularization.</p>
++ \alpha) \lambda ||\beta||_1,\]</div>
+<p>where <span class="math notranslate nohighlight">\(G\)</span> is the total number of groups, <span class="math notranslate nohighlight">\(\mathbf{X}^{(\ell)}\)</span> is
+the submatrix of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> with columns belonging to group
+<span class="math notranslate nohighlight">\(\ell\)</span>, <span class="math notranslate nohighlight">\(\beta^{(\ell)}\)</span> is the coefficient vector of group
+<span class="math notranslate nohighlight">\(\ell\)</span>, and <span class="math notranslate nohighlight">\(p_{\ell}\)</span> is the length of <span class="math notranslate nohighlight">\(\beta^{(\ell)}\)</span>.
+The model hyperparameter <span class="math notranslate nohighlight">\(\alpha\)</span> controls the combination of the
+group-lasso and the lasso, with <span class="math notranslate nohighlight">\(\alpha=0\)</span> giving the group lasso fit
+and <span class="math notranslate nohighlight">\(\alpha=1\)</span> yielding the lasso fit. The hyperparameter
+<span class="math notranslate nohighlight">\(\lambda\)</span> controls the strength of the regularization.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
