@@ -1,9 +1,6 @@
 """Utility functions for SGL-based estimators."""
 import numpy as np
 
-from joblib import Parallel
-from tqdm.auto import tqdm
-
 
 def check_groups(groups, X, allow_overlap=False, fit_intercept=False):
     """Validate group indices.
@@ -73,23 +70,3 @@ def check_groups(groups, X, allow_overlap=False, fit_intercept=False):
             raise ValueError("Overlapping groups detected.")
 
     return tuple(groups)
-
-
-class _ProgressParallel(Parallel):
-    def __init__(self, use_tqdm=True, total=None, desc=None, *args, **kwargs):
-        self._use_tqdm = use_tqdm
-        self._total = total
-        self._desc = desc
-        super().__init__(*args, **kwargs)
-
-    def __call__(self, *args, **kwargs):
-        with tqdm(
-            disable=not self._use_tqdm, desc=self._desc, total=self._total
-        ) as self._pbar:
-            return Parallel.__call__(self, *args, **kwargs)
-
-    def print_progress(self):
-        if self._total is None:  # pragma: no cover
-            self._pbar.total = self.n_dispatched_tasks
-        self._pbar.n = self.n_completed_tasks
-        self._pbar.refresh()
