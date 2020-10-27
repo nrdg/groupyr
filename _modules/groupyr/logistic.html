@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.6 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.1.7 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.1.6
+                0.1.7
               </div>
             
           
@@ -169,7 +169,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Create logistic estimators based on the sparse group lasso.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span><span class="p">,</span> <span class="n">Parallel</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
 <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
@@ -184,7 +184,7 @@
 
 <span class="kn">from</span> <span class="nn">._base</span> <span class="kn">import</span> <span class="n">SGLBaseEstimator</span>
 <span class="kn">from</span> <span class="nn">.sgl</span> <span class="kn">import</span> <span class="n">_alpha_grid</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span><span class="p">,</span> <span class="n">_ProgressParallel</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LogisticSGL&quot;</span><span class="p">,</span> <span class="s2">&quot;LogisticSGLCV&quot;</span><span class="p">]</span>
 
@@ -1112,12 +1112,9 @@
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
 
-        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">_ProgressParallel</span><span class="p">(</span>
+        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
             <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
-            <span class="n">use_tqdm</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">),</span>
-            <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;L1 ratios * CV folds&quot;</span><span class="p">,</span>
-            <span class="n">total</span><span class="o">=</span><span class="n">n_l1_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span>
             <span class="o">**</span><span class="n">_joblib_parallel_args</span><span class="p">(</span><span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">),</span>
         <span class="p">)(</span><span class="n">jobs</span><span class="p">)</span>
 
