@@ -2,7 +2,7 @@
 import numpy as np
 
 from functools import partial
-from joblib import delayed, effective_n_jobs
+from joblib import delayed, effective_n_jobs, Parallel
 from scipy import sparse
 from scipy.optimize import root_scalar
 from tqdm.auto import tqdm
@@ -18,7 +18,7 @@ from sklearn.utils.validation import check_array, check_is_fitted, column_or_1d
 
 from ._base import SGLBaseEstimator
 from ._prox import _soft_threshold
-from .utils import check_groups, _ProgressParallel
+from .utils import check_groups
 
 __all__ = ["SGL", "sgl_path", "SGLCV"]
 
@@ -831,12 +831,9 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         else:  # pragma: no cover
             parallel_verbosity = self.verbose
 
-        mse_paths = _ProgressParallel(
+        mse_paths = Parallel(
             n_jobs=self.n_jobs,
             verbose=parallel_verbosity,
-            use_tqdm=bool(self.verbose),
-            desc="L1 ratios * CV folds",
-            total=n_l1_ratio * len(folds),
             **_joblib_parallel_args(prefer="threads"),
         )(jobs)
 
