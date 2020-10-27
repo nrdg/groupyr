@@ -1,5 +1,5 @@
-v0.1.6 (October 22, 2020)
+v0.1.7 (October 26, 2020)
 =========================
-  * DOC: Fix mathjax rendering in documentation (#27)
+  * ENH: Use joblib Parallel instead of custom _ProgressParallel wrapper (#28)
 
 
