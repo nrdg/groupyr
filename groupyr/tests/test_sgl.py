@@ -172,7 +172,7 @@ def test_sgl_cv(tuning_strategy):
             n_bayes_iter=20,
         ).fit(X, y)
         assert clf.score(X_test, y_test) > 0.98  # nosec
-        assert_almost_equal(clf.alpha_, 0.065, 3)
+        assert_almost_equal(clf.alpha_, 0.06, 2)
 
 
 @pytest.mark.parametrize("execution_number", range(5))
