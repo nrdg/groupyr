@@ -5,6 +5,7 @@ branch = True
 source = groupyr
 omit =
     */setup.py
+    tests/*.py
 
 [report]
 exclude_lines =

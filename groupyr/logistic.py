@@ -3,6 +3,7 @@ import numpy as np
 
 from joblib import delayed, effective_n_jobs, Parallel
 from scipy import sparse
+from skopt import BayesSearchCV
 from tqdm.auto import tqdm
 
 from sklearn.linear_model._base import LinearClassifierMixin
@@ -705,6 +706,37 @@ class LogisticSGLCV(LogisticSGL):
         ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.
         ``-1`` means using all processors.
 
+    tuning_strategy : ["grid", "bayes"], default="grid"
+        Hyperparameter tuning strategy to use. If ``tuning_strategy == "grid"``,
+        then evaluate all parameter points on the ``l1_ratio`` and ``alphas`` grid,
+        using warm start to evaluate different ``alpha`` values along the
+        regularization path. If ``tuning_strategy == "bayes"``, then a fixed
+        number of parameter settings is sampled using ``skopt.BayesSearchCV``.
+        The fixed number of settings is set by ``n_bayes_iter``. The
+        ``l1_ratio`` setting is sampled uniformly from the minimum and maximum
+        of the input ``l1_ratio`` parameter. The ``alpha`` setting is sampled
+        log-uniformly either from the maximum and minumum of the input ``alphas``
+        parameter, if provided or from ``eps`` * max_alpha to max_alpha where
+        max_alpha is a conservative estimate of the maximum alpha for which the
+        solution coefficients are non-trivial.
+
+    n_bayes_iter : int, default=50
+        Number of parameter settings that are sampled if using Bayes search
+        for hyperparameter optimization. ``n_bayes_iter`` trades off runtime
+        vs quality of the solution. Consider increasing ``n_bayes_points`` if
+        you want to try more parameter settings in parallel.
+
+    n_bayes_points : int, default=1
+        Number of parameter settings to sample in parallel if using Bayes
+        search for hyperparameter optimization. If this does not align with
+        ``n_bayes_iter``, the last iteration will sample fewer points.
+
+    random_state : int, RandomState instance or None, optional (default=None)
+        If int, random_state is the seed used by the random number generator;
+        If RandomState instance, random_state is the random number generator;
+        If None, the random number generator is the RandomState instance used
+        by `np.random`.
+
     Attributes
     ----------
     alpha_ : float
@@ -735,6 +767,11 @@ class LogisticSGLCV(LogisticSGL):
         number of iterations run by the proximal gradient descent solver to
         reach the specified tolerance for the optimal alpha.
 
+    bayes_optimizer_ : skopt.BayesSearchCV instance or None
+        The BayesSearchCV instance used for hyperparameter optimization if
+        ``tuning_strategy == "bayes"``. If ``tuning_strategy == "grid"``,
+        then this attribute is None.
+
     See Also
     --------
     logistic_sgl_path
@@ -758,6 +795,10 @@ class LogisticSGLCV(LogisticSGL):
         copy_X=True,
         verbose=False,
         n_jobs=None,
+        tuning_strategy="grid",
+        n_bayes_iter=50,
+        n_bayes_points=1,
+        random_state=None,
     ):
         self.l1_ratio = l1_ratio
         self.groups = groups
@@ -774,6 +815,10 @@ class LogisticSGLCV(LogisticSGL):
         self.copy_X = copy_X
         self.verbose = verbose
         self.n_jobs = n_jobs
+        self.tuning_strategy = tuning_strategy
+        self.n_bayes_iter = n_bayes_iter
+        self.n_bayes_points = n_bayes_points
+        self.random_state = random_state
 
     def fit(self, X, y):
         """Fit logistic sparse group lasso linear model.
@@ -790,6 +835,12 @@ class LogisticSGLCV(LogisticSGL):
         y : array-like of shape (n_samples,) or (n_samples, n_targets)
             Target values
         """
+        if self.tuning_strategy.lower() not in ["grid", "bayes"]:
+            raise ValueError(
+                "`tuning_strategy` must be either 'grid' or 'bayes'; got "
+                "{0} instead.".format(self.tuning_strategy)
+            )
+
         # This makes sure that there is no duplication in memory.
         # Dealing right with copy_X is important in the following:
         # Multiple functions touch X and subsamples of X and can induce a
@@ -868,6 +919,10 @@ class LogisticSGLCV(LogisticSGL):
 
         # All LogisticSGLCV parameters except "cv" and "n_jobs" are acceptable
         path_params = self.get_params()
+        path_params.pop("tuning_strategy", None)
+        path_params.pop("n_bayes_iter", None)
+        path_params.pop("n_bayes_points", None)
+        path_params.pop("random_state", None)
 
         l1_ratios = np.atleast_1d(path_params["l1_ratio"])
         alphas = self.alphas
@@ -908,95 +963,145 @@ class LogisticSGLCV(LogisticSGL):
         # init cross-validation generator
         cv = check_cv(self.cv, classifier=True)
 
-        # Compute path for all folds and compute MSE to get the best alpha
-        folds = list(cv.split(X, y))
-        best_score = -np.inf
+        if self.tuning_strategy == "grid":
+            # Compute path for all folds and compute MSE to get the best alpha
+            folds = list(cv.split(X, y))
+            best_score = -np.inf
 
-        path_params.pop("cv", None)
-        path_params.pop("n_jobs", None)
-        path_params.pop("alphas", None)
-        path_params.pop("l1_ratio", None)
-        path_params.update({"groups": groups})
+            path_params.pop("cv", None)
+            path_params.pop("n_jobs", None)
+            path_params.pop("alphas", None)
+            path_params.pop("l1_ratio", None)
+            path_params.update({"groups": groups})
 
-        # We do a double for loop folded in one, in order to be able to
-        # iterate in parallel on l1_ratio and folds
-        jobs = (
-            delayed(logistic_sgl_scoring_path)(
-                X=X,
-                y=y,
-                train=train,
-                test=test,
-                l1_ratio=this_l1_ratio,
-                alphas=this_alphas,
-                Xy=None,
-                return_n_iter=False,
-                check_input=True,
-                **path_params,
+            # We do a double for loop folded in one, in order to be able to
+            # iterate in parallel on l1_ratio and folds
+            jobs = (
+                delayed(logistic_sgl_scoring_path)(
+                    X=X,
+                    y=y,
+                    train=train,
+                    test=test,
+                    l1_ratio=this_l1_ratio,
+                    alphas=this_alphas,
+                    Xy=None,
+                    return_n_iter=False,
+                    check_input=True,
+                    **path_params,
+                )
+                for this_l1_ratio, this_alphas in zip(l1_ratios, alphas)
+                for train, test in folds
             )
-            for this_l1_ratio, this_alphas in zip(l1_ratios, alphas)
-            for train, test in folds
-        )
 
-        if isinstance(self.verbose, int):  # pragma: no cover
-            parallel_verbosity = self.verbose - 2
-            if parallel_verbosity < 0:
-                parallel_verbosity = 0
-        else:  # pragma: no cover
-            parallel_verbosity = self.verbose
+            if isinstance(self.verbose, int):  # pragma: no cover
+                parallel_verbosity = self.verbose - 2
+                if parallel_verbosity < 0:
+                    parallel_verbosity = 0
+            else:  # pragma: no cover
+                parallel_verbosity = self.verbose
 
-        score_paths = Parallel(
-            n_jobs=self.n_jobs,
-            verbose=parallel_verbosity,
-            **_joblib_parallel_args(prefer="threads"),
-        )(jobs)
+            score_paths = Parallel(
+                n_jobs=self.n_jobs,
+                verbose=parallel_verbosity,
+                **_joblib_parallel_args(prefer="threads"),
+            )(jobs)
 
-        coefs_paths, alphas_paths, scores, n_iters = zip(*score_paths)
+            coefs_paths, alphas_paths, scores, n_iters = zip(*score_paths)
 
-        scores = np.reshape(scores, (n_l1_ratio, len(folds), -1))
-        alphas_paths = np.reshape(alphas_paths, (n_l1_ratio, len(folds), -1))
-        n_iters = np.reshape(n_iters, (n_l1_ratio, len(folds), -1))
-        coefs_paths = np.reshape(coefs_paths, (n_l1_ratio, len(folds), -1, n_alphas))
+            scores = np.reshape(scores, (n_l1_ratio, len(folds), -1))
+            alphas_paths = np.reshape(alphas_paths, (n_l1_ratio, len(folds), -1))
+            n_iters = np.reshape(n_iters, (n_l1_ratio, len(folds), -1))
+            coefs_paths = np.reshape(
+                coefs_paths, (n_l1_ratio, len(folds), -1, n_alphas)
+            )
 
-        mean_score = np.mean(scores, axis=1)
-        self.scoring_path_ = np.squeeze(np.moveaxis(scores, 2, 1))
+            mean_score = np.mean(scores, axis=1)
+            self.scoring_path_ = np.squeeze(np.moveaxis(scores, 2, 1))
 
-        for l1_ratio, l1_alphas, score_alphas in zip(l1_ratios, alphas, mean_score):
-            i_best_alpha = np.argmax(score_alphas)
-            this_best_score = score_alphas[i_best_alpha]
-            if this_best_score > best_score:
-                best_alpha = l1_alphas[i_best_alpha]
-                best_l1_ratio = l1_ratio
-                best_score = this_best_score
+            for l1_ratio, l1_alphas, score_alphas in zip(l1_ratios, alphas, mean_score):
+                i_best_alpha = np.argmax(score_alphas)
+                this_best_score = score_alphas[i_best_alpha]
+                if this_best_score > best_score:
+                    best_alpha = l1_alphas[i_best_alpha]
+                    best_l1_ratio = l1_ratio
+                    best_score = this_best_score
 
-        self.l1_ratio_ = best_l1_ratio
-        self.alpha_ = best_alpha
+            self.l1_ratio_ = best_l1_ratio
+            self.alpha_ = best_alpha
 
-        if self.alphas is None:
-            self.alphas_ = np.asarray(alphas)
-            if n_l1_ratio == 1:
-                self.alphas_ = self.alphas_[0]
-        # Remove duplicate alphas in case alphas is provided.
+            if self.alphas is None:
+                self.alphas_ = np.asarray(alphas)
+                if n_l1_ratio == 1:
+                    self.alphas_ = self.alphas_[0]
+            # Remove duplicate alphas in case alphas is provided.
+            else:
+                self.alphas_ = np.asarray(alphas[0])
+
+            # Refit the model with the parameters selected
+            common_params = {
+                name: value
+                for name, value in self.get_params().items()
+                if name in model.get_params()
+            }
+
+            model.set_params(**common_params)
+            model.alpha = best_alpha
+            model.l1_ratio = best_l1_ratio
+            model.copy_X = copy_X
+
+            model.fit(X, y)
+
+            self.coef_ = model.coef_
+            self.intercept_ = model.intercept_
+            self.n_iter_ = model.n_iter_
+            self.is_fitted_ = True
         else:
-            self.alphas_ = np.asarray(alphas[0])
+            # Set the model with the common input params
+            common_params = {
+                name: value
+                for name, value in self.get_params().items()
+                if name in model.get_params()
+            }
+            model.set_params(**common_params)
+            model.copy_X = copy_X
 
-        # Refit the model with the parameters selected
-        common_params = {
-            name: value
-            for name, value in self.get_params().items()
-            if name in model.get_params()
-        }
+            search_spaces = {"alpha": (np.min(alphas), np.max(alphas), "log-uniform")}
 
-        model.set_params(**common_params)
-        model.alpha = best_alpha
-        model.l1_ratio = best_l1_ratio
-        model.copy_X = copy_X
+            l1_min = np.min(self.l1_ratio)
+            l1_max = np.max(self.l1_ratio)
 
-        model.fit(X, y)
+            if l1_min < l1_max:
+                search_spaces["l1_ratio"] = (
+                    np.min(self.l1_ratio),
+                    np.max(self.l1_ratio),
+                    "uniform",
+                )
 
-        self.coef_ = model.coef_
-        self.intercept_ = model.intercept_
-        self.n_iter_ = model.n_iter_
-        self.is_fitted_ = True
+            self.bayes_optimizer_ = BayesSearchCV(
+                model,
+                search_spaces,
+                n_iter=self.n_bayes_iter,
+                cv=cv,
+                n_jobs=self.n_jobs,
+                n_points=self.n_bayes_points,
+                verbose=self.verbose,
+                random_state=self.random_state,
+                return_train_score=True,
+                scoring=self.scoring,
+            )
+
+            self.bayes_optimizer_.fit(X, y)
+
+            self.alpha_ = self.bayes_optimizer_.best_estimator_.alpha
+            self.l1_ratio_ = self.bayes_optimizer_.best_estimator_.l1_ratio
+            self.coef_ = self.bayes_optimizer_.best_estimator_.coef_
+            self.intercept_ = self.bayes_optimizer_.best_estimator_.intercept_
+            self.n_iter_ = self.bayes_optimizer_.best_estimator_.n_iter_
+            self.is_fitted_ = True
+            self.scoring_path_ = None
+            param_alpha = self.bayes_optimizer_.cv_results_["param__alpha"]
+            self.alphas_ = np.sort(param_alpha)[::-1]
+
         return self
 
     def score(self, X, y):

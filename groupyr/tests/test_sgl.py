@@ -133,17 +133,46 @@ def test_warm_start(fit_intercept):
     assert_array_almost_equal(fx_warm_start, fx_cold_start)
 
 
-def test_sgl_cv():
+@pytest.mark.parametrize("tuning_strategy", ["grid", "bayes"])
+def test_sgl_cv(tuning_strategy):
     X, y, X_test, y_test = build_dataset()
-    max_iter = 150
-    clf = SGLCV(n_alphas=10, eps=1e-3, max_iter=max_iter, cv=3).fit(X, y)
+    max_iter = 500
+    clf = SGLCV(
+        n_alphas=10,
+        eps=1e-3,
+        max_iter=max_iter,
+        cv=3,
+        tuning_strategy=tuning_strategy,
+        random_state=42,
+        n_bayes_iter=10,
+    ).fit(X, y)
     assert_almost_equal(clf.alpha_, 0.056, 2)
     assert clf.score(X_test, y_test) > 0.99  # nosec
 
-    alphas = np.copy(clf.alphas_)
-    np.random.default_rng().shuffle(alphas)
-    clf2 = SGLCV(alphas=alphas, max_iter=max_iter, cv=3, n_jobs=2).fit(X, y)
-    assert_array_almost_equal(clf.alphas_, clf2.alphas_)
+    if tuning_strategy == "grid":
+        alphas = np.copy(clf.alphas_)
+        np.random.default_rng().shuffle(alphas)
+        clf2 = SGLCV(
+            alphas=alphas,
+            max_iter=max_iter,
+            cv=3,
+            n_jobs=2,
+            tuning_strategy=tuning_strategy,
+        ).fit(X, y)
+        assert_array_almost_equal(clf.alphas_, clf2.alphas_)
+    else:
+        clf = SGLCV(
+            l1_ratio=[0.95, 1.0],
+            n_alphas=10,
+            eps=1e-3,
+            max_iter=max_iter,
+            cv=3,
+            tuning_strategy=tuning_strategy,
+            random_state=42,
+            n_bayes_iter=20,
+        ).fit(X, y)
+        assert clf.score(X_test, y_test) > 0.98  # nosec
+        assert_almost_equal(clf.alpha_, 0.065, 3)
 
 
 @pytest.mark.parametrize("execution_number", range(5))
@@ -178,3 +207,9 @@ def test_sglcv_value_errors():
 
     with pytest.raises(ValueError):
         SGLCV().fit(X, y + [0])
+
+    with pytest.raises(ValueError):
+        SGLCV(tuning_strategy="error").fit(X, y)
+
+    with pytest.raises(ValueError):
+        LogisticSGLCV(tuning_strategy="error").fit(X, y)
