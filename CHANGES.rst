@@ -1,3 +1,7 @@
+v0.1.8 (December 05, 2020)
+==========================
+  * ENH: Add BayesSearchCV option to SGLCV and LogisticSGLCV (#31)
+
 v0.1.7 (October 26, 2020)
 =========================
   * ENH: Use joblib Parallel instead of custom _ProgressParallel wrapper (#28)
