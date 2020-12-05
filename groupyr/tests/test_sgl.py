@@ -1,11 +1,13 @@
 import numpy as np
 import pytest
 
-from groupyr import SGL, SGLCV, LogisticSGLCV
-from groupyr.datasets import make_group_regression
+from groupyr import SGL, SGLCV, LogisticSGL, LogisticSGLCV
+from groupyr.datasets import make_group_regression, make_group_classification
 from groupyr.sgl import _alpha_grid
 
+from skopt import BayesSearchCV
 from sklearn.linear_model.tests.test_coordinate_descent import build_dataset
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.utils._testing import assert_almost_equal, assert_array_almost_equal
 
 
@@ -29,7 +31,7 @@ def test_sgl_input_validation():
         _alpha_grid(X, y, l1_ratio=0.5, scale_l2_by="error")
 
 
-@pytest.mark.parametrize("Estimator", [SGL, SGLCV, LogisticSGLCV])
+@pytest.mark.parametrize("Estimator", [SGL, SGLCV, LogisticSGL, LogisticSGLCV])
 def test_sgl_masks(Estimator):
     groups = [np.arange(5), np.arange(5, 10)]
     model = Estimator(groups=groups)
@@ -213,3 +215,55 @@ def test_sglcv_value_errors():
 
     with pytest.raises(ValueError):
         LogisticSGLCV(tuning_strategy="error").fit(X, y)
+
+
+def test_LogisticSGLCV_GridSearchCV():
+    # make sure LogisticSGLCV gives same best params (l1_ratio and alpha) as
+    # GridSearchCV
+    X, y, groups = make_group_classification(random_state=42)
+
+    cv = StratifiedKFold(3)
+    l1_ratios = np.linspace(0, 1, 3)
+    alphas = np.logspace(-4, 4, 3)
+
+    clf_cv = LogisticSGLCV(alphas=alphas, l1_ratio=l1_ratios, groups=groups, cv=cv)
+    clf_cv.fit(X, y)
+
+    param_grid = {"alpha": alphas, "l1_ratio": l1_ratios}
+    clf = LogisticSGL(groups=groups)
+    gs = GridSearchCV(clf, param_grid, cv=cv)
+    gs.fit(X, y)
+
+    assert gs.best_params_["l1_ratio"] == clf_cv.l1_ratio_
+    assert gs.best_params_["alpha"] == clf_cv.alpha_
+
+
+def test_LogisticSGLCV_BayesSearchCV():
+    # make sure LogisticSGLCV gives same best params (l1_ratio and alpha) as
+    # BayesSearchCV
+    X, y, groups = make_group_classification(random_state=42)
+    cv = StratifiedKFold(3)
+
+    l1_ratios = np.linspace(0, 1, 3)
+    alphas = np.logspace(-4, 4, 3)
+    clf_cv = LogisticSGLCV(
+        alphas=alphas,
+        l1_ratio=l1_ratios,
+        groups=groups,
+        cv=cv,
+        tuning_strategy="bayes",
+        n_bayes_iter=10,
+        random_state=42,
+    )
+    clf_cv.fit(X, y)
+
+    search_spaces = {
+        "alpha": (np.min(alphas), np.max(alphas), "log-uniform"),
+        "l1_ratio": (np.min(l1_ratios), np.max(l1_ratios), "uniform"),
+    }
+    clf = LogisticSGL(groups=groups)
+    gs = BayesSearchCV(clf, search_spaces, cv=cv, random_state=42, n_iter=10)
+    gs.fit(X, y)
+
+    assert gs.best_params_["l1_ratio"] == clf_cv.l1_ratio_
+    assert gs.best_params_["alpha"] == clf_cv.alpha_
