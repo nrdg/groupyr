@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; groupyr 0.1.7 documentation</title>
+  <title>API Reference &mdash; groupyr 0.1.8 documentation</title>
   
 
   
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.7
+                0.1.8
               </div>
             
           
@@ -341,7 +341,7 @@ efficient than using the canonical estimators with grid search because they
 make use of warm-starting.</p>
 <dl class="py class">
 <dt id="groupyr.SGLCV">
-<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">SGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/sgl.html#SGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.SGLCV" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">SGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tuning_strategy</span><span class="o">=</span><span class="default_value">'grid'</span></em>, <em class="sig-param"><span class="n">n_bayes_iter</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">n_bayes_points</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/sgl.html#SGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.SGLCV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterative SGL model fitting along a regularization path.</p>
 <p>See the scikit-learn glossary entry for <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator">cross-validation estimator</a></p>
 <dl class="field-list">
@@ -419,6 +419,33 @@ strategies that can be used here.</p>
 <code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v0.18.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
 <code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
 </dd>
+<dt><strong>tuning_strategy</strong><span class="classifier">[“grid”, “bayes”], default=”grid”</span></dt><dd><p>Hyperparameter tuning strategy to use. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
+then evaluate all parameter points on the <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> and <code class="docutils literal notranslate"><span class="pre">alphas</span></code> grid,
+using warm start to evaluate different <code class="docutils literal notranslate"><span class="pre">alpha</span></code> values along the
+regularization path. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;bayes&quot;</span></code>, then a fixed
+number of parameter settings is sampled using <code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code>.
+The fixed number of settings is set by <code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> setting is sampled uniformly from the minimum and maximum
+of the input <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> parameter. The <code class="docutils literal notranslate"><span class="pre">alpha</span></code> setting is sampled
+log-uniformly either from the maximum and minumum of the input <code class="docutils literal notranslate"><span class="pre">alphas</span></code>
+parameter, if provided or from <code class="docutils literal notranslate"><span class="pre">eps</span></code> * max_alpha to max_alpha where
+max_alpha is a conservative estimate of the maximum alpha for which the
+solution coefficients are non-trivial.</p>
+</dd>
+<dt><strong>n_bayes_iter</strong><span class="classifier">int, default=50</span></dt><dd><p>Number of parameter settings that are sampled if using Bayes search
+for hyperparameter optimization. <code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code> trades off runtime
+vs quality of the solution. Consider increasing <code class="docutils literal notranslate"><span class="pre">n_bayes_points</span></code> if
+you want to try more parameter settings in parallel.</p>
+</dd>
+<dt><strong>n_bayes_points</strong><span class="classifier">int, default=1</span></dt><dd><p>Number of parameter settings to sample in parallel if using Bayes
+search for hyperparameter optimization. If this does not align with
+<code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code>, the last iteration will sample fewer points.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance or None, optional (default=None)</span></dt><dd><p>If int, random_state is the seed used by the random number generator;
+If RandomState instance, random_state is the random number generator;
+If None, the random number generator is the RandomState instance used
+by <cite>np.random</cite>.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -449,6 +476,10 @@ alpha.</p>
 <dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>number of iterations run by the proximal gradient descent solver to
 reach the specified tolerance for the optimal alpha.</p>
 </dd>
+<dt><strong>bayes_optimizer_</strong><span class="classifier">skopt.BayesSearchCV instance or None</span></dt><dd><p>The BayesSearchCV instance used for hyperparameter optimization if
+<code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;bayes&quot;</span></code>. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
+then this attribute is None.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -456,7 +487,7 @@ reach the specified tolerance for the optimal alpha.</p>
 
 <dl class="py class">
 <dt id="groupyr.LogisticSGLCV">
-<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">LogisticSGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">scoring</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/logistic.html#LogisticSGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.LogisticSGLCV" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">groupyr.</code><code class="sig-name descname">LogisticSGLCV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">groups</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_l2_by</span><span class="o">=</span><span class="default_value">'group_length'</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">0.001</span></em>, <em class="sig-param"><span class="n">n_alphas</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">alphas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">scoring</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy_X</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tuning_strategy</span><span class="o">=</span><span class="default_value">'grid'</span></em>, <em class="sig-param"><span class="n">n_bayes_iter</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">n_bayes_points</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/logistic.html#LogisticSGLCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groupyr.LogisticSGLCV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterative Logistic SGL model fitting along a regularization path.</p>
 <p>See the scikit-learn glossary entry for <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator">cross-validation estimator</a></p>
 <dl class="field-list">
@@ -539,6 +570,33 @@ strategies that can be used here.</p>
 <code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v0.18.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
 <code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
 </dd>
+<dt><strong>tuning_strategy</strong><span class="classifier">[“grid”, “bayes”], default=”grid”</span></dt><dd><p>Hyperparameter tuning strategy to use. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
+then evaluate all parameter points on the <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> and <code class="docutils literal notranslate"><span class="pre">alphas</span></code> grid,
+using warm start to evaluate different <code class="docutils literal notranslate"><span class="pre">alpha</span></code> values along the
+regularization path. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;bayes&quot;</span></code>, then a fixed
+number of parameter settings is sampled using <code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code>.
+The fixed number of settings is set by <code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> setting is sampled uniformly from the minimum and maximum
+of the input <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code> parameter. The <code class="docutils literal notranslate"><span class="pre">alpha</span></code> setting is sampled
+log-uniformly either from the maximum and minumum of the input <code class="docutils literal notranslate"><span class="pre">alphas</span></code>
+parameter, if provided or from <code class="docutils literal notranslate"><span class="pre">eps</span></code> * max_alpha to max_alpha where
+max_alpha is a conservative estimate of the maximum alpha for which the
+solution coefficients are non-trivial.</p>
+</dd>
+<dt><strong>n_bayes_iter</strong><span class="classifier">int, default=50</span></dt><dd><p>Number of parameter settings that are sampled if using Bayes search
+for hyperparameter optimization. <code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code> trades off runtime
+vs quality of the solution. Consider increasing <code class="docutils literal notranslate"><span class="pre">n_bayes_points</span></code> if
+you want to try more parameter settings in parallel.</p>
+</dd>
+<dt><strong>n_bayes_points</strong><span class="classifier">int, default=1</span></dt><dd><p>Number of parameter settings to sample in parallel if using Bayes
+search for hyperparameter optimization. If this does not align with
+<code class="docutils literal notranslate"><span class="pre">n_bayes_iter</span></code>, the last iteration will sample fewer points.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance or None, optional (default=None)</span></dt><dd><p>If int, random_state is the seed used by the random number generator;
+If RandomState instance, random_state is the random number generator;
+If None, the random number generator is the RandomState instance used
+by <cite>np.random</cite>.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -571,6 +629,10 @@ alpha.</p>
 </dd>
 <dt><strong>n_iter_</strong><span class="classifier">int</span></dt><dd><p>number of iterations run by the proximal gradient descent solver to
 reach the specified tolerance for the optimal alpha.</p>
+</dd>
+<dt><strong>bayes_optimizer_</strong><span class="classifier">skopt.BayesSearchCV instance or None</span></dt><dd><p>The BayesSearchCV instance used for hyperparameter optimization if
+<code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;bayes&quot;</span></code>. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
+then this attribute is None.</p>
 </dd>
 </dl>
 </dd>

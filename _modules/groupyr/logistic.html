@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.7 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.1.8 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.1.7
+                0.1.8
               </div>
             
           
@@ -171,6 +171,7 @@
 
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span><span class="p">,</span> <span class="n">Parallel</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
 <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.linear_model._base</span> <span class="kn">import</span> <span class="n">LinearClassifierMixin</span>
@@ -873,6 +874,37 @@
 <span class="sd">        ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.</span>
 <span class="sd">        ``-1`` means using all processors.</span>
 
+<span class="sd">    tuning_strategy : [&quot;grid&quot;, &quot;bayes&quot;], default=&quot;grid&quot;</span>
+<span class="sd">        Hyperparameter tuning strategy to use. If ``tuning_strategy == &quot;grid&quot;``,</span>
+<span class="sd">        then evaluate all parameter points on the ``l1_ratio`` and ``alphas`` grid,</span>
+<span class="sd">        using warm start to evaluate different ``alpha`` values along the</span>
+<span class="sd">        regularization path. If ``tuning_strategy == &quot;bayes&quot;``, then a fixed</span>
+<span class="sd">        number of parameter settings is sampled using ``skopt.BayesSearchCV``.</span>
+<span class="sd">        The fixed number of settings is set by ``n_bayes_iter``. The</span>
+<span class="sd">        ``l1_ratio`` setting is sampled uniformly from the minimum and maximum</span>
+<span class="sd">        of the input ``l1_ratio`` parameter. The ``alpha`` setting is sampled</span>
+<span class="sd">        log-uniformly either from the maximum and minumum of the input ``alphas``</span>
+<span class="sd">        parameter, if provided or from ``eps`` * max_alpha to max_alpha where</span>
+<span class="sd">        max_alpha is a conservative estimate of the maximum alpha for which the</span>
+<span class="sd">        solution coefficients are non-trivial.</span>
+
+<span class="sd">    n_bayes_iter : int, default=50</span>
+<span class="sd">        Number of parameter settings that are sampled if using Bayes search</span>
+<span class="sd">        for hyperparameter optimization. ``n_bayes_iter`` trades off runtime</span>
+<span class="sd">        vs quality of the solution. Consider increasing ``n_bayes_points`` if</span>
+<span class="sd">        you want to try more parameter settings in parallel.</span>
+
+<span class="sd">    n_bayes_points : int, default=1</span>
+<span class="sd">        Number of parameter settings to sample in parallel if using Bayes</span>
+<span class="sd">        search for hyperparameter optimization. If this does not align with</span>
+<span class="sd">        ``n_bayes_iter``, the last iteration will sample fewer points.</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    alpha_ : float</span>
@@ -903,6 +935,11 @@
 <span class="sd">        number of iterations run by the proximal gradient descent solver to</span>
 <span class="sd">        reach the specified tolerance for the optimal alpha.</span>
 
+<span class="sd">    bayes_optimizer_ : skopt.BayesSearchCV instance or None</span>
+<span class="sd">        The BayesSearchCV instance used for hyperparameter optimization if</span>
+<span class="sd">        ``tuning_strategy == &quot;bayes&quot;``. If ``tuning_strategy == &quot;grid&quot;``,</span>
+<span class="sd">        then this attribute is None.</span>
+
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    logistic_sgl_path</span>
@@ -926,6 +963,10 @@
         <span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tuning_strategy</span><span class="o">=</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span>
+        <span class="n">n_bayes_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">n_bayes_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
@@ -942,6 +983,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tuning_strategy</span> <span class="o">=</span> <span class="n">tuning_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_iter</span> <span class="o">=</span> <span class="n">n_bayes_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_points</span> <span class="o">=</span> <span class="n">n_bayes_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model.</span>
@@ -958,6 +1003,12 @@
 <span class="sd">        y : array-like of shape (n_samples,) or (n_samples, n_targets)</span>
 <span class="sd">            Target values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuning_strategy</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="s2">&quot;bayes&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`tuning_strategy` must be either &#39;grid&#39; or &#39;bayes&#39;; got &quot;</span>
+                <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tuning_strategy</span><span class="p">)</span>
+            <span class="p">)</span>
+
         <span class="c1"># This makes sure that there is no duplication in memory.</span>
         <span class="c1"># Dealing right with copy_X is important in the following:</span>
         <span class="c1"># Multiple functions touch X and subsamples of X and can induce a</span>
@@ -1036,6 +1087,10 @@
 
         <span class="c1"># All LogisticSGLCV parameters except &quot;cv&quot; and &quot;n_jobs&quot; are acceptable</span>
         <span class="n">path_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;tuning_strategy&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n_bayes_iter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n_bayes_points&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;random_state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="n">l1_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">path_params</span><span class="p">[</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">])</span>
         <span class="n">alphas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span>
@@ -1076,95 +1131,145 @@
         <span class="c1"># init cross-validation generator</span>
         <span class="n">cv</span> <span class="o">=</span> <span class="n">check_cv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># Compute path for all folds and compute MSE to get the best alpha</span>
-        <span class="n">folds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-        <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuning_strategy</span> <span class="o">==</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span>
+            <span class="c1"># Compute path for all folds and compute MSE to get the best alpha</span>
+            <span class="n">folds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cv&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">path_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="n">groups</span><span class="p">})</span>
+            <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cv&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">path_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">path_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="n">groups</span><span class="p">})</span>
 
-        <span class="c1"># We do a double for loop folded in one, in order to be able to</span>
-        <span class="c1"># iterate in parallel on l1_ratio and folds</span>
-        <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">delayed</span><span class="p">(</span><span class="n">logistic_sgl_scoring_path</span><span class="p">)(</span>
-                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
-                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
-                <span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span>
-                <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
-                <span class="n">l1_ratio</span><span class="o">=</span><span class="n">this_l1_ratio</span><span class="p">,</span>
-                <span class="n">alphas</span><span class="o">=</span><span class="n">this_alphas</span><span class="p">,</span>
-                <span class="n">Xy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">return_n_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">path_params</span><span class="p">,</span>
+            <span class="c1"># We do a double for loop folded in one, in order to be able to</span>
+            <span class="c1"># iterate in parallel on l1_ratio and folds</span>
+            <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">logistic_sgl_scoring_path</span><span class="p">)(</span>
+                    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                    <span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span>
+                    <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+                    <span class="n">l1_ratio</span><span class="o">=</span><span class="n">this_l1_ratio</span><span class="p">,</span>
+                    <span class="n">alphas</span><span class="o">=</span><span class="n">this_alphas</span><span class="p">,</span>
+                    <span class="n">Xy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">return_n_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">path_params</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">this_l1_ratio</span><span class="p">,</span> <span class="n">this_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">folds</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">this_l1_ratio</span><span class="p">,</span> <span class="n">this_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">folds</span>
-        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-            <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">-</span> <span class="mi">2</span>
-            <span class="k">if</span> <span class="n">parallel_verbosity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+                <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">-</span> <span class="mi">2</span>
+                <span class="k">if</span> <span class="n">parallel_verbosity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                <span class="n">parallel_verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
 
-        <span class="n">score_paths</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
-            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
-            <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">_joblib_parallel_args</span><span class="p">(</span><span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">),</span>
-        <span class="p">)(</span><span class="n">jobs</span><span class="p">)</span>
+            <span class="n">score_paths</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">_joblib_parallel_args</span><span class="p">(</span><span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">),</span>
+            <span class="p">)(</span><span class="n">jobs</span><span class="p">)</span>
 
-        <span class="n">coefs_paths</span><span class="p">,</span> <span class="n">alphas_paths</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">n_iters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">score_paths</span><span class="p">)</span>
+            <span class="n">coefs_paths</span><span class="p">,</span> <span class="n">alphas_paths</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">n_iters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">score_paths</span><span class="p">)</span>
 
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">alphas_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">alphas_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">n_iters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_iters</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">coefs_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">coefs_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">))</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">alphas_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">alphas_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">n_iters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_iters</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">coefs_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">coefs_paths</span><span class="p">,</span> <span class="p">(</span><span class="n">n_l1_ratio</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">)</span>
+            <span class="p">)</span>
 
-        <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scoring_path_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scoring_path_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">l1_alphas</span><span class="p">,</span> <span class="n">score_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">mean_score</span><span class="p">):</span>
-            <span class="n">i_best_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">score_alphas</span><span class="p">)</span>
-            <span class="n">this_best_score</span> <span class="o">=</span> <span class="n">score_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">this_best_score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
-                <span class="n">best_alpha</span> <span class="o">=</span> <span class="n">l1_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
-                <span class="n">best_l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
-                <span class="n">best_score</span> <span class="o">=</span> <span class="n">this_best_score</span>
+            <span class="k">for</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">l1_alphas</span><span class="p">,</span> <span class="n">score_alphas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l1_ratios</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">mean_score</span><span class="p">):</span>
+                <span class="n">i_best_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">score_alphas</span><span class="p">)</span>
+                <span class="n">this_best_score</span> <span class="o">=</span> <span class="n">score_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">this_best_score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
+                    <span class="n">best_alpha</span> <span class="o">=</span> <span class="n">l1_alphas</span><span class="p">[</span><span class="n">i_best_alpha</span><span class="p">]</span>
+                    <span class="n">best_l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
+                    <span class="n">best_score</span> <span class="o">=</span> <span class="n">this_best_score</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio_</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="n">best_alpha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio_</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="n">best_alpha</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">n_l1_ratio</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># Remove duplicate alphas in case alphas is provided.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">n_l1_ratio</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Remove duplicate alphas in case alphas is provided.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Refit the model with the parameters selected</span>
+            <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">value</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+            <span class="p">}</span>
+
+            <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">common_params</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">best_alpha</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+
+            <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="c1"># Set the model with the common input params</span>
+            <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">value</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">common_params</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
 
-        <span class="c1"># Refit the model with the parameters selected</span>
-        <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">name</span><span class="p">:</span> <span class="n">value</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
-        <span class="p">}</span>
+            <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">)}</span>
 
-        <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">common_params</span><span class="p">)</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">best_alpha</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">best_l1_ratio</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+            <span class="n">l1_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span><span class="p">)</span>
+            <span class="n">l1_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span><span class="p">)</span>
 
-        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">l1_min</span> <span class="o">&lt;</span> <span class="n">l1_max</span><span class="p">:</span>
+                <span class="n">search_spaces</span><span class="p">[</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span><span class="p">),</span>
+                    <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
+                <span class="n">model</span><span class="p">,</span>
+                <span class="n">search_spaces</span><span class="p">,</span>
+                <span class="n">n_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_iter</span><span class="p">,</span>
+                <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+                <span class="n">n_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_points</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+                <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">scoring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">alpha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">l1_ratio</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">coef_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">intercept_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">n_iter_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scoring_path_</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">param_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;param__alpha&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alphas_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">param_alpha</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
