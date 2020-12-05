@@ -5,6 +5,7 @@ from functools import partial
 from joblib import delayed, effective_n_jobs, Parallel
 from scipy import sparse
 from scipy.optimize import root_scalar
+from skopt import BayesSearchCV
 from tqdm.auto import tqdm
 
 from sklearn.base import RegressorMixin, TransformerMixin
@@ -291,7 +292,7 @@ def _alpha_grid(
     alpha_max = np.max(min_alphas) * 1.2
 
     # Test feature sparsity just to make sure we're on the right side of the root
-    while (
+    while (  # pragma: no cover
         model(
             groups=groups,
             alpha=alpha_max,
@@ -303,7 +304,7 @@ def _alpha_grid(
         .chosen_features_.size
         > 0
     ):
-        alpha_max *= 1.2
+        alpha_max *= 1.2  # pragma: no cover
 
     if alpha_max <= np.finfo(float).resolution:
         alphas = np.empty(n_alphas)
@@ -614,6 +615,37 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         ``None`` means 1 unless in a :obj:`joblib:joblib.parallel_backend` context.
         ``-1`` means using all processors.
 
+    tuning_strategy : ["grid", "bayes"], default="grid"
+        Hyperparameter tuning strategy to use. If ``tuning_strategy == "grid"``,
+        then evaluate all parameter points on the ``l1_ratio`` and ``alphas`` grid,
+        using warm start to evaluate different ``alpha`` values along the
+        regularization path. If ``tuning_strategy == "bayes"``, then a fixed
+        number of parameter settings is sampled using ``skopt.BayesSearchCV``.
+        The fixed number of settings is set by ``n_bayes_iter``. The
+        ``l1_ratio`` setting is sampled uniformly from the minimum and maximum
+        of the input ``l1_ratio`` parameter. The ``alpha`` setting is sampled
+        log-uniformly either from the maximum and minumum of the input ``alphas``
+        parameter, if provided or from ``eps`` * max_alpha to max_alpha where
+        max_alpha is a conservative estimate of the maximum alpha for which the
+        solution coefficients are non-trivial.
+
+    n_bayes_iter : int, default=50
+        Number of parameter settings that are sampled if using Bayes search
+        for hyperparameter optimization. ``n_bayes_iter`` trades off runtime
+        vs quality of the solution. Consider increasing ``n_bayes_points`` if
+        you want to try more parameter settings in parallel.
+
+    n_bayes_points : int, default=1
+        Number of parameter settings to sample in parallel if using Bayes
+        search for hyperparameter optimization. If this does not align with
+        ``n_bayes_iter``, the last iteration will sample fewer points.
+
+    random_state : int, RandomState instance or None, optional (default=None)
+        If int, random_state is the seed used by the random number generator;
+        If RandomState instance, random_state is the random number generator;
+        If None, the random number generator is the RandomState instance used
+        by `np.random`.
+
     Attributes
     ----------
     alpha_ : float
@@ -640,6 +672,11 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         number of iterations run by the proximal gradient descent solver to
         reach the specified tolerance for the optimal alpha.
 
+    bayes_optimizer_ : skopt.BayesSearchCV instance or None
+        The BayesSearchCV instance used for hyperparameter optimization if
+        ``tuning_strategy == "bayes"``. If ``tuning_strategy == "grid"``,
+        then this attribute is None.
+
     See Also
     --------
     sgl_path
@@ -662,6 +699,10 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         cv=None,
         verbose=False,
         n_jobs=None,
+        tuning_strategy="grid",
+        n_bayes_iter=50,
+        n_bayes_points=1,
+        random_state=None,
     ):
         self.l1_ratio = l1_ratio
         self.groups = groups
@@ -677,6 +718,10 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         self.cv = cv
         self.verbose = verbose
         self.n_jobs = n_jobs
+        self.tuning_strategy = tuning_strategy
+        self.n_bayes_iter = n_bayes_iter
+        self.n_bayes_points = n_bayes_points
+        self.random_state = random_state
 
     def fit(self, X, y):
         """Fit sparse group lasso linear model.
@@ -693,6 +738,12 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         y : array-like of shape (n_samples,) or (n_samples, n_targets)
             Target values
         """
+        if self.tuning_strategy.lower() not in ["grid", "bayes"]:
+            raise ValueError(
+                "`tuning_strategy` must be either 'grid' or 'bayes'; got "
+                "{0} instead.".format(self.tuning_strategy)
+            )
+
         # This makes sure that there is no duplication in memory.
         # Dealing right with copy_X is important in the following:
         # Multiple functions touch X and subsamples of X and can induce a
@@ -755,6 +806,10 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         path_params = self.get_params()
         path_params.pop("cv", None)
         path_params.pop("n_jobs", None)
+        path_params.pop("tuning_strategy", None)
+        path_params.pop("n_bayes_iter", None)
+        path_params.pop("n_bayes_points", None)
+        path_params.pop("random_state", None)
 
         l1_ratios = np.atleast_1d(path_params["l1_ratio"])
         # For the first path, we need to set l1_ratio
@@ -801,83 +856,131 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         # init cross-validation generator
         cv = check_cv(self.cv)
 
-        # Compute path for all folds and compute MSE to get the best alpha
-        folds = list(cv.split(X, y))
-        best_mse = np.inf
+        if self.tuning_strategy == "grid":
+            # Compute path for all folds and compute MSE to get the best alpha
+            folds = list(cv.split(X, y))
+            best_mse = np.inf
 
-        # We do a double for loop folded in one, in order to be able to
-        # iterate in parallel on l1_ratio and folds
-        jobs = (
-            delayed(_path_residuals)(
-                X,
-                y,
-                train,
-                test,
-                sgl_path,
-                path_params,
-                alphas=this_alphas,
-                l1_ratio=this_l1_ratio,
-                X_order="F",
-                dtype=X.dtype.type,
+            # We do a double for loop folded in one, in order to be able to
+            # iterate in parallel on l1_ratio and folds
+            jobs = (
+                delayed(_path_residuals)(
+                    X,
+                    y,
+                    train,
+                    test,
+                    sgl_path,
+                    path_params,
+                    alphas=this_alphas,
+                    l1_ratio=this_l1_ratio,
+                    X_order="F",
+                    dtype=X.dtype.type,
+                )
+                for this_l1_ratio, this_alphas in zip(l1_ratios, alphas)
+                for train, test in folds
             )
-            for this_l1_ratio, this_alphas in zip(l1_ratios, alphas)
-            for train, test in folds
-        )
 
-        if isinstance(self.verbose, int):  # pragma: no cover
-            parallel_verbosity = self.verbose - 2
-            if parallel_verbosity < 0:
-                parallel_verbosity = 0
-        else:  # pragma: no cover
-            parallel_verbosity = self.verbose
+            if isinstance(self.verbose, int):  # pragma: no cover
+                parallel_verbosity = self.verbose - 2
+                if parallel_verbosity < 0:
+                    parallel_verbosity = 0
+            else:  # pragma: no cover
+                parallel_verbosity = self.verbose
 
-        mse_paths = Parallel(
-            n_jobs=self.n_jobs,
-            verbose=parallel_verbosity,
-            **_joblib_parallel_args(prefer="threads"),
-        )(jobs)
+            mse_paths = Parallel(
+                n_jobs=self.n_jobs,
+                verbose=parallel_verbosity,
+                **_joblib_parallel_args(prefer="threads"),
+            )(jobs)
 
-        mse_paths = np.reshape(mse_paths, (n_l1_ratio, len(folds), -1))
-        mean_mse = np.mean(mse_paths, axis=1)
-        self.mse_path_ = np.squeeze(np.rollaxis(mse_paths, 2, 1))
+            mse_paths = np.reshape(mse_paths, (n_l1_ratio, len(folds), -1))
+            mean_mse = np.mean(mse_paths, axis=1)
+            self.mse_path_ = np.squeeze(np.rollaxis(mse_paths, 2, 1))
 
-        for l1_ratio, l1_alphas, mse_alphas in zip(l1_ratios, alphas, mean_mse):
-            i_best_alpha = np.argmin(mse_alphas)
-            this_best_mse = mse_alphas[i_best_alpha]
-            if this_best_mse < best_mse:
-                best_alpha = l1_alphas[i_best_alpha]
-                best_l1_ratio = l1_ratio
-                best_mse = this_best_mse
+            for l1_ratio, l1_alphas, mse_alphas in zip(l1_ratios, alphas, mean_mse):
+                i_best_alpha = np.argmin(mse_alphas)
+                this_best_mse = mse_alphas[i_best_alpha]
+                if this_best_mse < best_mse:
+                    best_alpha = l1_alphas[i_best_alpha]
+                    best_l1_ratio = l1_ratio
+                    best_mse = this_best_mse
 
-        self.l1_ratio_ = best_l1_ratio
-        self.alpha_ = best_alpha
+            self.l1_ratio_ = best_l1_ratio
+            self.alpha_ = best_alpha
 
-        if self.alphas is None:
-            self.alphas_ = np.asarray(alphas)
-            if n_l1_ratio == 1:
-                self.alphas_ = self.alphas_[0]
-        # Remove duplicate alphas in case alphas is provided.
+            if self.alphas is None:
+                self.alphas_ = np.asarray(alphas)
+                if n_l1_ratio == 1:
+                    self.alphas_ = self.alphas_[0]
+            # Remove duplicate alphas in case alphas is provided.
+            else:
+                self.alphas_ = np.asarray(alphas[0])
+
+            # Refit the model with the parameters selected
+            common_params = {
+                name: value
+                for name, value in self.get_params().items()
+                if name in model.get_params()
+            }
+
+            model.set_params(**common_params)
+            model.alpha = best_alpha
+            model.l1_ratio = best_l1_ratio
+            model.copy_X = copy_X
+
+            model.fit(X, y)
+
+            self.coef_ = model.coef_
+            self.intercept_ = model.intercept_
+            self.n_iter_ = model.n_iter_
+            self.is_fitted_ = True
         else:
-            self.alphas_ = np.asarray(alphas[0])
+            # Set the model with the common input params
+            common_params = {
+                name: value
+                for name, value in self.get_params().items()
+                if name in model.get_params()
+            }
+            model.set_params(**common_params)
+            model.copy_X = copy_X
 
-        # Refit the model with the parameters selected
-        common_params = {
-            name: value
-            for name, value in self.get_params().items()
-            if name in model.get_params()
-        }
+            search_spaces = {"alpha": (np.min(alphas), np.max(alphas), "log-uniform")}
 
-        model.set_params(**common_params)
-        model.alpha = best_alpha
-        model.l1_ratio = best_l1_ratio
-        model.copy_X = copy_X
+            l1_min = np.min(self.l1_ratio)
+            l1_max = np.max(self.l1_ratio)
 
-        model.fit(X, y)
+            if l1_min < l1_max:
+                search_spaces["l1_ratio"] = (
+                    np.min(self.l1_ratio),
+                    np.max(self.l1_ratio),
+                    "uniform",
+                )
 
-        self.coef_ = model.coef_
-        self.intercept_ = model.intercept_
-        self.n_iter_ = model.n_iter_
-        self.is_fitted_ = True
+            self.bayes_optimizer_ = BayesSearchCV(
+                model,
+                search_spaces,
+                n_iter=self.n_bayes_iter,
+                cv=cv,
+                n_jobs=self.n_jobs,
+                n_points=self.n_bayes_points,
+                verbose=self.verbose,
+                random_state=self.random_state,
+                return_train_score=True,
+                scoring="neg_mean_squared_error",
+            )
+
+            self.bayes_optimizer_.fit(X, y)
+
+            self.alpha_ = self.bayes_optimizer_.best_estimator_.alpha
+            self.l1_ratio_ = self.bayes_optimizer_.best_estimator_.l1_ratio
+            self.coef_ = self.bayes_optimizer_.best_estimator_.coef_
+            self.intercept_ = self.bayes_optimizer_.best_estimator_.intercept_
+            self.n_iter_ = self.bayes_optimizer_.best_estimator_.n_iter_
+            self.is_fitted_ = True
+            self.mse_path_ = None
+            param_alpha = self.bayes_optimizer_.cv_results_["param__alpha"]
+            self.alphas_ = np.sort(param_alpha)[::-1]
+
         return self
 
     @property
