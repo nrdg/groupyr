@@ -162,6 +162,10 @@ def test_sgl_cv(tuning_strategy):
             tuning_strategy=tuning_strategy,
         ).fit(X, y)
         assert_array_almost_equal(clf.alphas_, clf2.alphas_)
+
+        # Make sure that this attr is set to None:
+        assert clf2.bayes_optimizer_ is None
+
     else:
         clf = SGLCV(
             l1_ratio=[0.95, 1.0],
