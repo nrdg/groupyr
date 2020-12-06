@@ -857,6 +857,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         cv = check_cv(self.cv)
 
         if self.tuning_strategy == "grid":
+            self.bayes_optimizer_ = None
             # Compute path for all folds and compute MSE to get the best alpha
             folds = list(cv.split(X, y))
             best_mse = np.inf
