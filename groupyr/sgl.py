@@ -11,7 +11,7 @@ from tqdm.auto import tqdm
 from sklearn.base import RegressorMixin, TransformerMixin
 from sklearn.linear_model._base import LinearModel, _preprocess_data
 from sklearn.linear_model._coordinate_descent import _alpha_grid as _lasso_alpha_grid
-from sklearn.linear_model._coordinate_descent import _path_residuals
+from sklearn.metrics import get_scorer
 from sklearn.model_selection import check_cv
 from sklearn.utils.extmath import safe_sparse_dot
 from sklearn.utils.fixes import _joblib_parallel_args
@@ -397,9 +397,6 @@ def sgl_path(
     verbose : bool or int, default=False
         Amount of verbosity.
 
-    return_n_iter : bool, default=False
-        Whether to return the number of iterations or not.
-
     check_input : bool, default=True
         Skip input validation checks, assuming there are handled by the
         caller when check_input=False.
@@ -409,16 +406,16 @@ def sgl_path(
 
     Returns
     -------
+    coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)
+        List of coefficients for the Logistic Regression model. If
+        fit_intercept is set to True then the second dimension will be
+        n_features + 1, where the last item represents the intercept.
+
     alphas : ndarray of shape (n_alphas,)
         The alphas along the path where models are computed.
 
-    coefs : ndarray of shape (n_features, n_alphas)
-        Coefficients along the path.
-
-    n_iters : list of int
-        The number of iterations taken by the PGD solver to
-        reach the specified tolerance for each alpha.
-        (Is returned when ``return_n_iter`` is set to True).
+    n_iters : array of shape (n_alphas,)
+        Actual number of iteration for each alpha.
 
     See Also
     --------
@@ -476,7 +473,11 @@ def sgl_path(
     max_iter = params.get("max_iter", 1000)
     loss = params.get("loss", "squared_loss")
     n_iters = np.empty((n_alphas,), dtype=int)
-    coefs = np.empty((n_features, n_alphas), dtype=X.dtype)
+
+    if fit_intercept:
+        coefs = np.empty((n_features + 1, n_alphas), dtype=X.dtype)
+    else:
+        coefs = np.empty((n_features, n_alphas), dtype=X.dtype)
 
     model = SGL(
         l1_ratio=l1_ratio,
@@ -501,7 +502,11 @@ def sgl_path(
         model.set_params(alpha=alpha)
         model.fit(X, y, loss=loss)
 
-        coefs[..., i] = model.coef_
+        if fit_intercept:
+            coefs[..., i] = np.concatenate([model.coef_, [model.intercept_]])
+        else:
+            coefs[..., i] = model.coef_
+
         n_iters[i] = model.n_iter_
 
         if verbose:
@@ -510,13 +515,181 @@ def sgl_path(
             elif verbose > 1:
                 print("Path: %03i out of %03i" % (i, n_alphas))
 
-    # TODO: Compute dual gaps here
-    dual_gaps = None
+    return coefs, alphas, n_iters
 
-    if return_n_iter:
-        return alphas, coefs, dual_gaps, n_iters
 
-    return alphas, coefs, dual_gaps
+def sgl_scoring_path(
+    X,
+    y,
+    train,
+    test,
+    l1_ratio=0.5,
+    groups=None,
+    scale_l2_by="group_length",
+    eps=1e-3,
+    n_alphas=100,
+    alphas=None,
+    Xy=None,
+    normalize=False,
+    copy_X=True,
+    verbose=False,
+    check_input=True,
+    scoring=None,
+    **params,
+):
+    """Return the scores for the models computed by 'path'.
+
+    Parameters
+    ----------
+    X : {array-like, sparse matrix} of shape (n_samples, n_features)
+        Training data.
+
+    y : array-like of shape (n_samples,) or (n_samples, n_targets)
+        Target values.
+
+    train : list of indices
+        The indices of the train set.
+
+    test : list of indices
+        The indices of the test set.
+
+    l1_ratio : float, default=0.5
+        Number between 0 and 1 passed to SGL estimator (scaling between the
+        group lasso and lasso penalties). ``l1_ratio=1`` corresponds to the
+        Lasso.
+
+    groups : list of numpy.ndarray
+        list of arrays of non-overlapping indices for each group. For
+        example, if nine features are grouped into equal contiguous groups of
+        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),
+        array([6, 7, 8])]``. If the feature matrix contains a bias or
+        intercept feature, do not include it as a group. If None, all
+        features will belong to one group.
+
+    scale_l2_by : ["group_length", None], default="group_length"
+        Scaling technique for the group-wise L2 penalty.
+        By default, ``scale_l2_by="group_length`` and the L2 penalty is
+        scaled by the square root of the group length so that each variable
+        has the same effect on the penalty. This may not be appropriate for
+        one-hot encoded features and ``scale_l2_by=None`` would be more
+        appropriate for that case. ``scale_l2_by=None`` will also reproduce
+        ElasticNet results when all features belong to one group.
+
+    eps : float, default=1e-3
+        Length of the path. ``eps=1e-3`` means that
+        ``alpha_min / alpha_max = 1e-3``.
+
+    n_alphas : int, default=100
+        Number of alphas along the regularization path.
+
+    alphas : ndarray, default=None
+        List of alphas where to compute the models.
+        If None alphas are set automatically.
+
+    Xy : array-like of shape (n_features,), default=None
+        Xy = np.dot(X.T, y) that can be precomputed.
+
+    normalize : bool, default=False
+        This parameter is ignored when ``fit_intercept`` is set to False.
+        If True, the regressors X will be normalized before regression by
+        subtracting the mean and dividing by the l2-norm.
+        If you wish to standardize, please use
+        :class:`sklearn.preprocessing.StandardScaler` before calling ``fit``
+        on an estimator with ``normalize=False``.
+
+    copy_X : bool, default=True
+        If ``True``, X will be copied; else, it may be overwritten.
+
+    verbose : bool or int, default=False
+        Amount of verbosity.
+
+    check_input : bool, default=True
+        Skip input validation checks, assuming there are handled by the
+        caller when check_input=False.
+
+    scoring : callable, default=None
+        A string (see sklearn model evaluation documentation) or a scorer
+        callable object / function with signature ``scorer(estimator, X, y)``.
+        For a list of scoring functions that can be used, look at
+        `sklearn.metrics`. The default scoring option used is accuracy_score.
+
+    **params : kwargs
+        Keyword arguments passed to the SGL estimator
+
+    Returns
+    -------
+    coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)
+        List of coefficients for the SGL model. If fit_intercept is set to
+        True then the second dimension will be n_features + 1, where the last
+        item represents the intercept.
+
+    alphas : ndarray
+        Grid of alphas used for cross-validation.
+
+    scores : ndarray of shape (n_alphas,)
+        Scores obtained for each alpha.
+
+    n_iter : ndarray of shape(n_alphas,)
+        Actual number of iteration for each alpha.
+    """
+    X_train = X[train]
+    y_train = y[train]
+    X_test = X[test]
+    y_test = y[test]
+
+    coefs, alphas, n_iter = sgl_path(
+        X_train,
+        y_train,
+        l1_ratio=l1_ratio,
+        groups=groups,
+        scale_l2_by=scale_l2_by,
+        eps=eps,
+        n_alphas=n_alphas,
+        alphas=alphas,
+        Xy=Xy,
+        normalize=normalize,
+        copy_X=copy_X,
+        verbose=verbose,
+        check_input=False,
+        **params,
+    )
+    del X_train, y_train
+
+    fit_intercept = params.get("fit_intercept", True)
+    max_iter = params.get("max_iter", 1000)
+    tol = params.get("tol", 1e-7)
+
+    model = SGL(
+        l1_ratio=l1_ratio,
+        groups=groups,
+        scale_l2_by=scale_l2_by,
+        fit_intercept=fit_intercept,
+        max_iter=max_iter,
+        tol=tol,
+        warm_start=True,
+        verbose=False,
+        suppress_solver_warnings=True,
+        include_solver_trace=False,
+    )
+
+    if scoring is None:
+        scoring = "neg_mean_squared_error"
+
+    model.is_fitted_ = True
+
+    scores = list()
+    scoring = get_scorer(scoring)
+    for w in coefs.T:
+        if fit_intercept:
+            model.coef_ = w[:-1]
+            model.intercept_ = w[-1]
+        else:
+            model.coef_ = w
+            model.intercept_ = 0.0
+
+        scores.append(scoring(model, X_test, y_test))
+
+    return coefs, alphas, np.array(scores), n_iter
 
 
 class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
@@ -661,7 +834,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
     intercept_ : float or ndarray of shape (n_targets, n_features)
         Independent term in the decision function.
 
-    mse_path_ : ndarray of shape (n_l1_ratio, n_alpha, n_folds)
+    scoring_path_ : ndarray of shape (n_l1_ratio, n_alpha, n_folds)
         Mean square error for the test set on each fold, varying l1_ratio and
         alpha.
 
@@ -847,9 +1020,6 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         if effective_n_jobs(self.n_jobs) > 1:
             path_params["copy_X"] = False
 
-        # "precompute" has no effect but it is expected by _path_residuals
-        path_params["precompute"] = False
-
         if isinstance(self.verbose, int):  # pragma: no cover
             path_params["verbose"] = self.verbose - 1
 
@@ -860,22 +1030,26 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             self.bayes_optimizer_ = None
             # Compute path for all folds and compute MSE to get the best alpha
             folds = list(cv.split(X, y))
-            best_mse = np.inf
+            best_score = -np.inf
+
+            path_params.pop("cv", None)
+            path_params.pop("n_jobs", None)
+            path_params.pop("alphas", None)
+            path_params.pop("l1_ratio", None)
+            path_params.update({"groups": groups})
 
             # We do a double for loop folded in one, in order to be able to
             # iterate in parallel on l1_ratio and folds
             jobs = (
-                delayed(_path_residuals)(
-                    X,
-                    y,
-                    train,
-                    test,
-                    sgl_path,
-                    path_params,
-                    alphas=this_alphas,
+                delayed(sgl_scoring_path)(
+                    X=X,
+                    y=y,
+                    train=train,
+                    test=test,
                     l1_ratio=this_l1_ratio,
-                    X_order="F",
-                    dtype=X.dtype.type,
+                    alphas=this_alphas,
+                    Xy=None,
+                    **path_params,
                 )
                 for this_l1_ratio, this_alphas in zip(l1_ratios, alphas)
                 for train, test in folds
@@ -888,23 +1062,30 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             else:  # pragma: no cover
                 parallel_verbosity = self.verbose
 
-            mse_paths = Parallel(
+            score_paths = Parallel(
                 n_jobs=self.n_jobs,
                 verbose=parallel_verbosity,
                 **_joblib_parallel_args(prefer="threads"),
             )(jobs)
 
-            mse_paths = np.reshape(mse_paths, (n_l1_ratio, len(folds), -1))
-            mean_mse = np.mean(mse_paths, axis=1)
-            self.mse_path_ = np.squeeze(np.rollaxis(mse_paths, 2, 1))
+            coefs_paths, alphas_paths, scores, n_iters = zip(*score_paths)
+            scores = np.reshape(scores, (n_l1_ratio, len(folds), -1))
+            alphas_paths = np.reshape(alphas_paths, (n_l1_ratio, len(folds), -1))
+            n_iters = np.reshape(n_iters, (n_l1_ratio, len(folds), -1))
+            coefs_paths = np.reshape(
+                coefs_paths, (n_l1_ratio, len(folds), -1, n_alphas)
+            )
 
-            for l1_ratio, l1_alphas, mse_alphas in zip(l1_ratios, alphas, mean_mse):
-                i_best_alpha = np.argmin(mse_alphas)
-                this_best_mse = mse_alphas[i_best_alpha]
-                if this_best_mse < best_mse:
+            mean_score = np.mean(scores, axis=1)
+            self.scoring_path_ = np.squeeze(np.moveaxis(scores, 2, 1))
+
+            for l1_ratio, l1_alphas, score_alphas in zip(l1_ratios, alphas, mean_score):
+                i_best_alpha = np.argmax(score_alphas)
+                this_best_score = score_alphas[i_best_alpha]
+                if this_best_score > best_score:
                     best_alpha = l1_alphas[i_best_alpha]
                     best_l1_ratio = l1_ratio
-                    best_mse = this_best_mse
+                    best_score = this_best_score
 
             self.l1_ratio_ = best_l1_ratio
             self.alpha_ = best_alpha
@@ -978,7 +1159,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             self.intercept_ = self.bayes_optimizer_.best_estimator_.intercept_
             self.n_iter_ = self.bayes_optimizer_.best_estimator_.n_iter_
             self.is_fitted_ = True
-            self.mse_path_ = None
+            self.scoring_path_ = None
             param_alpha = self.bayes_optimizer_.cv_results_["param__alpha"]
             self.alphas_ = np.sort(param_alpha)[::-1]
 

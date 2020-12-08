@@ -320,7 +320,7 @@ def logistic_sgl_path(
     alphas : ndarray
         Grid of alphas used for cross-validation.
 
-    n_iter : array of shape (n_alphas,)
+    n_iters : array of shape (n_alphas,)
         Actual number of iteration for each alpha.
     """
     # Preprocessing.
@@ -540,7 +540,7 @@ def logistic_sgl_scoring_path(
         Scores obtained for each alpha.
 
     n_iter : ndarray of shape(n_alphas,)
-        Actual number of iteration for each Cs.
+        Actual number of iteration for each alpha.
     """
     X_train = X[train]
     X_test = X[test]
@@ -563,6 +563,7 @@ def logistic_sgl_scoring_path(
         check_input=False,
         **params,
     )
+    del X_train
 
     fit_intercept = params.get("fit_intercept", True)
     max_iter = params.get("max_iter", 1000)
@@ -585,6 +586,8 @@ def logistic_sgl_scoring_path(
     # that is assigned during fit(). We don't call fit here so
     # we must assign it first
     model.classes_ = np.unique(y_train)
+    model.is_fitted_ = True
+    del y_train
 
     scores = list()
     scoring = get_scorer(scoring)
@@ -1054,6 +1057,7 @@ class LogisticSGLCV(LogisticSGL):
             self.coef_ = model.coef_
             self.intercept_ = model.intercept_
             self.n_iter_ = model.n_iter_
+            self.bayes_optimizer_ = None
             self.is_fitted_ = True
         else:
             # Set the model with the common input params
