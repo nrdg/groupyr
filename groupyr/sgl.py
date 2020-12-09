@@ -1027,7 +1027,6 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         cv = check_cv(self.cv)
 
         if self.tuning_strategy == "grid":
-            self.bayes_optimizer_ = None
             # Compute path for all folds and compute MSE to get the best alpha
             folds = list(cv.split(X, y))
             best_score = -np.inf
@@ -1115,6 +1114,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
             self.coef_ = model.coef_
             self.intercept_ = model.intercept_
             self.n_iter_ = model.n_iter_
+            self.bayes_optimizer_ = None
             self.is_fitted_ = True
         else:
             # Set the model with the common input params
