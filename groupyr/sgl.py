@@ -1,4 +1,5 @@
 """Create regression estimators based on the sparse group lasso."""
+import logging
 import numpy as np
 
 from functools import partial
@@ -22,6 +23,7 @@ from ._prox import _soft_threshold
 from .utils import check_groups
 
 __all__ = ["SGL", "sgl_path", "SGLCV"]
+logger = logging.getLogger(__name__)
 
 
 class SGL(SGLBaseEstimator, RegressorMixin, LinearModel):
@@ -638,6 +640,12 @@ def sgl_scoring_path(
     n_iter : ndarray of shape(n_alphas,)
         Actual number of iteration for each alpha.
     """
+    if Xy is not None:
+        logger.warning(
+            "You supplied the `Xy` parameter. Remember to ensure "
+            "that Xy is computed from the training data alone."
+        )
+
     X_train = X[train]
     y_train = y[train]
     X_test = X[test]

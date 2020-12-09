@@ -1,4 +1,5 @@
 """Create logistic estimators based on the sparse group lasso."""
+import logging
 import numpy as np
 
 from joblib import delayed, effective_n_jobs, Parallel
@@ -20,6 +21,7 @@ from .sgl import _alpha_grid
 from .utils import check_groups
 
 __all__ = ["LogisticSGL", "LogisticSGLCV"]
+logger = logging.getLogger(__name__)
 
 
 class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
@@ -546,6 +548,12 @@ def logistic_sgl_scoring_path(
     n_iter : ndarray of shape(n_alphas,)
         Actual number of iteration for each alpha.
     """
+    if Xy is not None:
+        logger.warning(
+            "You supplied the `Xy` parameter. Remember to ensure "
+            "that Xy is computed from the training data alone."
+        )
+
     X_train = X[train]
     X_test = X[test]
     y_train = y[train]
