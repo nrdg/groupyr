@@ -1,4 +1,5 @@
 """Create logistic estimators based on the sparse group lasso."""
+import logging
 import numpy as np
 
 from joblib import delayed, effective_n_jobs, Parallel
@@ -20,6 +21,7 @@ from .sgl import _alpha_grid
 from .utils import check_groups
 
 __all__ = ["LogisticSGL", "LogisticSGLCV"]
+logger = logging.getLogger(__name__)
 
 
 class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
@@ -287,7 +289,9 @@ def logistic_sgl_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.
@@ -320,7 +324,7 @@ def logistic_sgl_path(
     alphas : ndarray
         Grid of alphas used for cross-validation.
 
-    n_iter : array of shape (n_alphas,)
+    n_iters : array of shape (n_alphas,)
         Actual number of iteration for each alpha.
     """
     # Preprocessing.
@@ -497,7 +501,9 @@ def logistic_sgl_scoring_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.
@@ -540,8 +546,14 @@ def logistic_sgl_scoring_path(
         Scores obtained for each alpha.
 
     n_iter : ndarray of shape(n_alphas,)
-        Actual number of iteration for each Cs.
+        Actual number of iteration for each alpha.
     """
+    if Xy is not None:
+        logger.warning(
+            "You supplied the `Xy` parameter. Remember to ensure "
+            "that Xy is computed from the training data alone."
+        )
+
     X_train = X[train]
     X_test = X[test]
     y_train = y[train]
@@ -563,6 +575,7 @@ def logistic_sgl_scoring_path(
         check_input=False,
         **params,
     )
+    del X_train
 
     fit_intercept = params.get("fit_intercept", True)
     max_iter = params.get("max_iter", 1000)
@@ -585,6 +598,8 @@ def logistic_sgl_scoring_path(
     # that is assigned during fit(). We don't call fit here so
     # we must assign it first
     model.classes_ = np.unique(y_train)
+    model.is_fitted_ = True
+    del y_train
 
     scores = list()
     scoring = get_scorer(scoring)
@@ -1054,6 +1069,7 @@ class LogisticSGLCV(LogisticSGL):
             self.coef_ = model.coef_
             self.intercept_ = model.intercept_
             self.n_iter_ = model.n_iter_
+            self.bayes_optimizer_ = None
             self.is_fitted_ = True
         else:
             # Set the model with the common input params
