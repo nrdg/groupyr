@@ -408,7 +408,7 @@ def sgl_path(
     -------
     coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)
         List of coefficients for the Logistic Regression model. If
-        fit_intercept is set to True then the second dimension will be
+        fit_intercept is set to True then the first dimension will be
         n_features + 1, where the last item represents the intercept.
 
     alphas : ndarray of shape (n_alphas,)
@@ -620,7 +620,7 @@ def sgl_scoring_path(
     -------
     coefs : ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)
         List of coefficients for the SGL model. If fit_intercept is set to
-        True then the second dimension will be n_features + 1, where the last
+        True then the first dimension will be n_features + 1, where the last
         item represents the intercept.
 
     alphas : ndarray
