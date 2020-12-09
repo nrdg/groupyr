@@ -1,4 +1,5 @@
-v0.1.8 (December 05, 2020)
+v0.1.9 (December 09, 2020)
 ==========================
-  * ENH: Add BayesSearchCV option to SGLCV and LogisticSGLCV (#31)
+  * ENH: Use sgl_scoring_path instead of sklearn's _path_residuals (#33)
+  * FIX: Sets bayes_optimizer_ to None when "grid" strategy is used (#32)
 
