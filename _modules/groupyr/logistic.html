@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.8 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.1.9 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.1.8
+                0.1.9
               </div>
             
           
@@ -167,6 +167,7 @@
             
   <h1>Source code for groupyr.logistic</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Create logistic estimators based on the sparse group lasso.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span><span class="p">,</span> <span class="n">Parallel</span>
@@ -188,6 +189,7 @@
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LogisticSGL&quot;</span><span class="p">,</span> <span class="s2">&quot;LogisticSGLCV&quot;</span><span class="p">]</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LogisticSGL"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGL">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGL</span><span class="p">(</span><span class="n">SGLBaseEstimator</span><span class="p">,</span> <span class="n">LinearClassifierMixin</span><span class="p">):</span>
@@ -455,7 +457,9 @@
 <span class="sd">        If None alphas are set automatically.</span>
 
 <span class="sd">    Xy : array-like of shape (n_features,), default=None</span>
-<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed.</span>
+<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,</span>
+<span class="sd">        prevent train/test leakage by ensuring the ``Xy`` is precomputed</span>
+<span class="sd">        using only training data.</span>
 
 <span class="sd">    normalize : bool, default=False</span>
 <span class="sd">        This parameter is ignored when ``fit_intercept`` is set to False.</span>
@@ -488,7 +492,7 @@
 <span class="sd">    alphas : ndarray</span>
 <span class="sd">        Grid of alphas used for cross-validation.</span>
 
-<span class="sd">    n_iter : array of shape (n_alphas,)</span>
+<span class="sd">    n_iters : array of shape (n_alphas,)</span>
 <span class="sd">        Actual number of iteration for each alpha.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Preprocessing.</span>
@@ -665,7 +669,9 @@
 <span class="sd">        If None alphas are set automatically.</span>
 
 <span class="sd">    Xy : array-like of shape (n_features,), default=None</span>
-<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed.</span>
+<span class="sd">        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,</span>
+<span class="sd">        prevent train/test leakage by ensuring the ``Xy`` is precomputed</span>
+<span class="sd">        using only training data.</span>
 
 <span class="sd">    normalize : bool, default=False</span>
 <span class="sd">        This parameter is ignored when ``fit_intercept`` is set to False.</span>
@@ -708,8 +714,14 @@
 <span class="sd">        Scores obtained for each alpha.</span>
 
 <span class="sd">    n_iter : ndarray of shape(n_alphas,)</span>
-<span class="sd">        Actual number of iteration for each Cs.</span>
+<span class="sd">        Actual number of iteration for each alpha.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Xy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;You supplied the `Xy` parameter. Remember to ensure &quot;</span>
+            <span class="s2">&quot;that Xy is computed from the training data alone.&quot;</span>
+        <span class="p">)</span>
+
     <span class="n">X_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
     <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
     <span class="n">y_train</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
@@ -731,6 +743,7 @@
         <span class="n">check_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">params</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="k">del</span> <span class="n">X_train</span>
 
     <span class="n">fit_intercept</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fit_intercept&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">max_iter</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_iter&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -753,6 +766,8 @@
     <span class="c1"># that is assigned during fit(). We don&#39;t call fit here so</span>
     <span class="c1"># we must assign it first</span>
     <span class="n">model</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">del</span> <span class="n">y_train</span>
 
     <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">scoring</span> <span class="o">=</span> <span class="n">get_scorer</span><span class="p">(</span><span class="n">scoring</span><span class="p">)</span>
@@ -1222,6 +1237,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Set the model with the common input params</span>
