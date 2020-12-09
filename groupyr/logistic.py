@@ -287,7 +287,9 @@ def logistic_sgl_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.
@@ -497,7 +499,9 @@ def logistic_sgl_scoring_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.

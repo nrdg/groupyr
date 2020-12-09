@@ -172,7 +172,9 @@ def _alpha_grid(
         Target values
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     groups : list of numpy.ndarray
         list of arrays of non-overlapping indices for each group. For
@@ -381,7 +383,9 @@ def sgl_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.
@@ -587,7 +591,9 @@ def sgl_scoring_path(
         If None alphas are set automatically.
 
     Xy : array-like of shape (n_features,), default=None
-        Xy = np.dot(X.T, y) that can be precomputed.
+        Xy = np.dot(X.T, y) that can be precomputed. If supplying ``Xy``,
+        prevent train/test leakage by ensuring the ``Xy`` is precomputed
+        using only training data.
 
     normalize : bool, default=False
         This parameter is ignored when ``fit_intercept`` is set to False.
