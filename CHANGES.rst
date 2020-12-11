@@ -1,3 +1,7 @@
+v0.1.10 (December 10, 2020)
+===========================
+  * FIX: Assign error_score in BayesSearchCV (#34)
+
 v0.1.9 (December 09, 2020)
 ==========================
   * ENH: Use sgl_scoring_path instead of sklearn's _path_residuals (#33)
