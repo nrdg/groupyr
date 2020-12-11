@@ -1,6 +1,8 @@
 """Create regression estimators based on the sparse group lasso."""
+import contextlib
 import logging
 import numpy as np
+import warnings
 
 from functools import partial
 from joblib import delayed, effective_n_jobs, Parallel
@@ -833,6 +835,11 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         If None, the random number generator is the RandomState instance used
         by `np.random`.
 
+    suppress_solver_warnings : bool, default=True
+        If True, suppress warnings from BayesSearchCV when the objective is
+        evaluated at the same point multiple times. Setting this to False,
+        may be useful for debugging.
+
     Attributes
     ----------
     alpha_ : float
@@ -890,6 +897,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         n_bayes_iter=50,
         n_bayes_points=1,
         random_state=None,
+        suppress_solver_warnings=True,
     ):
         self.l1_ratio = l1_ratio
         self.groups = groups
@@ -909,6 +917,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         self.n_bayes_iter = n_bayes_iter
         self.n_bayes_points = n_bayes_points
         self.random_state = random_state
+        self.suppress_solver_warnings = suppress_solver_warnings
 
     def fit(self, X, y):
         """Fit sparse group lasso linear model.
@@ -1166,7 +1175,20 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
                 error_score=-np.inf,
             )
 
-            self.bayes_optimizer_.fit(X, y)
+            if self.suppress_solver_warnings:
+                ctx_mgr = warnings.catch_warnings()
+            else:
+                ctx_mgr = contextlib.suppress()
+
+            with ctx_mgr:
+                # If n_bayes_points > 1 the objective may be evaluated at the
+                # same point multiple times. This is okay and we give the user
+                # the choice as to whether or not to see these warnings. The
+                # default is to suppress them.
+                if self.suppress_solver_warnings:
+                    warnings.filterwarnings("ignore", category=UserWarning)
+
+                self.bayes_optimizer_.fit(X, y)
 
             self.alpha_ = self.bayes_optimizer_.best_estimator_.alpha
             self.l1_ratio_ = self.bayes_optimizer_.best_estimator_.l1_ratio
