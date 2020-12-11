@@ -1104,6 +1104,7 @@ class LogisticSGLCV(LogisticSGL):
                 random_state=self.random_state,
                 return_train_score=True,
                 scoring=self.scoring,
+                error_score=-np.inf,
             )
 
             self.bayes_optimizer_.fit(X, y)
