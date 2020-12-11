@@ -1163,6 +1163,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
                 random_state=self.random_state,
                 return_train_score=True,
                 scoring="neg_mean_squared_error",
+                error_score=-np.inf,
             )
 
             self.bayes_optimizer_.fit(X, y)
