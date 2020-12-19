@@ -7,7 +7,8 @@ to use it (see `LICENSE
 <https://github.com/richford/groupyr/blob/main/LICENSE>`_ for details).
 
 It also means that we welcome contributions from developers outside of our
-research collaboration and we will credit these contributions appropriately.
+research collaboration. We love contributions and we will credit them
+appropriately!
 
-Detailed guidelines for contribution are available `here
+We've written a more detailed contribution guide `here
 <https://github.com/richford/groupyr/blob/main/.github/CONTRIBUTING.md>`_.

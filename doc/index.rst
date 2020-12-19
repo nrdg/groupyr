@@ -1,14 +1,14 @@
 Groupyr: Sparse Group Lasso in Python
 =====================================
 
-Groupyr is a scikit-learn compatible implementation of the sparse group lasso
+*Groupyr* is a scikit-learn compatible implementation of the sparse group lasso
 linear model. It is intended for high-dimensional supervised learning
 problems where related covariates can be assigned to predefined groups.
 
 The Sparse Group Lasso
 ----------------------
 
-The sparse group lasso [1]_ is a penalized regression model that combines the
+The sparse group lasso [1]_ is a penalized regression approach that combines the
 group lasso with the normal lasso penalty to promote both global sparsity and
 group-wise sparsity. It estimates a target variable :math:`\hat{y}` from a
 feature matrix :math:`\mathbf{X}`, using
@@ -37,26 +37,27 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
 :math:`\lambda` controls the strength of the regularization.
 
 .. toctree::
+   :titlesonly:
+
+   Home <self>
+
+
+.. toctree::
    :maxdepth: 3
    :hidden:
 
    install
-   user_guide
    auto_examples/index
    getting_help
    api
+   FAQ <faq>
    contributing
-   *Groupyr* on GitHub <https://github.com/richford/groupyr>
+   Groupyr on GitHub <https://github.com/richford/groupyr>
 
-`Getting started <quick_start.html>`_
--------------------------------------
+`Installation <install.html>`_
+------------------------------
 
-See the `getting started <quick_start.html>`_ page for installation and basic usage instructions.
-
-`User Guide <user_guide.html>`_
--------------------------------
-
-See the `user guide <user_guide.html>`_ for further information on how to use groupyr.
+See the `installation guide <install.html>`_ for installation instructions.
 
 `API Documentation <api.html>`_
 -------------------------------
