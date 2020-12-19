@@ -12,7 +12,7 @@ methods will be familiar to ``sklearn`` users.
 Sparse Groups Lasso Estimators
 ==============================
 
-These are groupyr's canonical estimators. ``SGL`` is intended for regression
+These are *groupyr*'s canonical estimators. ``SGL`` is intended for regression
 problems while ``LogisticSGL`` is intended for classification problems.
 
 .. autoclass:: SGL

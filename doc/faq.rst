@@ -3,7 +3,7 @@
 Frequently Asked Questions
 ==========================
 
-Here we'll maintain a list of frequently asked questions about *Groupyr*. Do
+Here we'll maintain a list of frequently asked questions about *groupyr*. Do
 you have a question that isn't addressed here? If so, please see our `getting
 help page <getting_help.html>`_ for information about how to file a new
 issue.

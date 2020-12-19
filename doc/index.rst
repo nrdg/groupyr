@@ -1,5 +1,5 @@
-Groupyr: Sparse Group Lasso in Python
-=====================================
+*Groupyr*: Sparse Group Lasso in Python
+=======================================
 
 *Groupyr* is a scikit-learn compatible implementation of the sparse group lasso
 linear model. It is intended for high-dimensional supervised learning
@@ -37,6 +37,7 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
 :math:`\lambda` controls the strength of the regularization.
 
 .. toctree::
+   :hidden:
    :titlesonly:
 
    Home <self>
@@ -72,7 +73,7 @@ And look at the `example gallery <auto_examples/index.html>`_ for a set of intro
 Citing groupyr
 --------------
 
-If you use groupyr in a scientific publication, we would appreciate
+If you use *groupyr* in a scientific publication, we would appreciate
 citations. Please see our `citation instructions
 <https://github.com/richford/groupyr#citing-groupyr>`_ for the latest
 reference and a bibtex entry.
@@ -80,18 +81,18 @@ reference and a bibtex entry.
 Acknowledgements
 ----------------
 
-Groupyr development is supported through a grant from the `Gordon and Betty
+*Groupyr* development is supported through a grant from the `Gordon and Betty
 Moore Foundation <https://www.moore.org/>`_ and from the `Alfred P. Sloan
 Foundation <https://sloan.org/>`_ to the `University of Washington eScience
-Institute <http://escience.washington.edu/>`_, as well as NIH Collaborative
-Research in Computational Neuroscience grant R01EB027585-01 through the National
-Institute of Biomedical Imaging and Bioengineering to Eleftherios Garyfallidis
-(Indiana University) and Ariel Rokem (University of Washington).
+Institute <http://escience.washington.edu/>`_, as well as `NIMH BRAIN
+Initiative grant 1RF1MH121868-01
+<https://projectreporter.nih.gov/project_info_details.cfm?aid=9886761&icde=46874320&ddparam=&ddvalue=&ddsub=&cr=2&csb=default&cs=ASC&pball=)>`_
+to Ariel Rokem (University of Washington).
 
-The API design of groupyr was facilitated by the `scikit-learn project
+The API design of *groupyr* was facilitated by the `scikit-learn project
 template`_ and it therefore borrows heavily from `scikit-learn`_ [2]_.
-Groupyr relies on the copt optimization library [3]_ for its solver. The
-groupyr logo is a flipped silhouette of an `image from J. E. Randall`_ and is
+*Groupyr* relies on the copt optimization library [3]_ for its solver. The
+*groupyr* logo is a flipped silhouette of an `image from J. E. Randall`_ and is
 licensed `CC BY-SA`_.
 
 .. _scikit-learn project template: https://github.com/scikit-learn-contrib/project-template
