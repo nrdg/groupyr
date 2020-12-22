@@ -25,7 +25,7 @@ between the features and the target and must satisfy [1]_
     \hat{\beta} = \min_{\beta} \frac{1}{2}
     || y - \sum_{\ell = 1}^{G} \mathbf{X}^{(\ell)} \beta^{(\ell)} ||_2^2
     + (1 - \alpha) \lambda \sum_{\ell = 1}^{G} \sqrt{p_{\ell}} ||\beta^{(\ell)}||_2
-    + \alpha) \lambda ||\beta||_1,
+    + \alpha \lambda ||\beta||_1,
    
 where :math:`G` is the total number of groups, :math:`\mathbf{X}^{(\ell)}` is
 the submatrix of :math:`\mathbf{X}` with columns belonging to group
