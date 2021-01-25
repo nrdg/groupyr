@@ -149,11 +149,10 @@ SMBO for a regression example) in the online documentation.
 
 ## Acknowledgments
 
-Groupyr development was supported through a grant from the Gordon and Betty
-Moore Foundation and from the Alfred P. Sloan Foundation to the University of
-Washington eScience Institute, as well as NIMH BRAIN Initiative grant
-1RF1MH121868-01 to Ariel Rokem at the University of Washington and through cloud credits from the Google Cloud Platform. We would like
-to thank Noah Simon and Jason Yeatman for helpful discussions of the SGL
-method and its applications.
+Groupyr development was supported through a grant from the Gordon and
+Betty Moore Foundation and from the Alfred P. Sloan Foundation to the
+University of Washington eScience Institute, as well as NIMH BRAIN
+Initiative grant 1RF1MH121868-01 to Ariel Rokem at the University of
+Washington and through cloud credits from the Google Cloud Platform.
 
 ## References
