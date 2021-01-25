@@ -38,7 +38,7 @@ bibliography: paper.bib
 
 ## Summary
 
-For high-dimensional supervised learning, it is often benefitial to use
+For high-dimensional supervised learning, it is often beneficial to use
 domain-specific knowledge to improve the performance of statistical learning
 models. When the problem contains covariates which form groups, researchers
 can including this grouping information to find parsimonious representations
