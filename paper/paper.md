@@ -41,7 +41,7 @@ bibliography: paper.bib
 For high-dimensional supervised learning, it is often beneficial to use
 domain-specific knowledge to improve the performance of statistical learning
 models. When the problem contains covariates which form groups, researchers
-can including this grouping information to find parsimonious representations
+can include this grouping information to find parsimonious representations
 of the relationship between covariates and targets. These groups may arise
 artificially, as from the polynomial expansion of a smaller feature space, or
 naturally, as from the anatomical grouping of different brain regions or the
