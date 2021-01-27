@@ -82,26 +82,28 @@ $\alpha$ controls the overall strength of the regularization.
 
 ## Statement of need
 
-*Groupyr* is a Python library that implements the sparse group lasso as
-scikit-learn [@sklearn] [@sklearn_api] compatible estimators. It satisfies
-the need for grouped penalized regression models that can be used
-interoperably in researcher's real-world scikit-learn workflows. Some
-pre-existing Python libraries come close to satisfying this need.
-[Lightning](http://contrib.scikit-learn.org/lightning/) is a Python library
-for large-scale linear classification and regression. It supports many
-solvers with a combination of the L1 and L2 penalties. However, it does not
-allow the user to specify groups of covariates (see, for example, [this
-GitHub issue](https://github.com/scikit-learn-contrib/lightning/issues/39)).
-The [group_lasso](https://group-lasso.readthedocs.io/en/latest/#) package is
-a well-designed and well-documented implementation of the sparse group lasso
-that meets the basic API requirements of scikit-learn compatible estimators.
-However, we found that our implementation, which relies on the `copt`
-optimization library [@copt], was faster. Additionally, we needed estimators
-with built-in cross-validation support using both grid search and the
-``BayesSearchCV`` [@scikit-optimize] sequential model based optimization
-strategy. For example, the speed and cross-validation enhancements were
-crucial to using *groupyr* in real-world neuroinformatics research
-[@richiehalford2019multidimensional].
+*Groupyr* is a Python library that implements the sparse group lasso
+as scikit-learn [@sklearn] [@sklearn_api] compatible estimators.
+It satisfies the need for grouped penalized regression models that
+can be used interoperably in researcher's real-world scikit-learn
+workflows. Some pre-existing Python libraries come close to satisfying
+this need. [*Lightning*](http://contrib.scikit-learn.org/lightning/)
+is a Python library for large-scale linear classification and
+regression. It supports many solvers with a combination of the
+L1 and L2 penalties. However, it does not allow the user to
+specify groups of covariates (see, for example, [this GitHub
+issue](https://github.com/scikit-learn-contrib/lightning/issues/39)).
+Another Python package,
+[*group_lasso*](https://group-lasso.readthedocs.io/en/latest/#), is a
+well-designed and well-documented implementation of the sparse group
+lasso. It meets the basic API requirements of scikit-learn compatible
+estimators. However, we found that our implementation in *groupyr*,
+which relies on the *copt* optimization library [@copt], was faster.
+Additionally, we needed estimators with built-in cross-validation
+support using both grid search and sequential model based optimization
+strategies. For example, the speed and cross-validation enhancements
+were crucial to using *groupyr* in *AFQ-Insight*, a neuroinformatics
+research library [@richiehalford2019multidimensional].
 
 ## Usage
 
