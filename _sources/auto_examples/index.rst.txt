@@ -6,10 +6,14 @@
 
 .. _general_examples:
 
-General examples
+Examples
 ================
 
-Introductory examples.
+These examples use the sparse group lasso and synthetic data to demonstrate
+how groupyr can be used to solve penalized regression problems with grouped
+covariates. Because the data is synthetically generated, we know the "ground
+truth" and can compare to the estimated important features chosen by the
+groupyr models.
 
 
 
@@ -33,6 +37,27 @@ Introductory examples.
    :hidden:
 
    /auto_examples/plot_classifier
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso model on a simulated sparse signal with high group-level sparsit...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_regressor_thumb.png
+     :alt: Sparse Group Lasso for grouped sparse signals
+
+     :ref:`sphx_glr_auto_examples_plot_regressor.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_regressor
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

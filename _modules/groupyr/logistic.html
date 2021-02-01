@@ -7,12 +7,15 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>groupyr.logistic &mdash; groupyr 0.1.10 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.2.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
@@ -69,7 +72,7 @@
             
             
               <div class="version">
-                0.1.10
+                0.2.0
               </div>
             
           
@@ -95,13 +98,16 @@
             
             
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*Groupyr* on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">Groupyr on GitHub</a></li>
 </ul>
 
             
@@ -167,8 +173,10 @@
             
   <h1>Source code for groupyr.logistic</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Create logistic estimators based on the sparse group lasso.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">effective_n_jobs</span><span class="p">,</span> <span class="n">Parallel</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
@@ -920,6 +928,11 @@
 <span class="sd">        If None, the random number generator is the RandomState instance used</span>
 <span class="sd">        by `np.random`.</span>
 
+<span class="sd">    suppress_solver_warnings : bool, default=True</span>
+<span class="sd">        If True, suppress warnings from BayesSearchCV when the objective is</span>
+<span class="sd">        evaluated at the same point multiple times. Setting this to False,</span>
+<span class="sd">        may be useful for debugging.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    alpha_ : float</span>
@@ -982,6 +995,7 @@
         <span class="n">n_bayes_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
         <span class="n">n_bayes_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">suppress_solver_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">l1_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
@@ -1002,6 +1016,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_iter</span> <span class="o">=</span> <span class="n">n_bayes_iter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_bayes_points</span> <span class="o">=</span> <span class="n">n_bayes_points</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppress_solver_warnings</span> <span class="o">=</span> <span class="n">suppress_solver_warnings</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model.</span>
@@ -1275,7 +1290,20 @@
                 <span class="n">error_score</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">suppress_solver_warnings</span><span class="p">:</span>
+                <span class="n">ctx_mgr</span> <span class="o">=</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ctx_mgr</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+
+            <span class="k">with</span> <span class="n">ctx_mgr</span><span class="p">:</span>
+                <span class="c1"># If n_bayes_points &gt; 1 the objective may be evaluated at the</span>
+                <span class="c1"># same point multiple times. This is okay and we give the user</span>
+                <span class="c1"># the choice as to whether or not to see these warnings. The</span>
+                <span class="c1"># default is to suppress them.</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">suppress_solver_warnings</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">alpha</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayes_optimizer_</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">l1_ratio</span>

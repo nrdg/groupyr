@@ -7,12 +7,15 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>General examples &mdash; groupyr 0.1.10 documentation</title>
+  <title>Examples &mdash; groupyr 0.2.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
@@ -44,7 +47,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Logistic Sparse Group Lasso for grouped sparse signals" href="plot_classifier.html" />
-    <link rel="prev" title="User guide" href="../user_guide.html" /> 
+    <link rel="prev" title="Installation" href="../install.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -71,7 +74,7 @@
             
             
               <div class="version">
-                0.1.10
+                0.2.0
               </div>
             
           
@@ -96,17 +99,21 @@
               
             
             
-              <ul class="current">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+</ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">General examples</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="plot_classifier.html">Logistic Sparse Group Lasso for grouped sparse signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_regressor.html">Sparse Group Lasso for grouped sparse signals</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_help.html">Getting help using <em>groupyr</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to <em>groupyr</em></a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">*Groupyr* on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">Groupyr on GitHub</a></li>
 </ul>
 
             
@@ -153,7 +160,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>General examples</li>
+      <li>Examples</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,12 +179,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="general-examples">
-<span id="sphx-glr-auto-examples"></span><span id="id1"></span><h1>General examples<a class="headerlink" href="#general-examples" title="Permalink to this headline">¶</a></h1>
-<p>Introductory examples.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal. The esti..."><div class="figure align-default" id="id2">
+  <div class="section" id="examples">
+<span id="general-examples"></span><span id="sphx-glr-auto-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>These examples use the sparse group lasso and synthetic data to demonstrate
+how groupyr can be used to solve penalized regression problems with grouped
+covariates. Because the data is synthetically generated, we know the “ground
+truth” and can compare to the estimated important features chosen by the
+groupyr models.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal. The esti..."><div class="figure align-default" id="id1">
 <img alt="Logistic Sparse Group Lasso for grouped sparse signals" src="../_images/sphx_glr_plot_classifier_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_classifier.html#sphx-glr-auto-examples-plot-classifier-py"><span class="std std-ref">Logistic Sparse Group Lasso for grouped sparse signals</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_classifier.html#sphx-glr-auto-examples-plot-classifier-py"><span class="std std-ref">Logistic Sparse Group Lasso for grouped sparse signals</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso model on a simulated sparse signal with high group-level sparsit..."><div class="figure align-default" id="id2">
+<img alt="Sparse Group Lasso for grouped sparse signals" src="../_images/sphx_glr_plot_regressor_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_regressor.html#sphx-glr-auto-examples-plot-regressor-py"><span class="std std-ref">Sparse Group Lasso for grouped sparse signals</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
@@ -203,7 +220,7 @@
         <a href="plot_classifier.html" class="btn btn-neutral float-right" title="Logistic Sparse Group Lasso for grouped sparse signals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../user_guide.html" class="btn btn-neutral float-left" title="User guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
