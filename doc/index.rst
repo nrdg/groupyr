@@ -25,7 +25,7 @@ between the features and the target and must satisfy [1]_
     \hat{\beta} = \min_{\beta} \frac{1}{2}
     || y - \sum_{\ell = 1}^{G} \mathbf{X}^{(\ell)} \beta^{(\ell)} ||_2^2
     + (1 - \alpha) \lambda \sum_{\ell = 1}^{G} \sqrt{p_{\ell}} ||\beta^{(\ell)}||_2
-    + \alpha) \lambda ||\beta||_1,
+    + \alpha \lambda ||\beta||_1,
    
 where :math:`G` is the total number of groups, :math:`\mathbf{X}^{(\ell)}` is
 the submatrix of :math:`\mathbf{X}` with columns belonging to group
@@ -59,6 +59,44 @@ and :math:`\alpha=1` yielding the lasso fit. The hyperparameter
 ------------------------------
 
 See the `installation guide <install.html>`_ for installation instructions.
+
+Usage
+-----
+
+*Groupyr* is compatible with the scikit-learn API and its estimators offer the
+same instantiate, ``fit``, ``predict`` workflow that will be familiar to
+scikit-learn users. See the `API <api.html>`_ and `examples
+<auto_examples/index.html>`_ for full details. Here, we describe only the key
+differences necessary for scikit-learn users to get started with *groupyr*.
+
+For syntactic parallelism with the scikit-learn ``ElasticNet`` estimator, we
+use the keyword ``l1_ratio`` to refer to SGL's :math:`\alpha` hyperparameter
+above that controls the mixture of group lasso and lasso penalties. In
+addition to keyword parameters shared with scikit-learn's ``ElasticNet``,
+``ElasticNetCV``, ``LogisticRegression``, and ``LogisticRegressionCV``
+estimators, users must specify the group assignments for the columns of the
+feature matrix ``X``. This is done during estimator instantiation using the
+``groups`` parameter, which accepts a list of numpy arrays, where the
+:math:`i`-th array specifies the feature indices of the :math:`i`-th group.
+If no grouping information is provided, the default behavior assigns all
+features to one group.
+
+*Groupyr* also offers cross-validation estimators that automatically select
+the best values of the hyperparameters :math:`\alpha` and :math:`\lambda`
+using either an exhaustive grid search (with ``tuning_strategy="grid"``) or
+sequential model based optimization (SMBO) using the scikit-optimize library
+(with ``tuning_strategy="bayes"``). For the grid search strategy, our
+implementation is more efficient than using the base estimator with
+scikit-learn's ``GridSearchCV`` because it makes use of warm-starting, where
+the model is fit along a pre-defined regularization path and the solution
+from the previous fit is used as the initial guess for the current
+hyperparameter value. The randomness associated with SMBO complicates the use
+of a warm start strategy; it can be difficult to determine which of the
+previously attempted hyperparameter combinations should provide the initial
+guess for the current evaluation. However, even without warm-starting, we
+find that the SMBO strategy usually outperforms grid search because far fewer
+evaluations are needed to arrive at the optimal hyperparameters. We provide
+`examples <auto_examples/index.html>`_ of both strategies.
 
 `API Documentation <api.html>`_
 -------------------------------

@@ -23,7 +23,17 @@ MISSING_ENTRIES = [
         "affiliation": "Stanford University",
         "name": "Narayan, Manjari",
         "orcid": "0000-0001-5348-270X",
-    }
+    },
+    {
+        "affiliation": "Stanford University",
+        "name": "Yeatman, Jason",
+        "orcid": "0000-0002-2686-1293",
+    },
+    {
+        "affiliation": "The University of Washington",
+        "name": "Simon, Noah",
+        "orcid": "0000-0002-8985-2474",
+    },
 ]
 
 if __name__ == "__main__":
