@@ -87,14 +87,14 @@ as scikit-learn [@sklearn] [@sklearn_api] compatible estimators.
 It satisfies the need for grouped penalized regression models that
 can be used interoperably in researcher's real-world scikit-learn
 workflows. Some pre-existing Python libraries come close to satisfying
-this need. [*Lightning*](http://contrib.scikit-learn.org/lightning/)
+this need. [*Lightning*](http://contrib.scikit-learn.org/lightning/) [@lightning-2016]
 is a Python library for large-scale linear classification and
 regression. It supports many solvers with a combination of the
 L1 and L2 penalties. However, it does not allow the user to
 specify groups of covariates (see, for example, [this GitHub
 issue](https://github.com/scikit-learn-contrib/lightning/issues/39)).
 Another Python package,
-[*group_lasso*](https://group-lasso.readthedocs.io/en/latest/#), is a
+[*group_lasso*](https://group-lasso.readthedocs.io/en/latest/#) [@group-lasso], is a
 well-designed and well-documented implementation of the sparse group
 lasso. It meets the basic API requirements of scikit-learn compatible
 estimators. However, we found that our implementation in *groupyr*,
