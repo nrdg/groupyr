@@ -12,12 +12,12 @@ authors:
   - name: Manjari Narayan
     orcid: 0000-0001-5348-270X
     affiliation: 2
-  - name: Jason Yeatman
-    orcid: 0000-0002-2686-1293
-    affiliation: 5
   - name: Noah Simon
     orcid: 0000-0002-8985-2474
     affiliation: 4
+  - name: Jason Yeatman
+    orcid: 0000-0002-2686-1293
+    affiliation: 5
   - name: Ariel Rokem
     orcid: 0000-0003-0679-1985
     affiliation: 3
@@ -149,7 +149,23 @@ evaluations are needed to arrive at the optimal hyperparameters. We provide
 examples of both strategies (grid search for a classification example and
 SMBO for a regression example) in the online documentation.
 
-## Acknowledgments
+## Author statements and acknowledgments
+
+The first author (referred to as A.R.H. below) is the lead and corresponding
+author. The last author (referred to as A.R.) is the primary supervisor and
+is responsible for funding acquisition. All other authors are listed in
+alphabetical order by surname. We describe contributions to the paper using
+the CRediT taxonomy [@credit].
+Writing – Original Draft: A.R.H.;
+Writing – Review & Editing: A.R.H., N.S., J.Y., and A.R.;
+Conceptualization and methodology: A.R.H., N.S., and A.R.;
+Software and data curation: A.R.H., M.N., and A.R.;
+Validation: A.R.H. and M.N.;
+Resources: A.R.H. and A.R;
+Visualization: A.R.H.;
+Supervision: N.S., J.Y., and A.R.;
+Project Administration: A.R.H;
+Funding Acquisition: A.R.;
 
 Groupyr development was supported through a grant from the Gordon and
 Betty Moore Foundation and from the Alfred P. Sloan Foundation to the
