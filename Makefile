@@ -1,41 +1,44 @@
-.PHONY: clean clean-test clean-pyc clean-build flake lint
+.PHONY: clean clean-test clean-pyc clean-build lint help
+.DEFAULT_GOAL := help
 
-flake:
+lint:         ## Check code style
 	flake8
 	black --check .
 	pydocstyle
 
-lint: flake
-
-test:
-    # Unit testing using pytest
+test:         ## Run unit tests using pytest
 	pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
-devtest:
-    # Unit testing with the -x option, aborts testing after first failure
+devtest:      ## Run unit tests using pytest and abort testing after first failure
+    # Run unit testing using pytestUnit testing with the -x option, aborts testing after first failure
     # Useful for development when tests are long
 	pytest -x --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
-clean: clean-build clean-pyc ## remove all build, test, coverage and Python artifacts
+clean:        ## Remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc
 
-clean-build: ## remove build artifacts
+clean-build:  ## Remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc: ## remove Python file artifacts
+clean-pyc:    ## Remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-release: dist ## Package and upload a release
+release:      ## Package and upload a release
+release: dist
 	twine upload dist/*
 
-dist: clean ## Build source and wheel package
+dist:         ## Build source and wheel package
+dist: clean
 	python setup.py sdist
 	python setup.py bdist_wheel --universal
 	ls -l dist
 
+help:         ## Show this help.
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
