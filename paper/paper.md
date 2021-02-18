@@ -98,7 +98,7 @@ Another Python package,
 well-designed and well-documented implementation of the sparse group lasso.
 It meets the basic API requirements of scikit-learn compatible estimators.
 However, we found that our implementation in *groupyr*, which relies on the
-*copt* optimization library [@copt], was between five and seven times faster
+*copt* optimization library [@copt], was between two and ten times faster
 for the problem sizes that we encounter in our research (see the
 repository's examples directory for a performance comparison).
 Additionally, we needed estimators with built-in cross-validation
