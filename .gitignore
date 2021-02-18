@@ -74,3 +74,6 @@ target/
 
 # Line contributors file
 line-contributors.txt
+
+**.ipynb_checkpoints
+**Untitled.ipynb
