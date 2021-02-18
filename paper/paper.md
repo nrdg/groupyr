@@ -95,10 +95,12 @@ specify groups of covariates (see, for example, [this GitHub
 issue](https://github.com/scikit-learn-contrib/lightning/issues/39)).
 Another Python package,
 [*group_lasso*](https://group-lasso.readthedocs.io/en/latest/#) [@group-lasso], is a
-well-designed and well-documented implementation of the sparse group
-lasso. It meets the basic API requirements of scikit-learn compatible
-estimators. However, we found that our implementation in *groupyr*,
-which relies on the *copt* optimization library [@copt], was faster.
+well-designed and well-documented implementation of the sparse group lasso.
+It meets the basic API requirements of scikit-learn compatible estimators.
+However, we found that our implementation in *groupyr*, which relies on the
+*copt* optimization library [@copt], was between two and ten times faster
+for the problem sizes that we encounter in our research (see the
+repository's examples directory for a performance comparison).
 Additionally, we needed estimators with built-in cross-validation
 support using both grid search and sequential model based optimization
 strategies. For example, the speed and cross-validation enhancements
