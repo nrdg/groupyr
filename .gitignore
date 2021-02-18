@@ -75,5 +75,10 @@ target/
 # Line contributors file
 line-contributors.txt
 
+# Jupyter notebook files
 **.ipynb_checkpoints
 **Untitled.ipynb
+
+# PDF output
+examples/*.pdf
+paper/*.pdf
