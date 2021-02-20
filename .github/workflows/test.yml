@@ -23,6 +23,9 @@ jobs:
           python -m pip install coveralls --use-feature=2020-resolver
           python -m pip install .[dev] --use-feature=2020-resolver
           python -m pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
+      - name: Check Dependencies
+        run: |
+          pipconflictchecker
       - name: Lint
         run: |
           flake8
