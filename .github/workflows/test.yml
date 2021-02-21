@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
       - name: Checkout repo
@@ -23,9 +23,6 @@ jobs:
           python -m pip install coveralls --use-feature=2020-resolver
           python -m pip install .[dev] --use-feature=2020-resolver
           python -m pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
-      - name: Check Dependencies
-        run: |
-          pipconflictchecker
       - name: Lint
         run: |
           flake8
@@ -34,7 +31,7 @@ jobs:
       - name: Test
         run: |
           cp $(python -c 'import site; print(site.getsitepackages()[0])')/groupyr/_version.py groupyr/_version.py
-          pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
+          tox
       - name: Coveralls
         run: |
           coveralls
