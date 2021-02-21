@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Installation &mdash; groupyr 0.2.0 documentation</title>
+  <title>Installation &mdash; groupyr 0.2.1 documentation</title>
   
 
   
@@ -19,12 +19,16 @@
   <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery-rendered-html.css" type="text/css" />
 
   
   
     <link rel="shortcut icon" href="_static/groupyr-logo.ico"/>
   
+
   
+  
+
   
 
   
@@ -37,9 +41,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script src="_static/js/copybutton.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -61,7 +63,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> groupyr
+            <a href="index.html" class="icon icon-home"> groupyr
           
 
           
@@ -74,7 +76,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -106,6 +108,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installing-the-release-version">Installing the release version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-the-development-version">Installing the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
@@ -154,6 +157,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -165,7 +170,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -181,7 +186,15 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p><em>Groupyr</em> requires Python 3.6, 3.7, or 3.8.</p>
+<p><em>Groupyr</em> requires Python 3.6, 3.7, or 3.8 and depends on</p>
+<blockquote>
+<div><p>copt
+numpy
+scikit-learn
+scipy
+scikit-optimize
+tqdm</p>
+</div></blockquote>
 <div class="section" id="installing-the-release-version">
 <h2>Installing the release version<a class="headerlink" href="#installing-the-release-version" title="Permalink to this headline">¶</a></h2>
 <p>The recommended way to install <em>groupyr</em> is from PyPI,</p>
@@ -206,6 +219,12 @@ You can install the development version using <code class="docutils literal notr
 <p>If you would like to contribute to <em>groupyr</em>, see the <a class="reference external" href="contributing.html">contributing guidelines</a>.</p>
 <p>Next, go to the <a class="reference external" href="user_guide.html">user guide</a> or see the <a class="reference external" href="auto_examples/index.html">example gallery</a> for further information on how to use <em>groupyr</em>.</p>
 </div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Installing <em>groupyr</em> using either of the methods above will install all of
+its dependencies: copt, numpy, scikit-learn, scipy, scikit-optimize, and
+tqdm.</p>
+</div>
 </div>
 
 
@@ -213,37 +232,29 @@ You can install the development version using <code class="docutils literal notr
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="auto_examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Groupyr: Sparse Group Lasso in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="auto_examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Groupyr: Sparse Group Lasso in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Adam Richie-Halford
+        &#169; Copyright 2020, Adam Richie-Halford.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

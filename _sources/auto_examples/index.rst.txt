@@ -40,6 +40,27 @@ groupyr models.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example performs a rudimentary performance comparison of the groupyr and group-lasso packa...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_compare_group_lasso_performance_thumb.png
+     :alt: Rudimentary performance comparison of groupyr and group-lasso
+
+     :ref:`sphx_glr_auto_examples_compare_group_lasso_performance.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/compare_group_lasso_performance
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso model on a simulated sparse signal with high group-level sparsit...">
 
 .. only:: html
