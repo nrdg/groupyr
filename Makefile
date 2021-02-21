@@ -10,7 +10,7 @@ test:         ## Run unit tests using pytest
 	pytest --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
 devtest:      ## Run unit tests using pytest and abort testing after first failure
-    # Run unit testing using pytestUnit testing with the -x option, aborts testing after first failure
+    # Unit testing with the -x option, aborts testing after first failure
     # Useful for development when tests are long
 	pytest -x --pyargs groupyr --cov-report term-missing --cov-config .coveragerc --cov=groupyr -n auto
 
