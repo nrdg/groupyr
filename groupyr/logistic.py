@@ -173,7 +173,7 @@ class LogisticSGL(SGLBaseEstimator, LinearClassifierMixin):
         """
         scores = self.decision_function(X)
         if len(scores.shape) == 1:
-            indices = (scores > 0).astype(np.int)
+            indices = (scores > 0).astype(np.int32)
         else:
             indices = scores.argmax(axis=1)
 
