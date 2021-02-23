@@ -4,7 +4,6 @@ from sklearn.utils.estimator_checks import check_estimator
 
 from groupyr._base import SGLBaseEstimator
 from groupyr import LogisticSGL, LogisticSGLCV, SGL, SGLCV
-from groupyr.decomposition import GroupFPCA
 
 
 @pytest.mark.parametrize("Estimator", [SGLBaseEstimator, SGL, LogisticSGL])

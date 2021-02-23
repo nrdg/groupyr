@@ -2,9 +2,6 @@
 import inspect
 import numpy as np
 
-from collections import OrderedDict
-from groupyr.utils import check_groups
-
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils import check_array
 
