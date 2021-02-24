@@ -1,3 +1,7 @@
+v0.2.2 (February 24, 2021)
+==========================
+  * Micro release to accompany publication of JOSS paper
+
 v0.2.1 (February 21, 2021)
 ==========================
   * DEP: Loosen dependency requirements (#46)
