@@ -6,6 +6,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/richford/groupyr/badge.svg?branch=main&service=github)](https://coveralls.io/github/richford/groupyr?branch=main&service=github)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+<br>
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03024/status.svg)](https://doi.org/10.21105/joss.03024)
 [![DOI](https://zenodo.org/badge/300933639.svg)](https://zenodo.org/badge/latestdoi/300933639)
 
 _Groupyr_ is a Python library for penalized regression of grouped covariates.
@@ -23,20 +25,20 @@ _groupyr_.
 
 If you use _groupyr_ in a scientific publication, please see cite us:
 
-Richie-Halford, A., Narayan, M., and Rokem, A.
-[_Groupyr_: Sparse Group Lasso in Python][link_groupyr_docs].
-DOI:10.5281/zenodo.4067182
+Richie-Halford et al., (2021). Groupyr: Sparse Group Lasso in Python. Journal of Open Source Software, 6(58), 3024, https://doi.org/10.21105/joss.03024
 
 ```
-@software{richie-halford-groupyr,
-    author       = {{R}ichie-{H}alford, {A}dam and {N}arayan, {M}anjari and {R}okem, {A}riel},
-    title        = {{G}roupyr: {S}parse {G}roup {L}asso in {P}ython},
-    month        = oct,
-    year         = 2020,
-    publisher    = {Zenodo},
-    version      = {v0.1.3},
-    doi          = {10.5281/zenodo.4067182},
-    url          = {http://doi.org/10.5281/zenodo.4067182}
+@article{richie-halford-groupyr,
+    doi = {10.21105/joss.03024},
+    url = {https://doi.org/10.21105/joss.03024},
+    year = {2021},
+    publisher = {The Open Journal},
+    volume = {6},
+    number = {58},
+    pages = {3024},
+    author = {Adam {R}ichie-{H}alford and Manjari Narayan and Noah Simon and Jason Yeatman and Ariel Rokem},
+    title = {{G}roupyr: {S}parse {G}roup {L}asso in {P}ython},
+    journal = {Journal of Open Source Software}
 }
 ```
 
