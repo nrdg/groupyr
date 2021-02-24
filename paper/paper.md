@@ -83,7 +83,7 @@ $\alpha$ controls the overall strength of the regularization.
 ## Statement of need
 
 *Groupyr* is a Python library that implements the sparse group lasso
-as scikit-learn [@sklearn] [@sklearn_api] compatible estimators.
+as scikit-learn [@sklearn; @sklearn_api] compatible estimators.
 It satisfies the need for grouped penalized regression models that
 can be used interoperably in researcher's real-world scikit-learn
 workflows. Some pre-existing Python libraries come close to satisfying
