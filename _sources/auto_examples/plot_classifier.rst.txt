@@ -26,7 +26,6 @@ Estimates a Sparse Group Lasso logistic regression model on a simulated
 sparse signal. The estimated important features are compared with the
 ground-truth.
 
-
 .. GENERATED FROM PYTHON SOURCE LINES 11-73
 
 
@@ -123,7 +122,7 @@ ground-truth.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  16.420 seconds)
+   **Total running time of the script:** ( 1 minutes  13.941 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_classifier.py:

@@ -26,7 +26,6 @@ Estimates a Sparse Group Lasso model on a simulated sparse signal with high
 group-level sparsity. The prediction is compared to the ground truth and to
 the results of a Lasso model.
 
-
 .. GENERATED FROM PYTHON SOURCE LINES 11-90
 
 
@@ -42,19 +41,19 @@ the results of a Lasso model.
 
  .. code-block:: none
 
-    /opt/hostedtoolcache/Python/3.6.12/x64/lib/python3.6/site-packages/sklearn/model_selection/_split.py:297: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
-      FutureWarning
-    /opt/hostedtoolcache/Python/3.6.12/x64/lib/python3.6/site-packages/sklearn/model_selection/_split.py:297: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
-      FutureWarning
+    /opt/hostedtoolcache/Python/3.8.7/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.8.7/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
+      warnings.warn(
     Lasso performance:
     train: R^2 = 0.600, RMSE = 446.170
     test:  R^2 = 0.194, RMSE = 610.683
 
     SGL performance:
-    train: R^2 = 0.542, RMSE = 477.629
-    test:  R^2 = 0.331, RMSE = 556.409
+    train: R^2 = 0.559, RMSE = 468.265
+    test:  R^2 = 0.345, RMSE = 550.768
 
-    <matplotlib.legend.Legend object at 0x7fd2723346d8>
+    <matplotlib.legend.Legend object at 0x7f089fbdad30>
 
 
 
@@ -147,7 +146,7 @@ the results of a Lasso model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  2.900 seconds)
+   **Total running time of the script:** ( 1 minutes  48.164 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_regressor.py:
