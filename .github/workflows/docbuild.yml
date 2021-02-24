@@ -31,7 +31,7 @@ jobs:
           name: docs
           path: doc/_build/html
       - name: Publish docs to Github Pages
-        if: startsWith(github.event.ref, 'refs/tags')
+        if: startsWith(github.event.ref, 'refs/tags') && matrix.python-version == 3.8
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
