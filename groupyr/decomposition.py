@@ -87,6 +87,10 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         number of principal components to obtain from functional
         principal component analysis.
 
+    centering : bool, default=True
+        if True then calculate the mean of the functional data object and
+        center the data first.
+
     basis : str, instance of `skfda.representation.basis` class, optional
         the basis in which to represent each group's function before fPCA.
 
@@ -104,9 +108,16 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
     """
 
     def __init__(
-        self, n_components=3, basis=None, n_basis=4, groups=None, exclude_groups=None
+        self,
+        n_components=3,
+        centering=True,
+        basis=None,
+        n_basis=4,
+        groups=None,
+        exclude_groups=None,
     ):
         self.n_components = n_components
+        self.centering = centering
         self.basis = basis
         self.n_basis = n_basis
         self.groups = groups
@@ -165,7 +176,8 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
             )
 
         self.fpca_models_ = [
-            FPCA(n_components=self.n_components) for grp in self.groups_
+            FPCA(n_components=self.n_components, centering=self.centering)
+            for grp in self.groups_
         ]
         self.components_ = [None for grp in self.groups_]
         self.groups_out_ = []
