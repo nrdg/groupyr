@@ -10,7 +10,7 @@ try:
     from skfda.representation.basis import Basis
     from skfda.representation.basis import BSpline, Monomial, Constant, Fourier
     from skfda.preprocessing.dim_reduction.projection import FPCA
-except ImportError:
+except ImportError:  # pragma: no cover
     raise ImportError(
         "To use functional data analysis in groupyr, you will need to have "
         "scikit-fda installed. You can do this by installing groupyr with "
@@ -33,7 +33,7 @@ def _has_nbasis_kwarg(_basis):
         return False
 
 
-def _check_basis(basis, arg_name, n_basis):
+def _check_basis(basis, arg_name, n_basis, domain_range=None):
     allowed_bases = {
         "bspline": BSpline,
         "monomial": Monomial,
@@ -51,24 +51,30 @@ def _check_basis(basis, arg_name, n_basis):
             raise ValueError(err_msg)
 
         if _has_nbasis_kwarg(basis):
-            return basis(n_basis=n_basis)
+            return basis(n_basis=n_basis, domain_range=domain_range)
         else:
-            return basis()
+            return basis(domain_range=domain_range)
     elif basis is not None:
         if basis.lower() not in allowed_bases.keys():
             raise ValueError(err_msg)
 
         if _has_nbasis_kwarg(allowed_bases[basis.lower()]):
-            return allowed_bases[basis.lower()](n_basis=n_basis)
+            return allowed_bases[basis.lower()](
+                n_basis=n_basis, domain_range=domain_range
+            )
         else:
-            return allowed_bases[basis.lower()]()
+            return allowed_bases[basis.lower()](domain_range=domain_range)
 
     return None
 
 
-def _get_group_fd(X, group_mask, basis):
+def _get_group_fd(X, group_mask, basis, grid_points=None):
     group_X = np.copy(X[:, group_mask])
-    fd = FDataGrid(group_X, np.arange(0, group_X.shape[1]))
+    if grid_points is None:
+        group_grid_points = np.arange(0, group_X.shape[1])
+    else:
+        group_grid_points = np.copy(grid_points[group_mask])
+    fd = FDataGrid(group_X, group_grid_points)
     if basis is not None:
         fd = fd.to_basis(basis)
     return fd
@@ -98,6 +104,10 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         the number of functions in the basis. Only used if ``basis`` is not
         None.
 
+    basis_domain_range : tuple, optional
+        a tuple of length 2 containing the initial and end values of the
+        interval over which the basis can be evaluated.
+
     groups : numpy.ndarray or int, optional
         all group indices for feature matrix
 
@@ -113,6 +123,7 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         centering=True,
         basis=None,
         n_basis=4,
+        basis_domain_range=None,
         groups=None,
         exclude_groups=None,
     ):
@@ -120,48 +131,80 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         self.centering = centering
         self.basis = basis
         self.n_basis = n_basis
+        self.basis_domain_range = basis_domain_range
         self.groups = groups
         self.exclude_groups = exclude_groups
 
-    def transform(self, X, y=None):
+    def transform(self, X, y=None, grid_points=None):
         """Transform the input data.
 
         Parameters
         ----------
         X : numpy.ndarray
             The feature matrix
+
+        grid_points : numpy.ndarray
+            The points of dicretisation for the input ``X`` matrix. If None, this will use the
+            grid_points supplied during the fit method.
         """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=True
         )
-        basis = _check_basis(self.basis, "basis", self.n_basis)
-        groups = check_groups(groups=self.groups_, X=X, allow_overlap=True)
+        basis = _check_basis(self.basis, "basis", self.n_basis, self.basis_domain_range)
+        groups = check_groups(groups=self.groups_, X=X, allow_overlap=False)
 
         X_out = []
+
+        if grid_points is None:
+            transform_grid_points = self.fitted_grid_points_
+        else:
+            _ = check_groups(
+                groups=self.groups_,
+                X=grid_points,
+                allow_overlap=False,
+                kwarg_name="grid_points",
+            )
+            transform_grid_points = np.array(grid_points)
+
         for idx, grp in enumerate(groups):
             if self.fpca_models_[idx] is not None:
-                fd = _get_group_fd(X, grp, basis)
+                fd = _get_group_fd(X, grp, basis, transform_grid_points)
                 X_out.append(self.fpca_models_[idx].transform(fd))
             else:
                 X_out.append(X[:, grp])
 
         return np.hstack(X_out)
 
-    def fit(self, X=None, y=None):
+    def fit(self, X=None, y=None, grid_points=None):
         """Fit the fPCA transformer.
 
         Parameters
         ----------
         X : numpy.ndarray
             The feature matrix
+
+        grid_points : numpy.ndarray
+            The points of dicretisation for the input ``X`` matrix. If None, this will use the
+            grid_points supplied during the fit method.
         """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=True
         )
-        basis = _check_basis(self.basis, "basis", self.n_basis)
+        basis = _check_basis(self.basis, "basis", self.n_basis, self.basis_domain_range)
 
         _, self.n_features_in_ = X.shape
-        self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=True)
+        self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=False)
+
+        if grid_points is None:
+            self.fitted_grid_points_ = grid_points
+        else:
+            _ = check_groups(
+                groups=self.groups_,
+                X=grid_points,
+                allow_overlap=False,
+                kwarg_name="grid_points",
+            )
+            self.fitted_grid_points_ = np.array(grid_points)
 
         if self.exclude_groups is None:
             exclude_grp_idx = []
@@ -185,7 +228,7 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         feature_start_idx = 0
         for idx, grp in enumerate(self.groups_):
             if idx not in exclude_grp_idx:
-                fd = _get_group_fd(X, grp, basis)
+                fd = _get_group_fd(X, grp, basis, self.fitted_grid_points_)
                 self.fpca_models_[idx].fit(fd)
                 self.components_[idx] = self.fpca_models_[idx].components_
                 self.groups_out_.append(

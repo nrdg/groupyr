@@ -2,11 +2,11 @@
 import numpy as np
 
 
-def check_groups(groups, X, allow_overlap=False, fit_intercept=False):
+def check_groups(groups, X, allow_overlap=False, fit_intercept=False, kwarg_name="X"):
     """Validate group indices.
 
     Verify that all features in ``X`` are accounted for in groups,
-    that all groups refer to features that actually exist in ``XX``,
+    that all groups refer to features that actually exist in ``X``,
     and, if ``allow_overlap=False``, that all groups are distinct.
 
     Parameters
@@ -32,12 +32,17 @@ def check_groups(groups, X, allow_overlap=False, fit_intercept=False):
         If True, assume that the last column of the feature matrix
         corresponds to the bias or intercept.
 
+    kwarg_name : str, default="X"
+        The keyword argument name used to customize error messages. Defaults to
+        "X" as this function is most commonly used to check feature matrices
+        during fit, transform, and predict functions.
+
     Returns
     -------
     groups : list of numpy.ndarray
         The validated groups.
     """
-    _, n_features = X.shape
+    n_features = X.shape[-1]
 
     if fit_intercept:
         n_features -= 1
@@ -59,8 +64,8 @@ def check_groups(groups, X, allow_overlap=False, fit_intercept=False):
     if set(all_indices) > set(range(n_features)):
         raise ValueError(
             "There are feature indices in groups that exceed the dimensions "
-            "of X; X has {0} features but groups refers to indices {1}".format(
-                n_features, set(all_indices) - set(range(n_features))
+            "of {0}; {0} has {1} features but groups refers to indices {2}".format(
+                kwarg_name, n_features, set(all_indices) - set(range(n_features))
             )
         )
 
