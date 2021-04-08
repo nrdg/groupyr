@@ -1,11 +1,119 @@
 import numpy as np
 import pytest
 
-from groupyr.decomposition import GroupFPCA
+from groupyr.decomposition import GroupPCA, GroupFPCA
+from groupyr.decomposition import SupervisedGroupPCA, SupervisedGroupFPCA
 from skfda import FDataGrid
 from skfda.datasets import fetch_weather
 from skfda.representation.basis import BSpline, Constant, Fourier
+from sklearn.datasets import load_iris, load_diabetes
+from sklearn.decomposition import PCA
 from sklearn.utils.estimator_checks import check_estimator
+from sklearn.utils._testing import assert_allclose
+
+iris = load_iris()
+
+
+@pytest.mark.parametrize("exclude_groups", [None, 1])
+@pytest.mark.parametrize("n_components", range(1, iris.data.shape[1]))
+def test_group_pca_matches_sklearn_iris_results(n_components, exclude_groups):
+    X = iris.data
+    pca = PCA(n_components=n_components)
+
+    X_2 = np.hstack([X, X])
+    groups = [np.arange(0, X.shape[1]), np.arange(X.shape[1], 2 * X.shape[1])]
+
+    gpca = GroupPCA(
+        n_components=n_components, groups=groups, exclude_groups=exclude_groups
+    )
+
+    _ = gpca.fit_transform(X_2)
+
+    X_r = pca.fit_transform(X)
+    X_r2 = gpca.fit_transform(X_2)
+    if exclude_groups is not None:
+        assert_allclose(X_r2, np.hstack([X_r, X]))
+    else:
+        assert_allclose(X_r2, np.hstack([X_r, X_r]))
+
+
+def test_group_pca_inverse_matches_input():
+    X = iris.data
+    X_2 = np.hstack([X, X])
+    groups = [np.arange(0, X.shape[1]), np.arange(X.shape[1], 2 * X.shape[1])]
+
+    gpca = GroupPCA(groups=groups).fit(X_2)
+    Y = gpca.transform(X_2)
+    Y_inv = gpca.inverse_transform(Y)
+    assert_allclose(Y_inv, X_2)
+
+
+def test_supervised_diabetes():
+    n_components = 3
+    diabetes = load_diabetes()
+
+    X = diabetes.data
+    y = diabetes.target
+
+    groups = [np.arange(0, X.shape[1]), np.arange(X.shape[1], 2 * X.shape[1])]
+    X = np.hstack([X, X])
+
+    sgpca = SupervisedGroupPCA(n_components=n_components, groups=groups, theta=0.8).fit(
+        X, y
+    )
+
+    ref_mask = np.array(
+        [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+        ]
+    )
+    assert_allclose(sgpca.screening_mask_, ref_mask)
+
+
+def test_theta_equals_zero_equals_unsupervised():
+    n_components = 3
+    diabetes = load_diabetes()
+
+    X = diabetes.data
+    y = diabetes.target
+
+    groups = [np.arange(0, X.shape[1]), np.arange(X.shape[1], 2 * X.shape[1])]
+    X = np.hstack([X, X])
+
+    gpca = GroupPCA(n_components=n_components, groups=groups)
+    sgpca = SupervisedGroupPCA(n_components=n_components, groups=groups, theta=0.0)
+
+    X_r = gpca.fit_transform(X, y)
+    X_rs = sgpca.fit_transform(X, y)
+
+    assert_allclose(X_r, X_rs)
+
+    gpca = GroupFPCA(n_components=n_components, groups=groups)
+    sgpca = SupervisedGroupFPCA(n_components=n_components, groups=groups, theta=0.0)
+
+    X_r = gpca.fit_transform(X, y)
+    X_rs = sgpca.fit_transform(X, y)
+
+    assert_allclose(X_r, X_rs)
 
 
 def test_group_fpca_matches_skfda_results():
@@ -141,6 +249,8 @@ def test_groupfpca_errors():
         ).fit(X)
 
 
-@pytest.mark.parametrize("Transformer", [GroupFPCA])
+@pytest.mark.parametrize(
+    "Transformer", [GroupFPCA, GroupPCA, SupervisedGroupFPCA, SupervisedGroupPCA]
+)
 def test_all_estimators(Transformer):
     return check_estimator(Transformer())
