@@ -42,6 +42,9 @@ path_coefs, path_alphas, path_iters = gpr.sgl_path(
 
 group_means = np.array([np.linalg.norm(path_coefs[grp], axis=0) for grp in groups])
 
+zero_idx = np.array(
+    [np.max(np.where(group_means[i] == 0)[0]) for i in range(len(groups))]
+)
 
 fig, ax = plt.subplots(2, 1, figsize=(8, 10), sharex=True)
 
