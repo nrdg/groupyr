@@ -3,7 +3,7 @@
 Visualizing the SGL regularization path
 =======================================
 
-Computes SGL path using :function:`sgl_path` along the regularization parameter
+Computes SGL path using the function ``sgl_path`` along the regularization parameter
 on a synthetic dataset.  Each color represents a different feature group in the
 coefficient vector, and this is displayed as a function of the regularization
 parameter.
@@ -58,7 +58,7 @@ for grp, color, z_idx in zip(groups, cmap.colors, zero_idx):
     _ = ax[0].axvline(path_alphas[z_idx], ls=":", color=color)
     _ = ax[1].axvline(path_alphas[z_idx], ls=":", color=color)
 
-# _ = ax[1].semilogx(path_alphas, group_means.transpose())
+_ = ax[1].semilogx(path_alphas, group_means.transpose())
 
 _ = ax[1].set_xlabel(r"$\log(\alpha)$", fontsize=16)
 _ = ax[0].set_ylabel(r"$\left| \hat{\beta} \right|$", fontsize=16)

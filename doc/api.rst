@@ -52,6 +52,10 @@ Regularization Paths
 
 Use these functions to compute regression coefficients along a regularization path.
 
+.. currentmodule:: groupyr
+
 .. autofunction:: sgl_path
+
+.. currentmodule:: groupyr.logistic
 
 .. autofunction:: logistic_sgl_path
