@@ -46,3 +46,12 @@ Use these functions to generate synthetic sparse grouped data.
 .. autofunction:: make_group_classification
 
 .. autofunction:: make_group_regression
+
+Regularization Paths
+====================
+
+Use these functions to compute regression coefficients along a regularization path.
+
+.. autofunction:: sgl_path
+
+.. autofunction:: logistic_sgl_path
