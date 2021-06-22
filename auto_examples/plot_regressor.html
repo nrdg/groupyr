@@ -7,14 +7,16 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Sparse Group Lasso for grouped sparse signals &mdash; groupyr 0.2.3 documentation</title>
+  <title>Sparse Group Lasso for grouped sparse signals &mdash; groupyr 0.2.4 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
   <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
@@ -38,6 +40,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -76,7 +79,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.4
               </div>
             
           
@@ -108,6 +111,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="plot_classifier.html">Logistic Sparse Group Lasso for grouped sparse signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_sgl_path.html">Visualizing the SGL regularization path</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compare_group_lasso_performance.html">Rudimentary performance comparison of groupyr and group-lasso</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sparse Group Lasso for grouped sparse signals</a></li>
 </ul>
@@ -198,19 +202,19 @@ group-level sparsity. The prediction is compared to the ground truth and to
 the results of a Lasso model.</p>
 <img alt="plot regressor" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_regressor_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.8/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.10/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
   warnings.warn(
-/opt/hostedtoolcache/Python/3.8.8/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
+/opt/hostedtoolcache/Python/3.8.10/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
   warnings.warn(
 Lasso performance:
 train: R^2 = 0.600, RMSE = 446.170
 test:  R^2 = 0.194, RMSE = 610.683
 
 SGL performance:
-train: R^2 = 0.561, RMSE = 467.450
-test:  R^2 = 0.346, RMSE = 550.339
+train: R^2 = 0.563, RMSE = 466.275
+test:  R^2 = 0.347, RMSE = 549.749
 
-&lt;matplotlib.legend.Legend object at 0x7fc7f2f26fd0&gt;
+&lt;matplotlib.legend.Legend object at 0x7f7fffc093d0&gt;
 </pre></div>
 </div>
 <div class="line-block">
@@ -297,7 +301,7 @@ test:  R^2 = 0.346, RMSE = 550.339
 <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  50.229 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  42.627 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-regressor-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/901949dfa1ed15c1c16a529b043feba7/plot_regressor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_regressor.py</span></code></a></p>

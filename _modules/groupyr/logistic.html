@@ -7,14 +7,16 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>groupyr.logistic &mdash; groupyr 0.2.3 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.2.4 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
@@ -38,6 +40,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
@@ -74,7 +77,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.4
               </div>
             
           
@@ -404,7 +407,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;binary_only&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;requires_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
 
 
-<span class="k">def</span> <span class="nf">logistic_sgl_path</span><span class="p">(</span>
+<div class="viewcode-block" id="logistic_sgl_path"><a class="viewcode-back" href="../../api.html#groupyr.logistic_sgl_path">[docs]</a><span class="k">def</span> <span class="nf">logistic_sgl_path</span><span class="p">(</span>
     <span class="n">X</span><span class="p">,</span>
     <span class="n">y</span><span class="p">,</span>
     <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
@@ -607,7 +610,7 @@
             <span class="k">elif</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path: </span><span class="si">%03i</span><span class="s2"> out of </span><span class="si">%03i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_alphas</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">n_iters</span>
+    <span class="k">return</span> <span class="n">coefs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">n_iters</span></div>
 
 
 <span class="c1"># helper function for LogisticSGLCV</span>

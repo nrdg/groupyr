@@ -40,6 +40,27 @@ groupyr models.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Computes SGL path using the function sgl_path along the regularization parameter on a synthetic...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_sgl_path_thumb.png
+     :alt: Visualizing the SGL regularization path
+
+     :ref:`sphx_glr_auto_examples_plot_sgl_path.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_sgl_path
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example performs a rudimentary performance comparison of the groupyr and group-lasso packa...">
 
 .. only:: html
