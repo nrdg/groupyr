@@ -1,8 +1,5 @@
-v0.2.3 (March 17, 2021)
-=======================
-  * ENH: Add GroupFPCA (#48)
-  * ENH: Add group transformers (#51)
-  * DOC: Update README.md with JOSS article info (#53)
-  * DOC: One typo (#52)
-  * CI: Only publish docs to GitHub pages for one Python version (#49)
+v0.2.4 (June 22, 2021)
+======================
+  * Add sgl_path example to the documentation (#58)
+  * Add GroupPCA, and supervised PCA variants (#55)
 
