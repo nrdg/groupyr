@@ -59,3 +59,18 @@ Use these functions to compute regression coefficients along a regularization pa
 .. currentmodule:: groupyr.logistic
 
 .. autofunction:: logistic_sgl_path
+
+Group Transformers
+==================
+
+These classes perform group-wise transformations on their inputs.
+
+.. currentmodule:: groupyr.transform
+
+.. autoclass:: GroupExtractor
+
+.. autoclass:: GroupRemover
+
+.. autoclass:: GroupShuffler
+
+.. autoclass:: GroupAggregator

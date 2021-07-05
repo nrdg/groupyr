@@ -320,3 +320,122 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
 
     def _more_tags(self):  # pylint: disable=no-self-use
         return {"allow_nan": True, "multilabel": True, "multioutput": True}
+
+
+class GroupAggregator(BaseEstimator, TransformerMixin):
+    """Aggregate each group of a feature matrix using one or more functions.
+
+    Parameters
+    ----------
+    func : function, str, list or dict
+        Function to use for aggregating the data. If a function, it must
+        accept an ``axis=1`` parameter. If a string, it must be part of
+        the numpy namespace. Acceptable input types are
+
+        - function
+        - string function name
+        - list of functions and/or function names, e.g. ``[np.sum, 'mean']``
+
+        If no function is specified, ``np.mean`` is used.
+
+    groups : list of numpy.ndarray
+        list of arrays of non-overlapping indices for each group. For
+        example, if nine features are grouped into equal contiguous groups of
+        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),
+        array([6, 7, 8])]``. If the feature matrix contains a bias or
+        intercept feature, do not include it as a group. If None, all
+        features will belong to one group.
+
+    group_names : sequence of str or sequences, optional
+        The names of the groups of X. This parameter has no effect on the output
+        of the ``transform()`` method. However, this transformer will keep track
+        of the transformed feature names using ``group_names`` if provided.
+
+    kw_args
+        Additional keyword arguments to pass to ``func``. These will be applied to
+        all elements of ``func`` if ``func`` is a sequence.
+
+    Attributes
+    ----------
+    n_features_in_ : int
+        The number of features in the feature matrix input to ``fit()``.
+
+    n_features_out_ : int
+        The number of features in the feature matrix output by ``transform()``.
+
+    groups_ : list of np.ndarray
+        The validated group indices used by the transformer
+
+    feature_names_out_ : list of str
+        A list of the feature names corresponding to columns of the transformed output.
+    """
+
+    def __init__(self, func=None, groups=None, group_names=None, kw_args=None):
+        self.func = func
+        self.groups = groups
+        self.group_names = group_names
+        self.kw_args = kw_args
+
+    def transform(self, X=None, y=None):
+        """Learn the groups and number of features from the input data."""
+        X = check_array(
+            X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
+        )
+        groups = check_groups(groups=self.groups_, X=X, allow_overlap=True)
+
+        kwargs = self.kw_args if self.kw_args is not None else {}
+        if "axis" in kwargs:
+            _ = kwargs.pop("axis")
+
+        X_out = []
+        for grp in groups:
+            for f in self.func_:
+                X_out.append(f(X[:, grp], axis=1, **kwargs))
+
+        return np.vstack(X_out).T
+
+    def fit(self, X, y=None):
+        """Learn the groups and number of features from the input data.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix
+        """
+        X = check_array(
+            X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
+        )
+
+        _, self.n_features_in_ = X.shape
+        self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=True)
+        _ = _check_group_names(self.groups, self.group_names)
+
+        # Make func_ an iterable even if it is a singleton
+        if self.func is None:
+            self.func_ = [np.mean]
+        elif isinstance(self.func, str):
+            self.func_ = [self.func]
+        elif not isiterable(self.func):
+            self.func_ = [self.func]
+        else:
+            self.func_ = self.func
+
+        # Convert strings to the actual numpy function
+        self.func_ = [getattr(np, f) if isinstance(f, str) else f for f in self.func_]
+
+        if self.group_names is None:
+            group_names_out = [f"group{i}" for i in range(len(self.groups_))]
+        else:
+            group_names_out = self.group_names
+
+        self.feature_names_out_ = []
+        for grp_name in group_names_out:
+            for f in self.func_:
+                self.feature_names_out_.append("__".join([grp_name, f.__name__]))
+
+        self.n_features_out_ = len(self.feature_names_out_)
+
+        return self
+
+    def _more_tags(self):  # pylint: disable=no-self-use
+        return {"allow_nan": True, "multilabel": True, "multioutput": True}
