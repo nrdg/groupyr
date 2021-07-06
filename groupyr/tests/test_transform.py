@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from groupyr.transform import isiterable, GroupExtractor
-from groupyr.transform import GroupRemover, GroupShuffler
+from groupyr.transform import GroupRemover, GroupShuffler, GroupAggregator
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils import shuffle as util_shuffle
 
@@ -255,6 +255,57 @@ def test_GroupShuffler():
     assert np.allclose(X_tr, X)  # nosec
 
 
-@pytest.mark.parametrize("Transformer", [GroupExtractor, GroupRemover, GroupShuffler])
+def test_GroupAggregator():
+    X = np.arange(100).reshape(10, 10)
+    groups = [
+        np.array([0, 1, 2]),
+        np.array([3, 4, 5]),
+        np.array([6, 7, 8]),
+        np.array([9]),
+    ]
+    group_names = ["one", "two", "three", "four"]
+
+    ga = GroupAggregator(groups=groups)
+    X_tr = ga.fit_transform(X)
+    assert ga.feature_names_out_ == [
+        f"group{i}__mean" for i in range(len(groups))
+    ]  # nosec
+
+    X_ref = np.array([np.array([1, 4, 7, 9]) + i * 10 for i in range(10)])
+    assert np.allclose(X_tr, X_ref)  # nosec
+
+    ga = GroupAggregator(func=["mean", np.max], groups=groups, group_names=group_names)
+    X_tr = ga.fit_transform(X)
+    feature_names_ref = []
+    for grp in group_names:
+        feature_names_ref.append("__".join([grp, "mean"]))
+        feature_names_ref.append("__".join([grp, "amax"]))
+
+    assert ga.feature_names_out_ == feature_names_ref  # nosec
+    X_ref = np.array([np.array([1, 2, 4, 5, 7, 8, 9, 9]) + i * 10 for i in range(10)])
+    assert np.allclose(X_tr, X_ref)  # nosec
+
+    ga = GroupAggregator(func="median", groups=groups, group_names=group_names)
+    X_tr = ga.fit_transform(X)
+    feature_names_ref = []
+    for grp in group_names:
+        feature_names_ref.append("__".join([grp, "median"]))
+
+    assert ga.feature_names_out_ == feature_names_ref  # nosec
+    X_ref = np.array([np.array([1, 4, 7, 9]) + i * 10 for i in range(10)])
+    assert np.allclose(X_tr, X_ref)  # nosec
+
+    # Check that the axis kwarg is ignored
+    ga = GroupAggregator(
+        func=np.median, groups=groups, group_names=group_names, kw_args=dict(axis=99)
+    )
+    X_tr = ga.fit_transform(X)
+    assert ga.feature_names_out_ == feature_names_ref  # nosec
+    assert np.allclose(X_tr, X_ref)  # nosec
+
+
+@pytest.mark.parametrize(
+    "Transformer", [GroupExtractor, GroupRemover, GroupShuffler, GroupAggregator]
+)
 def test_all_estimators(Transformer):
     return check_estimator(Transformer())
