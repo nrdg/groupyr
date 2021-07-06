@@ -285,9 +285,7 @@ def test_GroupAggregator():
     X_ref = np.array([np.array([1, 2, 4, 5, 7, 8, 9, 9]) + i * 10 for i in range(10)])
     assert np.allclose(X_tr, X_ref)  # nosec
 
-    ga = GroupAggregator(
-        func="median", groups=groups, group_names=group_names, kw_args=dict(axis=99)
-    )
+    ga = GroupAggregator(func="median", groups=groups, group_names=group_names)
     X_tr = ga.fit_transform(X)
     feature_names_ref = []
     for grp in group_names:
@@ -297,6 +295,7 @@ def test_GroupAggregator():
     X_ref = np.array([np.array([1, 4, 7, 9]) + i * 10 for i in range(10)])
     assert np.allclose(X_tr, X_ref)  # nosec
 
+    # Check that the axis kwarg is ignored
     ga = GroupAggregator(
         func=np.median, groups=groups, group_names=group_names, kw_args=dict(axis=99)
     )

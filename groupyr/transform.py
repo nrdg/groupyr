@@ -1,4 +1,5 @@
 """Transform feature matrices with grouped covariates."""
+import logging
 import numpy as np
 
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -6,6 +7,8 @@ from sklearn.utils import check_array, check_random_state
 from sklearn.utils import shuffle as util_shuffle
 
 from .utils import check_groups
+
+logger = logging.getLogger(__name__)
 
 
 def isiterable(obj):
@@ -353,7 +356,8 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
 
     kw_args
         Additional keyword arguments to pass to ``func``. These will be applied to
-        all elements of ``func`` if ``func`` is a sequence.
+        all elements of ``func`` if ``func`` is a sequence. If "axis" is one of these
+        keywords, it will be ignored and set to ``axis=1``.
 
     Attributes
     ----------
@@ -385,12 +389,16 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
 
         kwargs = self.kw_args if self.kw_args is not None else {}
         if "axis" in kwargs:
+            logger.warning(
+                "You supplied the `axis` keyword argument. This transformer will "
+                "ignore whatever value you supplied and insist on `axis=1`."
+            )
             _ = kwargs.pop("axis")
 
         X_out = []
         for grp in groups:
-            for f in self.func_:
-                X_out.append(f(X[:, grp], axis=1, **kwargs))
+            for fun in self.func_:
+                X_out.append(fun(X[:, grp], axis=1, **kwargs))
 
         return np.vstack(X_out).T
 
@@ -421,7 +429,9 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
             self.func_ = self.func
 
         # Convert strings to the actual numpy function
-        self.func_ = [getattr(np, f) if isinstance(f, str) else f for f in self.func_]
+        self.func_ = [
+            getattr(np, fun) if isinstance(fun, str) else fun for fun in self.func_
+        ]
 
         if self.group_names is None:
             group_names_out = [f"group{i}" for i in range(len(self.groups_))]
@@ -430,8 +440,8 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
 
         self.feature_names_out_ = []
         for grp_name in group_names_out:
-            for f in self.func_:
-                self.feature_names_out_.append("__".join([grp_name, f.__name__]))
+            for fun in self.func_:
+                self.feature_names_out_.append("__".join([grp_name, fun.__name__]))
 
         self.n_features_out_ = len(self.feature_names_out_)
 
