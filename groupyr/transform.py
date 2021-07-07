@@ -219,7 +219,7 @@ class GroupRemover(BaseEstimator, TransformerMixin):
     select_intersection : bool, default=False
         if ``True``, and ``select`` is a sequence, then ``transform`` will
         return the group intersection of labels in ``select``. Otherwise,
-        ``tranform`` will return the group union.
+        ``transform`` will return the group union.
     """
 
     def __init__(
