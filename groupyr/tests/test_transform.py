@@ -66,6 +66,24 @@ def test_GroupExtractor():
     X_tr = ge.fit_transform(X)
     assert np.allclose(X[:, idx], X_tr)  # nosec
 
+    # Test the same as before but with group intersection instead of group union
+    select = ["alpha", "two"]
+    idx = np.concatenate(
+        [
+            grp
+            for grp, t in zip(groups, group_tuple_names)
+            if all([r in t for r in select])
+        ]
+    )
+    ge = GroupExtractor(
+        groups=groups,
+        group_names=group_tuple_names,
+        select=select,
+        select_intersection=True,
+    )
+    X_tr = ge.fit_transform(X)
+    assert np.allclose(X[:, idx], X_tr)  # nosec
+
     select = [0, 3]
     ge = GroupExtractor(groups=groups, select=select)
     X_tr = ge.fit_transform(X)

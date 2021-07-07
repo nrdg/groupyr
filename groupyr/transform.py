@@ -45,7 +45,7 @@ def _check_group_names(groups, group_names):
     return group_names_
 
 
-def _check_select(select, group_names_):
+def _check_select(select, group_names_, return_sequence_intersection=False):
     missing_grp_names_msg = "if ``select`` is a string, you must provide group_names"
     if select is None:
         select_ = select
@@ -62,9 +62,16 @@ def _check_select(select, group_names_):
         if group_names_ is None:
             raise ValueError(missing_grp_names_msg)
 
-        mask = np.zeros_like(group_names_, dtype=bool)
+        if return_sequence_intersection:
+            mask = np.ones_like(group_names_, dtype=bool)
+        else:
+            mask = np.zeros_like(group_names_, dtype=bool)
+
         for label in select:
-            mask = np.logical_or(mask, set([label]) <= group_names_)
+            if return_sequence_intersection:
+                mask = np.logical_and(mask, set([label]) <= group_names_)
+            else:
+                mask = np.logical_or(mask, set([label]) <= group_names_)
 
         select_ = np.where(mask)[0]
     else:
@@ -109,13 +116,26 @@ class GroupExtractor(BaseEstimator, TransformerMixin):
 
     copy_X : bool, default=False
         if ``True``, X will be copied; else, ``transform`` may return a view
+
+    select_intersection : bool, default=False
+        if ``True``, and ``select`` is a sequence, then ``transform`` will
+        return the group intersection of labels in ``select``. Otherwise,
+        ``transform`` will return the group union.
     """
 
-    def __init__(self, select=None, groups=None, group_names=None, copy_X=False):
+    def __init__(
+        self,
+        select=None,
+        groups=None,
+        group_names=None,
+        copy_X=False,
+        select_intersection=False,
+    ):
         self.select = select
         self.groups = groups
         self.group_names = group_names
         self.copy_X = copy_X
+        self.select_intersection = select_intersection
 
     def transform(self, X, y=None):
         """Transform the input data, extracting the desired groups.
@@ -150,7 +170,11 @@ class GroupExtractor(BaseEstimator, TransformerMixin):
         _, self.n_features_in_ = X.shape
         self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=True)
         self.group_names_ = _check_group_names(self.groups, self.group_names)
-        self.select_ = _check_select(self.select, self.group_names_)
+        self.select_ = _check_select(
+            self.select,
+            self.group_names_,
+            return_sequence_intersection=self.select_intersection,
+        )
 
         return self
 
@@ -191,13 +215,26 @@ class GroupRemover(BaseEstimator, TransformerMixin):
 
     copy_X : bool, default=False
         if ``True``, X will be copied; else, ``transform`` may return a view
+
+    select_intersection : bool, default=False
+        if ``True``, and ``select`` is a sequence, then ``transform`` will
+        return the group intersection of labels in ``select``. Otherwise,
+        ``transform`` will return the group union.
     """
 
-    def __init__(self, select=None, groups=None, group_names=None, copy_X=False):
+    def __init__(
+        self,
+        select=None,
+        groups=None,
+        group_names=None,
+        copy_X=False,
+        select_intersection=False,
+    ):
         self.select = select
         self.groups = groups
         self.group_names = group_names
         self.copy_X = copy_X
+        self.select_intersection = select_intersection
 
     def transform(self, X, y=None):
         """Transform the input data, removing the unwanted groups.
@@ -234,7 +271,11 @@ class GroupRemover(BaseEstimator, TransformerMixin):
         _, self.n_features_in_ = X.shape
         self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=True)
         self.group_names_ = _check_group_names(self.groups, self.group_names)
-        self.select_ = _check_select(self.select, self.group_names_)
+        self.select_ = _check_select(
+            self.select,
+            self.group_names_,
+            return_sequence_intersection=self.select_intersection,
+        )
 
         return self
 
@@ -278,13 +319,26 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
         If RandomState instance, random_state is the random number generator;
         If None, the random number generator is the RandomState instance used
         by `np.random`.
+
+    select_intersection : bool, default=False
+        if ``True``, and ``select`` is a sequence, then ``transform`` will
+        return the group intersection of labels in ``select``. Otherwise,
+        ``transform`` will return the group union.
     """
 
-    def __init__(self, select=None, groups=None, group_names=None, random_state=None):
+    def __init__(
+        self,
+        select=None,
+        groups=None,
+        group_names=None,
+        random_state=None,
+        select_intersection=False,
+    ):
         self.select = select
         self.groups = groups
         self.group_names = group_names
         self.random_state = random_state
+        self.select_intersection = select_intersection
 
     def transform(self, X, y=None):
         """Transform the input data, removing the unwanted groups.
@@ -317,7 +371,11 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
         _, self.n_features_in_ = X.shape
         self.groups_ = check_groups(groups=self.groups, X=X, allow_overlap=True)
         self.group_names_ = _check_group_names(self.groups, self.group_names)
-        self.select_ = _check_select(self.select, self.group_names_)
+        self.select_ = _check_select(
+            self.select,
+            self.group_names_,
+            return_sequence_intersection=self.select_intersection,
+        )
 
         return self
 
