@@ -139,7 +139,7 @@ class GroupExtractor(BaseEstimator, TransformerMixin):
         self.copy_X = copy_X
         self.select_intersection = select_intersection
 
-    def transform(self, X, y=None):
+    def transform(self, X):
         """Transform the input data, extracting the desired groups.
 
         Parameters
@@ -161,7 +161,19 @@ class GroupExtractor(BaseEstimator, TransformerMixin):
         return X[:, idx]
 
     def fit(self, X=None, y=None):
-        """Learn the groups and number of features from the input data."""
+        """Select specified groups from the feature matrix.
+
+        This method learns the new feature names and group indices. The
+        actual extraction of features is done in the ``transform`` method.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix.
+
+        y : None
+            Ignored.
+        """
         X = check_array(
             X,
             copy=self.copy_X,
@@ -238,7 +250,7 @@ class GroupRemover(BaseEstimator, TransformerMixin):
         self.copy_X = copy_X
         self.select_intersection = select_intersection
 
-    def transform(self, X, y=None):
+    def transform(self, X):
         """Transform the input data, removing the unwanted groups.
 
         Parameters
@@ -262,7 +274,19 @@ class GroupRemover(BaseEstimator, TransformerMixin):
         return X[:, idx]
 
     def fit(self, X=None, y=None):
-        """Learn the groups and number of features from the input data."""
+        """Remove specified groups from the feature matrix.
+
+        This method learns the new feature names and group indices. The
+        actual removal of features is done in the ``transform`` method.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix.
+
+        y : None
+            Ignored.
+        """
         X = check_array(
             X,
             copy=self.copy_X,
@@ -342,13 +366,13 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
         self.random_state = random_state
         self.select_intersection = select_intersection
 
-    def transform(self, X, y=None):
-        """Transform the input data, removing the unwanted groups.
+    def transform(self, X):
+        """Transform the input data, shuffling the desired groups.
 
         Parameters
         ----------
         X : numpy.ndarray
-            The feature matrix
+            The feature matrix.
         """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
@@ -365,7 +389,19 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
         return X
 
     def fit(self, X=None, y=None):
-        """Learn the groups and number of features from the input data."""
+        """Shuffle specified groups from the feature matrix.
+
+        This method learns the new feature names and group indices. The
+        actual shuffling of features is done in the ``transform`` method.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix.
+
+        y : None
+            Ignored.
+        """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
         )
@@ -440,8 +476,14 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
         self.group_names = group_names
         self.kw_args = kw_args
 
-    def transform(self, X=None, y=None):
-        """Learn the groups and number of features from the input data."""
+    def transform(self, X=None):
+        """Return a groupwise aggregation of the feature matrix.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix.
+        """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
         )
@@ -463,12 +505,18 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
         return np.vstack(X_out).T
 
     def fit(self, X, y=None):
-        """Learn the groups and number of features from the input data.
+        """Aggregate features in each group with a user-defined reduction function.
+
+        This method learns the groups and number of features from the input data.
+        The actual group aggregation is done in the ``transform`` method.
 
         Parameters
         ----------
         X : numpy.ndarray
-            The feature matrix
+            The feature matrix.
+
+        y : None
+            Ignored.
         """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
@@ -571,8 +619,14 @@ class GroupResampler(BaseEstimator, TransformerMixin):
         self.group_names = group_names
         self.kind = kind
 
-    def transform(self, X=None, y=None):
-        """Learn the groups and number of features from the input data."""
+    def transform(self, X=None):
+        """Return a resampled feature matrix.
+
+        Parameters
+        ----------
+        X : numpy.ndarray
+            The feature matrix
+        """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
         )
@@ -592,12 +646,17 @@ class GroupResampler(BaseEstimator, TransformerMixin):
         return np.hstack(X_out)
 
     def fit(self, X, y=None):
-        """Learn the groups and number of features from the input data.
+        """Learn the resampled feature names and groups.
+
+        The actual resampling is done in the ``transform`` method.
 
         Parameters
         ----------
         X : numpy.ndarray
-            The feature matrix
+            The feature matrix.
+
+        y : None
+            Ignored.
         """
         X = check_array(
             X, copy=True, dtype=[np.float32, np.float64, int], force_all_finite=False
@@ -612,6 +671,11 @@ class GroupResampler(BaseEstimator, TransformerMixin):
             target_type=(int, float),
             min_val=0.0,
         )
+
+        if isinstance(self.resample_to, float) and self.resample_to > 1.0:
+            raise ValueError(
+                "If resample_to is a float, it must not be greater than 1.0."
+            )
 
         if self.group_names is None:
             group_names_out = [f"group{i}" for i in range(len(self.groups_))]

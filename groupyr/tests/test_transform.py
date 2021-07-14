@@ -495,6 +495,9 @@ def test_GroupResampler():
     ]
     assert feature_names_ref == gs.feature_names_out_
 
+    with pytest.raises(ValueError):
+        GroupResampler(resample_to=3.0).fit_transform(X)
+
 
 @pytest.mark.parametrize(
     "Transformer",
