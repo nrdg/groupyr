@@ -74,3 +74,5 @@ These classes perform group-wise transformations on their inputs.
 .. autoclass:: GroupShuffler
 
 .. autoclass:: GroupAggregator
+
+.. autoclass:: GroupResampler
