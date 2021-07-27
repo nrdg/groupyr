@@ -5,14 +5,14 @@
 
 Computation times
 =================
-**03:11.272** total execution time for **auto_examples** files:
+**02:12.509** total execution time for **auto_examples** files:
 
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_regressor.py` (``plot_regressor.py``)                                   | 01:42.627 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_regressor.py` (``plot_regressor.py``)                                   | 01:19.167 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_classifier.py` (``plot_classifier.py``)                                 | 01:09.900 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_classifier.py` (``plot_classifier.py``)                                 | 00:42.294 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_sgl_path.py` (``plot_sgl_path.py``)                                     | 00:18.745 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_sgl_path.py` (``plot_sgl_path.py``)                                     | 00:11.049 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_auto_examples_compare_group_lasso_performance.py` (``compare_group_lasso_performance.py``) | 00:00.000 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+

@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>groupyr.transform &mdash; groupyr 0.2.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/groupyr-logo.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/js/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> groupyr
+          
+
+          
+            
+            <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting help using <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <em>groupyr</em></a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">Groupyr on GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">groupyr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>groupyr.transform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for groupyr.transform</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Transform feature matrices with grouped covariates.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_random_state</span><span class="p">,</span> <span class="n">check_scalar</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">shuffle</span> <span class="k">as</span> <span class="n">util_shuffle</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_groups</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">isiterable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return True if obj is an iterable, False otherwise.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># noqa F841</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_check_group_names</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">group_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">group_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">groups</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;you provided group_names but not groups. &quot;</span>
+                <span class="s2">&quot;Please provide groups also.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">isiterable</span><span class="p">(</span><span class="n">group_names</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">group_names</span><span class="p">):</span>
+            <span class="n">group_names_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">group_names</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">isiterable</span><span class="p">(</span><span class="n">group_names</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">isiterable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">group_names</span><span class="p">):</span>
+            <span class="n">group_names_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">group_names</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;group_names must be a sequence of strings or a sequence &quot;</span>
+                <span class="s2">&quot;of sequences. got </span><span class="si">{0}</span><span class="s2"> instead&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group_names</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;group_names must have the same length as groups.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">group_names_</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">group_names_</span>
+
+
+<span class="k">def</span> <span class="nf">_check_select</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="n">group_names_</span><span class="p">,</span> <span class="n">return_sequence_intersection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">missing_grp_names_msg</span> <span class="o">=</span> <span class="s2">&quot;if ``select`` is a string, you must provide group_names&quot;</span>
+    <span class="k">if</span> <span class="n">select</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">select_</span> <span class="o">=</span> <span class="n">select</span>
+    <span class="k">elif</span> <span class="n">isiterable</span><span class="p">(</span><span class="n">select</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">select</span><span class="p">):</span>
+        <span class="n">select_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">select</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">select_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">select</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">group_names_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">missing_grp_names_msg</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">select</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">group_names_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">select_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">isiterable</span><span class="p">(</span><span class="n">select</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">select</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">group_names_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">missing_grp_names_msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_sequence_intersection</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">group_names_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">group_names_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">select</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">return_sequence_intersection</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="nb">set</span><span class="p">([</span><span class="n">label</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">group_names_</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="nb">set</span><span class="p">([</span><span class="n">label</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">group_names_</span><span class="p">)</span>
+
+        <span class="n">select_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;``select`` must be an int, string or sequence of ints or &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;strings; got </span><span class="si">{</span><span class="n">select</span><span class="si">}</span><span class="s2"> instead.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">select_</span>
+
+
+<div class="viewcode-block" id="GroupExtractor"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupExtractor">[docs]</a><span class="k">class</span> <span class="nc">GroupExtractor</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An sklearn-compatible group extractor.</span>
+
+<span class="sd">    Given a sequence of all group indices and a subsequence of desired</span>
+<span class="sd">    group indices, this transformer returns the columns of the feature</span>
+<span class="sd">    matrix, `X`, that are in the desired subgroups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    select : numpy.ndarray, int, or str, optional</span>
+<span class="sd">        subsequence of desired groups to extract from feature matrix</span>
+<span class="sd">        If int or sequence of ints, these will be treated as group indices.</span>
+<span class="sd">        If str or sequence of str, these will be treated as labels for any</span>
+<span class="sd">        level of the (potentially multi-indexed) group names, which must be</span>
+<span class="sd">        specified in ``group_names``</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    group_names : sequence of str or sequences, optional</span>
+<span class="sd">        The names of the groups of X. If this is a sequence of strings, then</span>
+<span class="sd">        this transformer will extract groups whose names match ``select``. If</span>
+<span class="sd">        this is a sequence of sequences, then this transformer will extract</span>
+<span class="sd">        groups that have labels that match ``select`` at any level of their</span>
+<span class="sd">        multi-index.</span>
+
+<span class="sd">    copy_X : bool, default=False</span>
+<span class="sd">        if ``True``, X will be copied; else, ``transform`` may return a view</span>
+
+<span class="sd">    select_intersection : bool, default=False</span>
+<span class="sd">        if ``True``, and ``select`` is a sequence, then ``transform`` will</span>
+<span class="sd">        return the group intersection of labels in ``select``. Otherwise,</span>
+<span class="sd">        ``transform`` will return the group union.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">select</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">group_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">copy_X</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">select_intersection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="n">select</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="n">group_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform the input data, extracting the desired groups.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+            <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">X</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">groups</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select specified groups from the feature matrix.</span>
+
+<span class="sd">        This method learns the new feature names and group indices. The</span>
+<span class="sd">        actual extraction of features is done in the ``transform`` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+            <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span> <span class="o">=</span> <span class="n">_check_group_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="o">=</span> <span class="n">_check_select</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span><span class="p">,</span>
+            <span class="n">return_sequence_intersection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allow_nan&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multioutput&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GroupRemover"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupRemover">[docs]</a><span class="k">class</span> <span class="nc">GroupRemover</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An sklearn-compatible group remover.</span>
+
+<span class="sd">    Given a sequence of all group indices and a subsequence of unwanted</span>
+<span class="sd">    group indices, this transformer returns the columns of the feature</span>
+<span class="sd">    matrix, `X`, that DO NOT include the unwanted subgroups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    select : numpy.ndarray, int, or str, optional</span>
+<span class="sd">        subsequence of desired groups to remove from feature matrix</span>
+<span class="sd">        If int or sequence of ints, these will be treated as group indices.</span>
+<span class="sd">        If str or sequence of str, these will be treated as labels for any</span>
+<span class="sd">        level of the (potentially multi-indexed) group names, which must be</span>
+<span class="sd">        specified in ``group_names``</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    group_names : sequence of str or sequences, optional</span>
+<span class="sd">        The names of the groups of X. If this is a sequence of strings, then</span>
+<span class="sd">        this transformer will remove groups whose names match ``select``. If</span>
+<span class="sd">        this is a sequence of sequences, then this transformer will remove</span>
+<span class="sd">        groups that have labels that match ``select`` at any level of their</span>
+<span class="sd">        multi-index.</span>
+
+<span class="sd">    copy_X : bool, default=False</span>
+<span class="sd">        if ``True``, X will be copied; else, ``transform`` may return a view</span>
+
+<span class="sd">    select_intersection : bool, default=False</span>
+<span class="sd">        if ``True``, and ``select`` is a sequence, then ``transform`` will</span>
+<span class="sd">        return the group intersection of labels in ``select``. Otherwise,</span>
+<span class="sd">        ``transform`` will return the group union.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">select</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">group_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">copy_X</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">select_intersection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="n">select</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="n">group_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span> <span class="o">=</span> <span class="n">copy_X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform the input data, removing the unwanted groups.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+            <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">X</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">grp</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove specified groups from the feature matrix.</span>
+
+<span class="sd">        This method learns the new feature names and group indices. The</span>
+<span class="sd">        actual removal of features is done in the ``transform`` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_X</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+            <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span> <span class="o">=</span> <span class="n">_check_group_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="o">=</span> <span class="n">_check_select</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span><span class="p">,</span>
+            <span class="n">return_sequence_intersection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allow_nan&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multioutput&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GroupShuffler"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupShuffler">[docs]</a><span class="k">class</span> <span class="nc">GroupShuffler</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Shuffle some groups of a feature matrix, leaving others as is.</span>
+
+<span class="sd">    Given a sequence of all group indices and a subsequence of</span>
+<span class="sd">    group indices, this transformer returns the feature</span>
+<span class="sd">    matrix, `X`, with the subset of groups shuffled.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    select : numpy.ndarray, int, or str, optional</span>
+<span class="sd">        subsequence of desired groups to shuffle in the feature matrix</span>
+<span class="sd">        If int or sequence of ints, these will be treated as group indices.</span>
+<span class="sd">        If str or sequence of str, these will be treated as labels for any</span>
+<span class="sd">        level of the (potentially multi-indexed) group names, which must be</span>
+<span class="sd">        specified in ``group_names``</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    group_names : sequence of str or sequences, optional</span>
+<span class="sd">        The names of the groups of X. If this is a sequence of strings, then</span>
+<span class="sd">        this transformer will shuffle groups whose names match ``select``. If</span>
+<span class="sd">        this is a sequence of sequences, then this transformer will shuffle</span>
+<span class="sd">        groups that have labels that match ``select`` at any level of their</span>
+<span class="sd">        multi-index.</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
+<span class="sd">    select_intersection : bool, default=False</span>
+<span class="sd">        if ``True``, and ``select`` is a sequence, then ``transform`` will</span>
+<span class="sd">        return the group intersection of labels in ``select``. Otherwise,</span>
+<span class="sd">        ``transform`` will return the group union.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">select</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">group_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">select_intersection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="n">select</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="n">group_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform the input data, shuffling the desired groups.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">X</span>
+
+        <span class="n">generator</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">groups</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_</span><span class="p">])</span>
+        <span class="n">shuffle_view</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+        <span class="n">shuffle_view</span> <span class="o">=</span> <span class="n">util_shuffle</span><span class="p">(</span><span class="n">shuffle_view</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">generator</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">shuffle_view</span>
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shuffle specified groups from the feature matrix.</span>
+
+<span class="sd">        This method learns the new feature names and group indices. The</span>
+<span class="sd">        actual shuffling of features is done in the ``transform`` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span> <span class="o">=</span> <span class="n">_check_group_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_</span> <span class="o">=</span> <span class="n">_check_select</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_names_</span><span class="p">,</span>
+            <span class="n">return_sequence_intersection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allow_nan&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multioutput&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GroupAggregator"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupAggregator">[docs]</a><span class="k">class</span> <span class="nc">GroupAggregator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Aggregate each group of a feature matrix using one or more functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : function, str, list or dict</span>
+<span class="sd">        Function to use for aggregating the data. If a function, it must</span>
+<span class="sd">        accept an ``axis=1`` parameter. If a string, it must be part of</span>
+<span class="sd">        the numpy namespace. Acceptable input types are</span>
+
+<span class="sd">        - function</span>
+<span class="sd">        - string function name</span>
+<span class="sd">        - list of functions and/or function names, e.g. ``[np.sum, &#39;mean&#39;]``</span>
+
+<span class="sd">        If no function is specified, ``np.mean`` is used.</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    group_names : sequence of str or sequences, optional</span>
+<span class="sd">        The names of the groups of X. This parameter has no effect on the output</span>
+<span class="sd">        of the ``transform()`` method. However, this transformer will keep track</span>
+<span class="sd">        of the transformed feature names using ``group_names`` if provided.</span>
+
+<span class="sd">    kw_args</span>
+<span class="sd">        Additional keyword arguments to pass to ``func``. These will be applied to</span>
+<span class="sd">        all elements of ``func`` if ``func`` is a sequence. If &quot;axis&quot; is one of these</span>
+<span class="sd">        keywords, it will be ignored and set to ``axis=1``.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_features_in_ : int</span>
+<span class="sd">        The number of features in the feature matrix input to ``fit()``.</span>
+
+<span class="sd">    n_features_out_ : int</span>
+<span class="sd">        The number of features in the feature matrix output by ``transform()``.</span>
+
+<span class="sd">    groups_ : list of np.ndarray</span>
+<span class="sd">        The validated group indices used by the transformer</span>
+
+<span class="sd">    feature_names_out_ : list of str</span>
+<span class="sd">        A list of the feature names corresponding to columns of the transformed output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kw_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="n">group_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kw_args</span> <span class="o">=</span> <span class="n">kw_args</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a groupwise aggregation of the feature matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kw_args</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kw_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;axis&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;You supplied the `axis` keyword argument. This transformer will &quot;</span>
+                <span class="s2">&quot;ignore whatever value you supplied and insist on `axis=1`.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">)</span>
+
+        <span class="n">X_out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fun</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_</span><span class="p">:</span>
+                <span class="n">X_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fun</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">grp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">X_out</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Aggregate features in each group with a user-defined reduction function.</span>
+
+<span class="sd">        This method learns the groups and number of features from the input data.</span>
+<span class="sd">        The actual group aggregation is done in the ``transform`` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">_check_group_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="p">)</span>
+
+        <span class="c1"># Make func_ an iterable even if it is a singleton</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">isiterable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span>
+
+        <span class="c1"># Convert strings to the actual numpy function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="n">fun</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">fun</span> <span class="k">for</span> <span class="n">fun</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group_names_out</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;group</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group_names_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grp_name</span> <span class="ow">in</span> <span class="n">group_names_out</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fun</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">grp_name</span><span class="p">,</span> <span class="n">fun</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_out_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allow_nan&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multioutput&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<span class="k">def</span> <span class="nf">_resample_features</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_features_out</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">X</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_features_out</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="GroupResampler"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupResampler">[docs]</a><span class="k">class</span> <span class="nc">GroupResampler</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Upsample or downsample each group.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resample_to : int or float, default=1.0</span>
+<span class="sd">        If an int, the number of desired resampled features per group.</span>
+<span class="sd">        If a float, the resampling ratio.</span>
+
+<span class="sd">    groups : list of numpy.ndarray</span>
+<span class="sd">        list of arrays of non-overlapping indices for each group. For</span>
+<span class="sd">        example, if nine features are grouped into equal contiguous groups of</span>
+<span class="sd">        three, then groups would be ``[array([0, 1, 2]), array([3, 4, 5]),</span>
+<span class="sd">        array([6, 7, 8])]``. If the feature matrix contains a bias or</span>
+<span class="sd">        intercept feature, do not include it as a group. If None, all</span>
+<span class="sd">        features will belong to one group.</span>
+
+<span class="sd">    group_names : sequence of str or sequences, optional</span>
+<span class="sd">        The names of the groups of X. This parameter has no effect on the output</span>
+<span class="sd">        of the ``transform()`` method. However, this transformer will keep track</span>
+<span class="sd">        of the transformed feature names using ``group_names`` if provided.</span>
+
+<span class="sd">    kind : str or int, optional</span>
+<span class="sd">        Specifies the kind of interpolation as a string or as an integer</span>
+<span class="sd">        specifying the order of the spline interpolator to use.</span>
+<span class="sd">        The string has to be one of &#39;linear&#39;, &#39;nearest&#39;, &#39;nearest-up&#39;, &#39;zero&#39;,</span>
+<span class="sd">        &#39;slinear&#39;, &#39;quadratic&#39;, &#39;cubic&#39;, &#39;previous&#39;, or &#39;next&#39;. &#39;zero&#39;,</span>
+<span class="sd">        &#39;slinear&#39;, &#39;quadratic&#39; and &#39;cubic&#39; refer to a spline interpolation of</span>
+<span class="sd">        zeroth, first, second or third order; &#39;previous&#39; and &#39;next&#39; simply</span>
+<span class="sd">        return the previous or next value of the point; &#39;nearest-up&#39; and</span>
+<span class="sd">        &#39;nearest&#39; differ when interpolating half-integers (e.g. 0.5, 1.5)</span>
+<span class="sd">        in that &#39;nearest-up&#39; rounds up and &#39;nearest&#39; rounds down. Default</span>
+<span class="sd">        is &#39;linear&#39;.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_features_in_ : int</span>
+<span class="sd">        The number of features in the feature matrix input to ``fit()``.</span>
+
+<span class="sd">    n_features_out_ : int</span>
+<span class="sd">        The number of features in the feature matrix output by ``transform()``.</span>
+
+<span class="sd">    groups_ : list of np.ndarray</span>
+<span class="sd">        The validated group indices used by the transformer</span>
+
+<span class="sd">    feature_names_out_ : list of str</span>
+<span class="sd">        A list of the feature names corresponding to columns of the transformed output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resample_to</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span> <span class="o">=</span> <span class="n">resample_to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="n">group_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a resampled feature matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">X_out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="n">n_features</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)))</span>
+
+            <span class="n">X_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">_resample_features</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">grp</span><span class="p">],</span> <span class="n">n_features_out</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">X_out</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Learn the resampled feature names and groups.</span>
+
+<span class="sd">        The actual resampling is done in the ``transform`` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : numpy.ndarray</span>
+<span class="sd">            The feature matrix.</span>
+
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">force_all_finite</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_</span> <span class="o">=</span> <span class="n">check_groups</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">_check_group_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">check_scalar</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;resample_to&quot;</span><span class="p">,</span>
+            <span class="n">target_type</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="n">min_val</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If resample_to is a float, it must not be greater than 1.0.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group_names_out</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;group</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group_names_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups_out_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grp</span><span class="p">,</span> <span class="n">grp_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_</span><span class="p">,</span> <span class="n">group_names_out</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="n">n_features</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_to</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups_out_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grp_name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grp_name</span> <span class="o">+</span> <span class="p">(</span><span class="n">idx</span><span class="p">,))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">grp_name</span><span class="p">,</span> <span class="n">idx</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_out_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_names_out_</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allow_nan&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;multioutput&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Adam Richie-Halford.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

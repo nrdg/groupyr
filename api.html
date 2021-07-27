@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>API Reference &mdash; groupyr 0.2.4 documentation</title>
+  <title>API Reference &mdash; groupyr 0.2.5 documentation</title>
   
 
   
@@ -79,7 +79,7 @@
             
             
               <div class="version">
-                0.2.4
+                0.2.5
               </div>
             
           
@@ -116,6 +116,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#cross-validation-estimators">Cross-validation Estimators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-generation">Dataset Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#regularization-paths">Regularization Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#group-transformers">Group Transformers</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
@@ -1019,6 +1020,231 @@ n_features + 1, where the last item represents the intercept.</p>
 <dt><strong>alphas</strong><span class="classifier">ndarray</span></dt><dd><p>Grid of alphas used for cross-validation.</p>
 </dd>
 <dt><strong>n_iters</strong><span class="classifier">array of shape (n_alphas,)</span></dt><dd><p>Actual number of iteration for each alpha.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="group-transformers">
+<h2>Group Transformers<a class="headerlink" href="#group-transformers" title="Permalink to this headline">¶</a></h2>
+<p>These classes perform group-wise transformations on their inputs.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="groupyr.transform.GroupExtractor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_intersection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An sklearn-compatible group extractor.</p>
+<p>Given a sequence of all group indices and a subsequence of desired
+group indices, this transformer returns the columns of the feature
+matrix, <cite>X</cite>, that are in the desired subgroups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to extract from feature matrix
+If int or sequence of ints, these will be treated as group indices.
+If str or sequence of str, these will be treated as labels for any
+level of the (potentially multi-indexed) group names, which must be
+specified in <code class="docutils literal notranslate"><span class="pre">group_names</span></code></p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group.</p>
+</dd>
+<dt><strong>group_names</strong><span class="classifier">sequence of str or sequences, optional</span></dt><dd><p>The names of the groups of X. If this is a sequence of strings, then
+this transformer will extract groups whose names match <code class="docutils literal notranslate"><span class="pre">select</span></code>. If
+this is a sequence of sequences, then this transformer will extract
+groups that have labels that match <code class="docutils literal notranslate"><span class="pre">select</span></code> at any level of their
+multi-index.</p>
+</dd>
+<dt><strong>copy_X</strong><span class="classifier">bool, default=False</span></dt><dd><p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, <code class="docutils literal notranslate"><span class="pre">transform</span></code> may return a view</p>
+</dd>
+<dt><strong>select_intersection</strong><span class="classifier">bool, default=False</span></dt><dd><p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, and <code class="docutils literal notranslate"><span class="pre">select</span></code> is a sequence, then <code class="docutils literal notranslate"><span class="pre">transform</span></code> will
+return the group intersection of labels in <code class="docutils literal notranslate"><span class="pre">select</span></code>. Otherwise,
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> will return the group union.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="groupyr.transform.GroupRemover">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupRemover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_intersection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupRemover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupRemover" title="Permalink to this definition">¶</a></dt>
+<dd><p>An sklearn-compatible group remover.</p>
+<p>Given a sequence of all group indices and a subsequence of unwanted
+group indices, this transformer returns the columns of the feature
+matrix, <cite>X</cite>, that DO NOT include the unwanted subgroups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to remove from feature matrix
+If int or sequence of ints, these will be treated as group indices.
+If str or sequence of str, these will be treated as labels for any
+level of the (potentially multi-indexed) group names, which must be
+specified in <code class="docutils literal notranslate"><span class="pre">group_names</span></code></p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group.</p>
+</dd>
+<dt><strong>group_names</strong><span class="classifier">sequence of str or sequences, optional</span></dt><dd><p>The names of the groups of X. If this is a sequence of strings, then
+this transformer will remove groups whose names match <code class="docutils literal notranslate"><span class="pre">select</span></code>. If
+this is a sequence of sequences, then this transformer will remove
+groups that have labels that match <code class="docutils literal notranslate"><span class="pre">select</span></code> at any level of their
+multi-index.</p>
+</dd>
+<dt><strong>copy_X</strong><span class="classifier">bool, default=False</span></dt><dd><p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, <code class="docutils literal notranslate"><span class="pre">transform</span></code> may return a view</p>
+</dd>
+<dt><strong>select_intersection</strong><span class="classifier">bool, default=False</span></dt><dd><p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, and <code class="docutils literal notranslate"><span class="pre">select</span></code> is a sequence, then <code class="docutils literal notranslate"><span class="pre">transform</span></code> will
+return the group intersection of labels in <code class="docutils literal notranslate"><span class="pre">select</span></code>. Otherwise,
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> will return the group union.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="groupyr.transform.GroupShuffler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupShuffler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_intersection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupShuffler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupShuffler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffle some groups of a feature matrix, leaving others as is.</p>
+<p>Given a sequence of all group indices and a subsequence of
+group indices, this transformer returns the feature
+matrix, <cite>X</cite>, with the subset of groups shuffled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to shuffle in the feature matrix
+If int or sequence of ints, these will be treated as group indices.
+If str or sequence of str, these will be treated as labels for any
+level of the (potentially multi-indexed) group names, which must be
+specified in <code class="docutils literal notranslate"><span class="pre">group_names</span></code></p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group.</p>
+</dd>
+<dt><strong>group_names</strong><span class="classifier">sequence of str or sequences, optional</span></dt><dd><p>The names of the groups of X. If this is a sequence of strings, then
+this transformer will shuffle groups whose names match <code class="docutils literal notranslate"><span class="pre">select</span></code>. If
+this is a sequence of sequences, then this transformer will shuffle
+groups that have labels that match <code class="docutils literal notranslate"><span class="pre">select</span></code> at any level of their
+multi-index.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance or None, optional (default=None)</span></dt><dd><p>If int, random_state is the seed used by the random number generator;
+If RandomState instance, random_state is the random number generator;
+If None, the random number generator is the RandomState instance used
+by <cite>np.random</cite>.</p>
+</dd>
+<dt><strong>select_intersection</strong><span class="classifier">bool, default=False</span></dt><dd><p>if <code class="docutils literal notranslate"><span class="pre">True</span></code>, and <code class="docutils literal notranslate"><span class="pre">select</span></code> is a sequence, then <code class="docutils literal notranslate"><span class="pre">transform</span></code> will
+return the group intersection of labels in <code class="docutils literal notranslate"><span class="pre">select</span></code>. Otherwise,
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> will return the group union.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="groupyr.transform.GroupAggregator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupAggregator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupAggregator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupAggregator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate each group of a feature matrix using one or more functions.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">function, str, list or dict</span></dt><dd><p>Function to use for aggregating the data. If a function, it must
+accept an <code class="docutils literal notranslate"><span class="pre">axis=1</span></code> parameter. If a string, it must be part of
+the numpy namespace. Acceptable input types are</p>
+<ul class="simple">
+<li><p>function</p></li>
+<li><p>string function name</p></li>
+<li><p>list of functions and/or function names, e.g. <code class="docutils literal notranslate"><span class="pre">[np.sum,</span> <span class="pre">'mean']</span></code></p></li>
+</ul>
+<p>If no function is specified, <code class="docutils literal notranslate"><span class="pre">np.mean</span></code> is used.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group.</p>
+</dd>
+<dt><strong>group_names</strong><span class="classifier">sequence of str or sequences, optional</span></dt><dd><p>The names of the groups of X. This parameter has no effect on the output
+of the <code class="docutils literal notranslate"><span class="pre">transform()</span></code> method. However, this transformer will keep track
+of the transformed feature names using <code class="docutils literal notranslate"><span class="pre">group_names</span></code> if provided.</p>
+</dd>
+<dt><strong>kw_args</strong></dt><dd><p>Additional keyword arguments to pass to <code class="docutils literal notranslate"><span class="pre">func</span></code>. These will be applied to
+all elements of <code class="docutils literal notranslate"><span class="pre">func</span></code> if <code class="docutils literal notranslate"><span class="pre">func</span></code> is a sequence. If “axis” is one of these
+keywords, it will be ignored and set to <code class="docutils literal notranslate"><span class="pre">axis=1</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>n_features_in_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix input to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
+</dd>
+<dt><strong>n_features_out_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix output by <code class="docutils literal notranslate"><span class="pre">transform()</span></code>.</p>
+</dd>
+<dt><strong>groups_</strong><span class="classifier">list of np.ndarray</span></dt><dd><p>The validated group indices used by the transformer</p>
+</dd>
+<dt><strong>feature_names_out_</strong><span class="classifier">list of str</span></dt><dd><p>A list of the feature names corresponding to columns of the transformed output.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="groupyr.transform.GroupResampler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupResampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resample_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupResampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupResampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsample or downsample each group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>resample_to</strong><span class="classifier">int or float, default=1.0</span></dt><dd><p>If an int, the number of desired resampled features per group.
+If a float, the resampling ratio.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">list of numpy.ndarray</span></dt><dd><p>list of arrays of non-overlapping indices for each group. For
+example, if nine features are grouped into equal contiguous groups of
+three, then groups would be <code class="docutils literal notranslate"><span class="pre">[array([0,</span> <span class="pre">1,</span> <span class="pre">2]),</span> <span class="pre">array([3,</span> <span class="pre">4,</span> <span class="pre">5]),</span>
+<span class="pre">array([6,</span> <span class="pre">7,</span> <span class="pre">8])]</span></code>. If the feature matrix contains a bias or
+intercept feature, do not include it as a group. If None, all
+features will belong to one group.</p>
+</dd>
+<dt><strong>group_names</strong><span class="classifier">sequence of str or sequences, optional</span></dt><dd><p>The names of the groups of X. This parameter has no effect on the output
+of the <code class="docutils literal notranslate"><span class="pre">transform()</span></code> method. However, this transformer will keep track
+of the transformed feature names using <code class="docutils literal notranslate"><span class="pre">group_names</span></code> if provided.</p>
+</dd>
+<dt><strong>kind</strong><span class="classifier">str or int, optional</span></dt><dd><p>Specifies the kind of interpolation as a string or as an integer
+specifying the order of the spline interpolator to use.
+The string has to be one of ‘linear’, ‘nearest’, ‘nearest-up’, ‘zero’,
+‘slinear’, ‘quadratic’, ‘cubic’, ‘previous’, or ‘next’. ‘zero’,
+‘slinear’, ‘quadratic’ and ‘cubic’ refer to a spline interpolation of
+zeroth, first, second or third order; ‘previous’ and ‘next’ simply
+return the previous or next value of the point; ‘nearest-up’ and
+‘nearest’ differ when interpolating half-integers (e.g. 0.5, 1.5)
+in that ‘nearest-up’ rounds up and ‘nearest’ rounds down. Default
+is ‘linear’.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>n_features_in_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix input to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
+</dd>
+<dt><strong>n_features_out_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix output by <code class="docutils literal notranslate"><span class="pre">transform()</span></code>.</p>
+</dd>
+<dt><strong>groups_</strong><span class="classifier">list of np.ndarray</span></dt><dd><p>The validated group indices used by the transformer</p>
+</dd>
+<dt><strong>feature_names_out_</strong><span class="classifier">list of str</span></dt><dd><p>A list of the feature names corresponding to columns of the transformed output.</p>
 </dd>
 </dl>
 </dd>
