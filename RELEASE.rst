@@ -1,5 +1,6 @@
-v0.2.4 (June 22, 2021)
+v0.2.5 (July 27, 2021)
 ======================
-  * Add sgl_path example to the documentation (#58)
-  * Add GroupPCA, and supervised PCA variants (#55)
+  * ENH: Add GroupResampler (#62)
+  * ENH: Add select_intersection kwarg to transformers (#61)
+  * ENH: Add GroupAggregator, tests, and doc API (#59)
 
