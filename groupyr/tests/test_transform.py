@@ -326,6 +326,8 @@ def test_GroupAggregator():
     assert ga.feature_names_out_ == feature_names_ref  # nosec
     assert np.allclose(X_tr, X_ref)  # nosec
 
+    assert ga.get_feature_names() == ga.feature_names_out_
+
 
 def test_GroupResampler():
     X = np.arange(100).reshape(5, 20)

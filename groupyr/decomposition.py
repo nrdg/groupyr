@@ -18,10 +18,24 @@ try:
 except ImportError:  # pragma: no cover
     HAS_SKFDA = False
 
-from .utils import check_groups
+from .utils import check_groups, _FeatureNameMixin, _stringify_sequence
 
 
-class GroupPCA(BaseEstimator, TransformerMixin):
+class _PCAFeatureNameMixin(_FeatureNameMixin):
+    def generate_feature_names(self, pca_models):
+        self.feature_names_out_ = []
+        for idx, (grp, pca_model) in enumerate(zip(self.groups_out_, pca_models)):
+            if self.group_names is None:
+                group_name = f"group{idx}"
+            else:
+                group_name = _stringify_sequence(self.group_names[idx])
+            feature_type = "feature" if pca_model is None else "pc"
+            self.feature_names_out_ += [
+                "_".join([group_name, feature_type + str(n)]) for n in range(len(grp))
+            ]
+
+
+class GroupPCA(BaseEstimator, TransformerMixin, _PCAFeatureNameMixin):
     """An sklearn-compatible grouped PCA transformer.
 
     Given a feature matrix `X` and grouping information,
@@ -99,6 +113,9 @@ class GroupPCA(BaseEstimator, TransformerMixin):
         PCA transformatiton. These groups will be left untouched and
         transferred to the output matrix.
 
+    group_names : sequence of str, optional
+        The names of the groups of X.
+
     Attributes
     ----------
     components_ : list of ndarray of shape (n_components, n_features) for each group
@@ -158,6 +175,9 @@ class GroupPCA(BaseEstimator, TransformerMixin):
     n_samples_ : int
         Number of samples in the training data.
 
+    feature_names_out_ : list of str
+        The names of the transformed features
+
     """
 
     def __init__(
@@ -170,6 +190,7 @@ class GroupPCA(BaseEstimator, TransformerMixin):
         random_state=None,
         groups=None,
         exclude_groups=None,
+        group_names=None,
     ):
         self.n_components = n_components
         self.whiten = whiten
@@ -179,6 +200,7 @@ class GroupPCA(BaseEstimator, TransformerMixin):
         self.random_state = random_state
         self.groups = groups
         self.exclude_groups = exclude_groups
+        self.group_names = group_names
 
     def _check_exclude_groups(self):
         if self.exclude_groups is None:
@@ -271,6 +293,7 @@ class GroupPCA(BaseEstimator, TransformerMixin):
                 feature_start_idx += len(grp)
 
         self.n_features_out_ = np.sum([len(grp) for grp in self.groups_out_])
+        self.generate_feature_names(self.pca_models_)
 
         return self
 
@@ -531,6 +554,9 @@ class SupervisedGroupPCA(GroupPCA, GroupSDRMixin):
         PCA transformatiton. These groups will be left untouched and
         transferred to the output matrix.
 
+    group_names : sequence of str, optional
+        The names of the groups of X.
+
     Attributes
     ----------
     components_ : list of ndarray of shape (n_components, n_features) for each group
@@ -590,6 +616,9 @@ class SupervisedGroupPCA(GroupPCA, GroupSDRMixin):
     n_samples_ : int
         Number of samples in the training data.
 
+    feature_names_out_ : list of str
+        The names of the transformed features
+
     """
 
     def __init__(
@@ -605,6 +634,7 @@ class SupervisedGroupPCA(GroupPCA, GroupSDRMixin):
         random_state=None,
         groups=None,
         exclude_groups=None,
+        group_names=None,
     ):
         self.n_components = n_components
         self.theta = theta
@@ -617,6 +647,7 @@ class SupervisedGroupPCA(GroupPCA, GroupSDRMixin):
         self.random_state = random_state
         self.groups = groups
         self.exclude_groups = exclude_groups
+        self.group_names = group_names
 
     def fit(self, X, y):
         """Fit the GroupPCA model with X.
@@ -666,7 +697,7 @@ class SupervisedGroupPCA(GroupPCA, GroupSDRMixin):
 
 
 def _check_skfda():
-    if not HAS_SKFDA:
+    if not HAS_SKFDA:  # pragma: no cover
         raise ImportError(
             "To use functional data analysis in groupyr, you will need to have "
             "scikit-fda installed. You can do this by installing groupyr with "
@@ -736,7 +767,7 @@ def _get_group_fd(X, group_mask, basis, grid_points=None):
     return fd
 
 
-class GroupFPCA(BaseEstimator, TransformerMixin):
+class GroupFPCA(BaseEstimator, TransformerMixin, _PCAFeatureNameMixin):
     """An sklearn-compatible grouped functional PCA transformer.
 
     Given a feature matrix `X` and grouping information,
@@ -772,6 +803,9 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         fPCA transformatiton. These groups will be left untouched and
         transferred to the output matrix.
 
+    group_names : sequence of str, optional
+        The names of the groups of X.
+
     Attributes
     ----------
     components_ : list of skfda.FData
@@ -798,6 +832,9 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
     n_features_out_ : int
         number of transformed features
 
+    feature_names_out_ : list of str
+        The names of the transformed features
+
     """
 
     def __init__(
@@ -809,6 +846,7 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         basis_domain_range=None,
         groups=None,
         exclude_groups=None,
+        group_names=None,
     ):
         self.n_components = n_components
         self.centering = centering
@@ -817,6 +855,7 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
         self.basis_domain_range = basis_domain_range
         self.groups = groups
         self.exclude_groups = exclude_groups
+        self.group_names = group_names
 
     def _check_exclude_groups(self):
         if self.exclude_groups is None:
@@ -892,6 +931,7 @@ class GroupFPCA(BaseEstimator, TransformerMixin):
                 feature_start_idx += len(grp)
 
         self.n_features_out_ = np.sum([len(grp) for grp in self.groups_out_])
+        self.generate_feature_names(self.fpca_models_)
 
         return self
 
@@ -996,6 +1036,9 @@ class SupervisedGroupFPCA(GroupFPCA, GroupSDRMixin):
         fPCA transformatiton. These groups will be left untouched and
         transferred to the output matrix.
 
+    group_names : sequence of str, optional
+        The names of the groups of X.
+
     Attributes
     ----------
     components_ : list of skfda.FData
@@ -1024,6 +1067,9 @@ class SupervisedGroupFPCA(GroupFPCA, GroupSDRMixin):
 
     screening_mask_ : np.ndarray
 
+    feature_names_out_ : list of str
+        The names of the transformed features
+
     """
 
     def __init__(
@@ -1038,6 +1084,7 @@ class SupervisedGroupFPCA(GroupFPCA, GroupSDRMixin):
         basis_domain_range=None,
         groups=None,
         exclude_groups=None,
+        group_names=None,
     ):
         self.theta = theta
         self.absolute_threshold = absolute_threshold
@@ -1050,6 +1097,7 @@ class SupervisedGroupFPCA(GroupFPCA, GroupSDRMixin):
             basis_domain_range=basis_domain_range,
             groups=groups,
             exclude_groups=exclude_groups,
+            group_names=group_names,
         )
 
     def fit(self, X, y, grid_points=None):

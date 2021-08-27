@@ -2,8 +2,26 @@ import numpy as np
 import pytest
 
 from groupyr.datasets import make_group_regression
-from groupyr.utils import check_groups
+from groupyr.utils import check_groups, _stringify_sequence
 from sklearn.utils._testing import assert_array_almost_equal
+
+
+@pytest.mark.parametrize(
+    "_input, reference",
+    [
+        ("string", "string"),
+        (["foo", "bar", "baz"], "foo_bar_baz"),
+        (("foo", "bar", 1), "foo_bar_1"),
+    ],
+)
+def test_stringify_sequence(_input, reference):
+    output = _stringify_sequence(_input)
+    assert output == reference  # nosec
+
+
+def test_stringify_sequence_error():
+    with pytest.raises(TypeError):
+        _stringify_sequence(0)
 
 
 def test_check_groups():
