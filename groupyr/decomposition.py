@@ -26,7 +26,7 @@ class _PCAFeatureNameMixin(_FeatureNameMixin):
         self.feature_names_out_ = []
         for idx, (grp, pca_model) in enumerate(zip(self.groups_out_, pca_models)):
             if self.group_names is None:
-                group_name = f"group{idx}"
+                group_name = "group" + str(idx).zfill(int(np.log10(len(self.groups_out_))+1)         
             else:
                 group_name = _stringify_sequence(self.group_names[idx])
             feature_type = "feature" if pca_model is None else "pc"
