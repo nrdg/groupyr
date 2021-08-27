@@ -8,7 +8,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils import check_array, check_random_state, check_scalar
 from sklearn.utils import shuffle as util_shuffle
 
-from .utils import check_groups
+from .utils import check_groups, _FeatureNameMixin, _stringify_sequence
 
 logger = logging.getLogger(__name__)
 
@@ -421,7 +421,7 @@ class GroupShuffler(BaseEstimator, TransformerMixin):
         return {"allow_nan": True, "multilabel": True, "multioutput": True}
 
 
-class GroupAggregator(BaseEstimator, TransformerMixin):
+class GroupAggregator(BaseEstimator, TransformerMixin, _FeatureNameMixin):
     """Aggregate each group of a feature matrix using one or more functions.
 
     Parameters
@@ -549,7 +549,9 @@ class GroupAggregator(BaseEstimator, TransformerMixin):
         self.feature_names_out_ = []
         for grp_name in group_names_out:
             for fun in self.func_:
-                self.feature_names_out_.append("__".join([grp_name, fun.__name__]))
+                self.feature_names_out_.append(
+                    "__".join([_stringify_sequence(grp_name), fun.__name__])
+                )
 
         self.n_features_out_ = len(self.feature_names_out_)
 
@@ -564,7 +566,7 @@ def _resample_features(X, n_features_out, kind="linear"):
     return f(np.linspace(0, 1, n_features_out))
 
 
-class GroupResampler(BaseEstimator, TransformerMixin):
+class GroupResampler(BaseEstimator, TransformerMixin, _FeatureNameMixin):
     """Upsample or downsample each group.
 
     Parameters

@@ -1,6 +1,23 @@
 """Utility functions for SGL-based estimators."""
 import numpy as np
 
+from collections.abc import Sequence
+
+
+def _stringify_sequence(sequence):
+    if isinstance(sequence, str):
+        return sequence
+    elif isinstance(sequence, Sequence):
+        return "_".join([str(el) for el in sequence])
+    else:
+        raise TypeError("group_name must be a string or sequence.")
+
+
+class _FeatureNameMixin:
+    def get_feature_names(self):
+        """Return a list of feature names."""
+        return self.feature_names_out_
+
 
 def check_groups(groups, X, allow_overlap=False, fit_intercept=False, kwarg_name="X"):
     """Validate group indices.
