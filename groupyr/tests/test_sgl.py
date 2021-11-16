@@ -179,6 +179,7 @@ def test_sgl_cv(tuning_strategy):
         ).fit(X, y)
         assert clf.score(X_test, y_test) > 0.98  # nosec
         assert_almost_equal(clf.alpha_, 0.06, 2)
+        assert len(clf.alphas_) == 20
 
 
 @pytest.mark.parametrize("execution_number", range(5))
@@ -269,5 +270,6 @@ def test_LogisticSGLCV_BayesSearchCV():
     gs = BayesSearchCV(clf, search_spaces, cv=cv, random_state=42, n_iter=10)
     gs.fit(X, y)
 
+    assert len(clf_cv.alphas_) == 10
     assert gs.best_params_["l1_ratio"] == clf_cv.l1_ratio_
     assert gs.best_params_["alpha"] == clf_cv.alpha_

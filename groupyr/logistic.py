@@ -1138,7 +1138,7 @@ class LogisticSGLCV(LogisticSGL):
             self.n_iter_ = self.bayes_optimizer_.best_estimator_.n_iter_
             self.is_fitted_ = True
             self.scoring_path_ = None
-            param_alpha = self.bayes_optimizer_.cv_results_["param__alpha"]
+            param_alpha = self.bayes_optimizer_.cv_results_["param_alpha"]
             self.alphas_ = np.sort(param_alpha)[::-1]
 
         return self
