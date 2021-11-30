@@ -621,7 +621,7 @@ def sgl_scoring_path(
         A string (see sklearn model evaluation documentation) or a scorer
         callable object / function with signature ``scorer(estimator, X, y)``.
         For a list of scoring functions that can be used, look at
-        `sklearn.metrics`. The default scoring option used is neg_mean_squared_error.
+        `sklearn.metrics`. The default scoring option used is r2_score.
 
     **params : kwargs
         Keyword arguments passed to the SGL estimator
@@ -689,7 +689,7 @@ def sgl_scoring_path(
     )
 
     if scoring is None:
-        scoring = "neg_mean_squared_error"
+        scoring = "r2"
 
     model.is_fitted_ = True
 
@@ -782,9 +782,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         A string (see sklearn model evaluation documentation) or a scorer
         callable object / function with signature ``scorer(estimator, X, y)``.
         For a list of scoring functions that can be used, look at
-        `sklearn.metrics`.  The default scoring option for model selection is
-        "neg_mean_squared_error".  The default scoring option for the ``score``
-        method is "r2".
+        `sklearn.metrics`. The default scoring option is "r2".
 
     cv : int, cross-validation generator or iterable, default=None
         Determines the cross-validation splitting strategy.
