@@ -63,6 +63,38 @@ def test_sgl_zero(suppress_warnings):
     assert_array_almost_equal(pred, [0, 0, 0])
 
 
+@pytest.mark.parametrize("tuning_strategy", ["grid", "bayes"])
+def test_sglcv_scoring(tuning_strategy):
+    X = [[-4], [-3], [-2], [-1], [0], [1], [2], [3], [4]]
+    y = [-4, -3, -2, -1, 0, 1, 2, 3, 4]
+
+    model = SGLCV(
+        n_alphas=10,
+        eps=1e-3,
+        max_iter=500,
+        cv=3,
+        tuning_strategy=tuning_strategy,
+        random_state=42,
+        n_bayes_iter=10,
+        scoring="neg_mean_squared_error",
+    ).fit(X, y)
+
+    assert_almost_equal(model.score(X, y), 0.0, 3)
+
+    model = SGLCV(
+        n_alphas=10,
+        eps=1e-3,
+        max_iter=500,
+        cv=3,
+        tuning_strategy=tuning_strategy,
+        random_state=42,
+        n_bayes_iter=10,
+        scoring="r2",
+    ).fit(X, y)
+
+    assert_almost_equal(model.score(X, y), 1.0, 3)
+
+
 # When l1_ratio=1, SGL should behave like the lasso. These next tests
 # replicate the unit testing for sklearn.linear_model.Lasso
 @pytest.mark.parametrize("loss", ["squared_loss", "huber"])

@@ -621,7 +621,7 @@ def sgl_scoring_path(
         A string (see sklearn model evaluation documentation) or a scorer
         callable object / function with signature ``scorer(estimator, X, y)``.
         For a list of scoring functions that can be used, look at
-        `sklearn.metrics`. The default scoring option used is accuracy_score.
+        `sklearn.metrics`. The default scoring option used is r2_score.
 
     **params : kwargs
         Keyword arguments passed to the SGL estimator
@@ -689,7 +689,7 @@ def sgl_scoring_path(
     )
 
     if scoring is None:
-        scoring = "neg_mean_squared_error"
+        scoring = "r2"
 
     model.is_fitted_ = True
 
@@ -777,6 +777,12 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
 
     tol : float, default=1e-7
         Stopping criterion. Convergence tolerance for the ``copt`` proximal gradient solver
+
+    scoring : callable, default=None
+        A string (see sklearn model evaluation documentation) or a scorer
+        callable object / function with signature ``scorer(estimator, X, y)``.
+        For a list of scoring functions that can be used, look at
+        `sklearn.metrics`. The default scoring option is "r2".
 
     cv : int, cross-validation generator or iterable, default=None
         Determines the cross-validation splitting strategy.
@@ -890,6 +896,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         max_iter=1000,
         tol=1e-7,
         copy_X=True,
+        scoring=None,
         cv=None,
         verbose=False,
         n_jobs=None,
@@ -910,6 +917,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         self.max_iter = max_iter
         self.tol = tol
         self.copy_X = copy_X
+        self.scoring = scoring
         self.cv = cv
         self.verbose = verbose
         self.n_jobs = n_jobs
@@ -1171,7 +1179,7 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
                 verbose=self.verbose,
                 random_state=self.random_state,
                 return_train_score=True,
-                scoring="neg_mean_squared_error",
+                scoring=self.scoring,
                 error_score=-np.inf,
             )
 
@@ -1224,6 +1232,27 @@ class SGLCV(LinearModel, RegressorMixin, TransformerMixin):
         """
         mean_abs_coef = abs(self.coef_.mean())
         return np.abs(self.coef_) > rtol * mean_abs_coef
+
+    def score(self, X, y):
+        """Return the score using the `scoring` option on test data and labels.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Test samples.
+
+        y : array-like of shape (n_samples,)
+            True labels for X.
+
+        Returns
+        -------
+        score : float
+            Score of self.predict(X) wrt. y.
+        """
+        scoring = self.scoring or "r2"
+        scoring = get_scorer(scoring)
+
+        return scoring(self, X, y)
 
     @property
     def chosen_groups_(self):
