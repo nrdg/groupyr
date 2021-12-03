@@ -21,7 +21,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip --use-feature=2020-resolver
           python -m pip install coveralls --use-feature=2020-resolver
-          python -m pip install .[dev,fda] --use-feature=2020-resolver
+          python -m pip install .[all] --use-feature=2020-resolver
           python -m pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
       - name: Lint
         run: |
