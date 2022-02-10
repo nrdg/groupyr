@@ -176,7 +176,7 @@ class SparseGroupL1(object):
         if self.bias_index is not None:
             out[self.bias_index] = x[self.bias_index]
 
-        norms = np.sqrt(self.group_masks.dot(l1_prox ** 2)) / self.group_scale
+        norms = np.sqrt(self.group_masks.dot(l1_prox**2)) / self.group_scale
 
         norm_mask = norms > (1.0 - self.l1_ratio) * self.alpha * step_size
         all_norm = all(norm_mask)

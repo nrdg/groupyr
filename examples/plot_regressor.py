@@ -34,13 +34,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Fit an SGL model for this data
-cv = KFold(random_state=1729)
+cv = KFold(random_state=1729, shuffle=True)
 sgl = gpr.SGLCV(
     groups=groups, cv=cv, l1_ratio=[0.0, 1.0], tuning_strategy="bayes", n_bayes_iter=50
 ).fit(X_train, y_train)
 
 # Fit a Lasso model on this data
-cv = KFold(random_state=1729)
+cv = KFold(random_state=1729, shuffle=True)
 lasso = LassoCV(cv=cv).fit(X_train, y_train)
 
 # Print model performance

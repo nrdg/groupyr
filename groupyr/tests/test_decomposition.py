@@ -3,9 +3,6 @@ import pytest
 
 from groupyr.decomposition import GroupPCA, GroupFPCA, _get_score_func
 from groupyr.decomposition import SupervisedGroupPCA, SupervisedGroupFPCA
-from skfda import FDataGrid
-from skfda.datasets import fetch_weather
-from skfda.representation.basis import BSpline, Constant, Fourier
 from sklearn.datasets import load_iris, load_diabetes
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import f_regression, f_classif
@@ -134,12 +131,13 @@ def test_theta_equals_zero_equals_unsupervised(binarize):
 
 
 def test_group_fpca_matches_skfda_results():
+    skfda = pytest.importorskip("skfda")
     n_basis = 9
     n_components = 3
 
     grid_points = np.arange(0.5, 365, 1)
-    fd_data = fetch_weather()["data"].coordinates[0]
-    fd_data = FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
+    fd_data = skfda.datasets.fetch_weather()["data"].coordinates[0]
+    fd_data = skfda.FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
     X = fd_data.data_matrix.squeeze()
     X = np.hstack([X, X])
     groups = [np.arange(0, 365), np.arange(365, 730)]
@@ -204,17 +202,34 @@ def test_group_fpca_matches_skfda_results():
 
 
 @pytest.mark.parametrize(
-    "basis", ["constant", "bspline", None, BSpline, Constant, Fourier]
+    "basis",
+    [
+        "constant",
+        "bspline",
+        None,
+        "import_bspline",
+        "import_constant",
+        "import_fourier",
+    ],
 )
 @pytest.mark.parametrize("use_grid_points", [True, False])
 @pytest.mark.parametrize("exclude_groups", [None, 1, [1]])
 def test_group_fpca_bases(basis, use_grid_points, exclude_groups):
+    skfda = pytest.importorskip("skfda")
+
+    if basis == "import_bspline":
+        basis = skfda.representation.basis.BSpline
+    elif basis == "import_constant":
+        basis = skfda.representation.basis.Constant
+    elif basis == "import_fourier":
+        basis = skfda.representation.basis.Fourier
+
     n_basis = 9
     n_components = 1
 
     grid_points = np.arange(0.5, 365, 1)
-    fd_data = fetch_weather()["data"].coordinates[0]
-    fd_data = FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
+    fd_data = skfda.datasets.fetch_weather()["data"].coordinates[0]
+    fd_data = skfda.FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
     X = fd_data.data_matrix.squeeze()
     X = np.hstack([X, X])
     groups = [np.arange(0, 365), np.arange(365, 730)]
@@ -237,12 +252,14 @@ def test_group_fpca_bases(basis, use_grid_points, exclude_groups):
 
 
 def test_groupfpca_errors():
+    skfda = pytest.importorskip("skfda")
+
     n_basis = 9
     n_components = 1
 
     grid_points = np.arange(0.5, 365, 1)
-    fd_data = fetch_weather()["data"].coordinates[0]
-    fd_data = FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
+    fd_data = skfda.datasets.fetch_weather()["data"].coordinates[0]
+    fd_data = skfda.FDataGrid(np.squeeze(fd_data.data_matrix), grid_points)
     X = fd_data.data_matrix.squeeze()
     X = np.hstack([X, X])
     groups = [np.arange(0, 365), np.arange(365, 730)]
