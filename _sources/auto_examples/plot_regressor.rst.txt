@@ -30,9 +30,10 @@ the results of a Lasso model.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_regressor_001.png
-    :alt: plot regressor
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_regressor_001.png
+   :alt: plot regressor
+   :srcset: /auto_examples/images/sphx_glr_plot_regressor_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
@@ -41,19 +42,15 @@ the results of a Lasso model.
 
  .. code-block:: none
 
-    /opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
-      warnings.warn(
-    /opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/sklearn/model_selection/_split.py:293: FutureWarning: Setting a random_state has no effect since shuffle is False. This will raise an error in 0.24. You should leave random_state to its default (None), or set shuffle=True.
-      warnings.warn(
     Lasso performance:
-    train: R^2 = 0.600, RMSE = 446.170
-    test:  R^2 = 0.194, RMSE = 610.683
+    train: R^2 = 0.491, RMSE = 503.387
+    test:  R^2 = 0.160, RMSE = 623.359
 
     SGL performance:
-    train: R^2 = 0.560, RMSE = 468.201
-    test:  R^2 = 0.345, RMSE = 550.734
+    train: R^2 = 0.600, RMSE = 446.198
+    test:  R^2 = 0.359, RMSE = 544.449
 
-    <matplotlib.legend.Legend object at 0x7f3db53bfd60>
+    <matplotlib.legend.Legend object at 0x7fe4bcd0a580>
 
 
 
@@ -89,13 +86,13 @@ the results of a Lasso model.
     )
 
     # Fit an SGL model for this data
-    cv = KFold(random_state=1729)
+    cv = KFold(random_state=1729, shuffle=True)
     sgl = gpr.SGLCV(
         groups=groups, cv=cv, l1_ratio=[0.0, 1.0], tuning_strategy="bayes", n_bayes_iter=50
     ).fit(X_train, y_train)
 
     # Fit a Lasso model on this data
-    cv = KFold(random_state=1729)
+    cv = KFold(random_state=1729, shuffle=True)
     lasso = LassoCV(cv=cv).fit(X_train, y_train)
 
     # Print model performance
@@ -146,7 +143,7 @@ the results of a Lasso model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  19.167 seconds)
+   **Total running time of the script:** ( 2 minutes  40.225 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_regressor.py:

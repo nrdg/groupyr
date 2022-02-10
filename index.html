@@ -1,90 +1,47 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.2.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
-  <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-  <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-  <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery-rendered-html.css" type="text/css" />
-
-  
-  
+  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.2.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="shortcut icon" href="_static/groupyr-logo.ico"/>
-  
-
-  
-  
-
-  
-
-  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/js/copybutton.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="install.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="#" class="icon icon-home"> groupyr
-          
-
-          
-            
             <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -92,18 +49,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Home</a></li>
 </ul>
@@ -117,78 +63,37 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/richford/groupyr">Groupyr on GitHub</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="#">groupyr</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-        
       <li><em>Groupyr</em>: Sparse Group Lasso in Python</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="groupyr-sparse-group-lasso-in-python">
-<h1><em>Groupyr</em>: Sparse Group Lasso in Python<a class="headerlink" href="#groupyr-sparse-group-lasso-in-python" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="groupyr-sparse-group-lasso-in-python">
+<h1><em>Groupyr</em>: Sparse Group Lasso in Python<a class="headerlink" href="#groupyr-sparse-group-lasso-in-python" title="Permalink to this headline"></a></h1>
 <p><em>Groupyr</em> is a scikit-learn compatible implementation of the sparse group lasso
 linear model. It is intended for high-dimensional supervised learning
 problems where related covariates can be assigned to predefined groups.</p>
-<div class="section" id="the-sparse-group-lasso">
-<h2>The Sparse Group Lasso<a class="headerlink" href="#the-sparse-group-lasso" title="Permalink to this headline">¶</a></h2>
+<section id="the-sparse-group-lasso">
+<h2>The Sparse Group Lasso<a class="headerlink" href="#the-sparse-group-lasso" title="Permalink to this headline"></a></h2>
 <p>The sparse group lasso <a class="footnote-reference brackets" href="#id11" id="id1">1</a> is a penalized regression approach that combines the
 group lasso with the normal lasso penalty to promote both global sparsity and
 group-wise sparsity. It estimates a target variable <span class="math notranslate nohighlight">\(\hat{y}\)</span> from a
@@ -214,13 +119,13 @@ and <span class="math notranslate nohighlight">\(\alpha=1\)</span> yielding the 
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-<div class="section" id="id3">
-<h2><a class="reference external" href="install.html">Installation</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id3">
+<h2><a class="reference external" href="install.html">Installation</a><a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
 <p>See the <a class="reference external" href="install.html">installation guide</a> for installation instructions.</p>
-</div>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
 <p><em>Groupyr</em> is compatible with the scikit-learn API and its estimators offer the
 same instantiate, <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">predict</span></code> workflow that will be familiar to
 scikit-learn users. See the <a class="reference external" href="api.html">API</a> and <a class="reference external" href="auto_examples/index.html">examples</a> for full details. Here, we describe only the key
@@ -252,23 +157,23 @@ guess for the current evaluation. However, even without warm-starting, we
 find that the SMBO strategy usually outperforms grid search because far fewer
 evaluations are needed to arrive at the optimal hyperparameters. We provide
 <a class="reference external" href="auto_examples/index.html">examples</a> of both strategies.</p>
-</div>
-<div class="section" id="id5">
-<h2><a class="reference external" href="api.html">API Documentation</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id5">
+<h2><a class="reference external" href="api.html">API Documentation</a><a class="headerlink" href="#id5" title="Permalink to this headline"></a></h2>
 <p>See the <a class="reference external" href="api.html">API Documentation</a> for detailed documentation of the API.</p>
-</div>
-<div class="section" id="id8">
-<h2><a class="reference external" href="auto_examples/index.html">Examples</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id8">
+<h2><a class="reference external" href="auto_examples/index.html">Examples</a><a class="headerlink" href="#id8" title="Permalink to this headline"></a></h2>
 <p>And look at the <a class="reference external" href="auto_examples/index.html">example gallery</a> for a set of introductory examples.</p>
-</div>
-<div class="section" id="citing-groupyr">
-<h2>Citing groupyr<a class="headerlink" href="#citing-groupyr" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="citing-groupyr">
+<h2>Citing groupyr<a class="headerlink" href="#citing-groupyr" title="Permalink to this headline"></a></h2>
 <p>If you use <em>groupyr</em> in a scientific publication, we would appreciate
 citations. Please see our <a class="reference external" href="https://github.com/richford/groupyr#citing-groupyr">citation instructions</a> for the latest
 reference and a bibtex entry.</p>
-</div>
-<div class="section" id="acknowledgements">
-<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline"></a></h2>
 <p><em>Groupyr</em> development is supported through a grant from the <a class="reference external" href="https://www.moore.org/">Gordon and Betty
 Moore Foundation</a> and from the <a class="reference external" href="https://sloan.org/">Alfred P. Sloan
 Foundation</a> to the <a class="reference external" href="http://escience.washington.edu/">University of Washington eScience
@@ -280,9 +185,9 @@ template</a> and it therefore borrows heavily from <a class="reference external"
 <em>Groupyr</em> relies on the copt optimization library <a class="footnote-reference brackets" href="#id13" id="id10">3</a> for its solver. The
 <em>groupyr</em> logo is a flipped silhouette of an <a class="reference external" href="https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg">image from J. E. Randall</a> and is
 licensed <a class="reference external" href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA</a>.</p>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
 <dl class="footnote brackets">
 <dt class="label" id="id11"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
 <dd><p>Simon, N., Friedman, J., Hastie, T., &amp; Tibshirani, R. (2013).
@@ -301,54 +206,37 @@ for Data Mining and Machine Learning, 108-122.</p>
 DOI:10.5281/zenodo.1283339.</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Adam Richie-Halford.
-
-    </p>
+    <p>&#169; Copyright 2020, Adam Richie-Halford.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -42,9 +42,10 @@ training data.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_sgl_path_001.png
-    :alt: SGL ($\lambda=0.5$) regularization path
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_sgl_path_001.png
+   :alt: SGL ($\lambda=0.5$) regularization path
+   :srcset: /auto_examples/images/sphx_glr_plot_sgl_path_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -104,7 +105,7 @@ training data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.049 seconds)
+   **Total running time of the script:** ( 0 minutes  21.047 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_sgl_path.py:
