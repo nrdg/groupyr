@@ -30,13 +30,9 @@ def make_group_classification(
 ):
     """Generate a random n-class sparse group classification problem.
 
-    This initially creates clusters of points normally distributed (std=1)
-    about vertices of an ``n_informative``-dimensional hypercube with sides of
-    length ``2*class_sep`` and assigns an equal number of clusters to each
-    class. It introduces interdependence between these features and adds
-    various types of further noise to the data.
-
-    Prior to shuffling, ``X`` stacks a number of these primary "informative"
+    This function is a generalization of sklearn.datasets.make_classification
+    to feature matrices with grouped covariates. Prior to shuffling, ``X``
+    stacks a number of these primary "informative"
     features, "redundant" linear combinations of these, "repeated" duplicates
     of sampled features, and arbitrary noise for and remaining features.
     This method uses sklearn.datasets.make_classification to construct a
@@ -284,7 +280,9 @@ def make_group_regression(
 ):
     """Generate a sparse group regression problem.
 
-    Prior to shuffling, ``X`` stacks a number of these primary "informative"
+    This function is a generalization of sklearn.datasets.make_regression
+    to feature matrices with grouped covariates. Prior to shuffling, ``X``
+    stacks a number of these primary "informative"
     features, and arbitrary noise for and remaining features.
     This method uses sklearn.datasets.make_regression to construct a
     giant unshuffled regression problem of size
