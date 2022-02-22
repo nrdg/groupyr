@@ -31,7 +31,7 @@ def make_group_classification(
     """Generate a random n-class sparse group classification problem.
 
     This function is a generalization of sklearn.datasets.make_classification
-    to feature matrices with grouped covariates. Prior to shuffling, ``X`` 
+    to feature matrices with grouped covariates. Prior to shuffling, ``X``
     stacks a number of these primary "informative"
     features, "redundant" linear combinations of these, "repeated" duplicates
     of sampled features, and arbitrary noise for and remaining features.
@@ -279,7 +279,7 @@ def make_group_regression(
     random_state=None,
 ):
     """Generate a sparse group regression problem.
-    
+
     This function is a generalization of sklearn.datasets.make_regression
     to feature matrices with grouped covariates. Prior to shuffling, ``X``
     stacks a number of these primary "informative"
