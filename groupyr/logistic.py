@@ -14,7 +14,6 @@ from sklearn.metrics import get_scorer
 from sklearn.model_selection import check_cv
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.extmath import safe_sparse_dot
-from sklearn.utils.fixes import _joblib_parallel_args
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted, column_or_1d
 
@@ -1027,7 +1026,7 @@ class LogisticSGLCV(LogisticSGL):
             score_paths = Parallel(
                 n_jobs=self.n_jobs,
                 verbose=parallel_verbosity,
-                **_joblib_parallel_args(prefer="threads"),
+                prefer="threads",
             )(jobs)
 
             coefs_paths, alphas_paths, scores, n_iters = zip(*score_paths)
