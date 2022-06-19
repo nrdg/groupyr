@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>groupyr.logistic &mdash; groupyr 0.2.6 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.2.7 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
@@ -37,7 +37,7 @@
             <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.6
+                0.2.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -101,7 +101,6 @@
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">check_cv</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">safe_sparse_dot</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">_joblib_parallel_args</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">check_classification_targets</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">column_or_1d</span>
 
@@ -1114,7 +1113,7 @@
             <span class="n">score_paths</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
                 <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="o">=</span><span class="n">parallel_verbosity</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">_joblib_parallel_args</span><span class="p">(</span><span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">),</span>
+                <span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;threads&quot;</span><span class="p">,</span>
             <span class="p">)(</span><span class="n">jobs</span><span class="p">)</span>
 
             <span class="n">coefs_paths</span><span class="p">,</span> <span class="n">alphas_paths</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">n_iters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">score_paths</span><span class="p">)</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>groupyr.datasets &mdash; groupyr 0.2.6 documentation</title>
+  <title>groupyr.datasets &mdash; groupyr 0.2.7 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
@@ -37,7 +37,7 @@
             <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.6
+                0.2.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -117,13 +117,9 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate a random n-class sparse group classification problem.</span>
 
-<span class="sd">    This initially creates clusters of points normally distributed (std=1)</span>
-<span class="sd">    about vertices of an ``n_informative``-dimensional hypercube with sides of</span>
-<span class="sd">    length ``2*class_sep`` and assigns an equal number of clusters to each</span>
-<span class="sd">    class. It introduces interdependence between these features and adds</span>
-<span class="sd">    various types of further noise to the data.</span>
-
-<span class="sd">    Prior to shuffling, ``X`` stacks a number of these primary &quot;informative&quot;</span>
+<span class="sd">    This function is a generalization of sklearn.datasets.make_classification</span>
+<span class="sd">    to feature matrices with grouped covariates. Prior to shuffling, ``X``</span>
+<span class="sd">    stacks a number of these primary &quot;informative&quot;</span>
 <span class="sd">    features, &quot;redundant&quot; linear combinations of these, &quot;repeated&quot; duplicates</span>
 <span class="sd">    of sampled features, and arbitrary noise for and remaining features.</span>
 <span class="sd">    This method uses sklearn.datasets.make_classification to construct a</span>
@@ -371,7 +367,9 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate a sparse group regression problem.</span>
 
-<span class="sd">    Prior to shuffling, ``X`` stacks a number of these primary &quot;informative&quot;</span>
+<span class="sd">    This function is a generalization of sklearn.datasets.make_regression</span>
+<span class="sd">    to feature matrices with grouped covariates. Prior to shuffling, ``X``</span>
+<span class="sd">    stacks a number of these primary &quot;informative&quot;</span>
 <span class="sd">    features, and arbitrary noise for and remaining features.</span>
 <span class="sd">    This method uses sklearn.datasets.make_regression to construct a</span>
 <span class="sd">    giant unshuffled regression problem of size</span>
