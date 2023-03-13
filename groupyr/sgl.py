@@ -238,7 +238,6 @@ def _alpha_grid(
             fit_intercept=fit_intercept,
             eps=eps,
             n_alphas=n_alphas,
-            normalize=normalize,
             copy_X=copy_X,
         )
 
