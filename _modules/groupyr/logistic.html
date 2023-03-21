@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>groupyr.logistic &mdash; groupyr 0.2.7 documentation</title>
+  <title>groupyr.logistic &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -18,10 +17,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -33,15 +33,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> groupyr
-            <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            groupyr
+              <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,9 +77,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>groupyr.logistic</li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">groupyr.logistic</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -113,7 +117,7 @@
 
 
 <div class="viewcode-block" id="LogisticSGL"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGL">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGL</span><span class="p">(</span><span class="n">SGLBaseEstimator</span><span class="p">,</span> <span class="n">LinearClassifierMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An sklearn compatible sparse group lasso classifier.</span>
 
 <span class="sd">    This solves the sparse group lasso [1]_ problem for a feature matrix</span>
@@ -195,7 +199,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
-        <span class="sd">&quot;&quot;&quot;Fit a linear model using the sparse group lasso.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit a linear model using the sparse group lasso.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -214,7 +218,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict confidence scores for samples.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict confidence scores for samples.</span>
 
 <span class="sd">        The confidence score for a sample is the signed distance of that</span>
 <span class="sd">        sample to the hyperplane.</span>
@@ -245,7 +249,7 @@
         <span class="k">return</span> <span class="n">scores</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict class labels for samples in X.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict class labels for samples in X.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -266,7 +270,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return classification probability estimates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return classification probability estimates.</span>
 
 <span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
 
@@ -290,7 +294,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_predict_proba_lr</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict logarithm of probability estimates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict logarithm of probability estimates.</span>
 
 <span class="sd">        The returned estimates for all classes are ordered by the label of classes.</span>
 
@@ -328,7 +332,7 @@
     <span class="n">check_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">params</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute a Logistic SGL model for a list of regularization parameters.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a Logistic SGL model for a list of regularization parameters.</span>
 
 <span class="sd">    This is an implementation that uses the result of the previous model</span>
 <span class="sd">    to speed up computations along the regularization path, making it faster</span>
@@ -538,7 +542,7 @@
     <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">params</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute scores across logistic SGL path.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute scores across logistic SGL path.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -708,7 +712,7 @@
 
 
 <div class="viewcode-block" id="LogisticSGLCV"><a class="viewcode-back" href="../../api.html#groupyr.LogisticSGLCV">[docs]</a><span class="k">class</span> <span class="nc">LogisticSGLCV</span><span class="p">(</span><span class="n">LogisticSGL</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Iterative Logistic SGL model fitting along a regularization path.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterative Logistic SGL model fitting along a regularization path.</span>
 
 <span class="sd">    See the scikit-learn glossary entry for `cross-validation estimator</span>
 <span class="sd">    &lt;https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator&gt;`_</span>
@@ -931,7 +935,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">suppress_solver_warnings</span> <span class="o">=</span> <span class="n">suppress_solver_warnings</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit logistic sparse group lasso linear model.</span>
 
 <span class="sd">        Fit is on grid of alphas and best alpha estimated by cross-validation.</span>
 
@@ -1230,7 +1234,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the score using the `scoring` option on test data and labels.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the score using the `scoring` option on test data and labels.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1252,16 +1256,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">chosen_features_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return an index array of chosen features.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an index array of chosen features.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sparsity_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return boolean array indicating which features survived regularization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return boolean array indicating which features survived regularization.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">!=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">like_nonzero_mask_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return boolean array indicating which features are zero or close to zero.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return boolean array indicating which features are zero or close to zero.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1275,7 +1279,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">chosen_groups_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return set of the group IDs that survived regularization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return set of the group IDs that survived regularization.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">group_mask</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="nb">bool</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span><span class="p">)))</span>
@@ -1286,7 +1290,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chosen_features_</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove columns corresponding to zeroed-out coefficients.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove columns corresponding to zeroed-out coefficients.&quot;&quot;&quot;</span>
         <span class="c1"># Check is fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;is_fitted_&quot;</span><span class="p">)</span>
 

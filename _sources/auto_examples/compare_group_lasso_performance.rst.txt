@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_examples_compare_group_lasso_performance.py>`
+        :ref:`Go to the end <sphx_glr_download_auto_examples_compare_group_lasso_performance.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -108,23 +108,20 @@ pip install group-lasso
 
 .. _sphx_glr_download_auto_examples_compare_group_lasso_performance.py:
 
+.. only:: html
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
 
 
-  .. container:: sphx-glr-download sphx-glr-download-python
 
-     :download:`Download Python source code: compare_group_lasso_performance.py <compare_group_lasso_performance.py>`
+    .. container:: sphx-glr-download sphx-glr-download-python
 
+      :download:`Download Python source code: compare_group_lasso_performance.py <compare_group_lasso_performance.py>`
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: compare_group_lasso_performance.ipynb <compare_group_lasso_performance.ipynb>`
+      :download:`Download Jupyter notebook: compare_group_lasso_performance.ipynb <compare_group_lasso_performance.ipynb>`
 
 
 .. only:: html

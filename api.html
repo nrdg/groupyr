@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; groupyr 0.2.7 documentation</title>
+  <title>API Reference &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,10 +18,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/js/copybutton.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -36,15 +36,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> groupyr
-            <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            groupyr
+              <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -58,11 +62,34 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_help.html">Getting help using <em>groupyr</em></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sparse-groups-lasso-estimators">Sparse Groups Lasso Estimators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cross-validation-estimators">Cross-validation Estimators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dataset-generation">Dataset Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#regularization-paths">Regularization Paths</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#group-transformers">Group Transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sparse-groups-lasso-estimators">Sparse Groups Lasso Estimators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.SGL"><code class="docutils literal notranslate"><span class="pre">SGL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.LogisticSGL"><code class="docutils literal notranslate"><span class="pre">LogisticSGL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation-estimators">Cross-validation Estimators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.SGLCV"><code class="docutils literal notranslate"><span class="pre">SGLCV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.LogisticSGLCV"><code class="docutils literal notranslate"><span class="pre">LogisticSGLCV</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-generation">Dataset Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.datasets.make_group_classification"><code class="docutils literal notranslate"><span class="pre">make_group_classification()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.datasets.make_group_regression"><code class="docutils literal notranslate"><span class="pre">make_group_regression()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#regularization-paths">Regularization Paths</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.sgl_path"><code class="docutils literal notranslate"><span class="pre">sgl_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.logistic.logistic_sgl_path"><code class="docutils literal notranslate"><span class="pre">logistic_sgl_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#group-transformers">Group Transformers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.transform.GroupExtractor"><code class="docutils literal notranslate"><span class="pre">GroupExtractor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.transform.GroupRemover"><code class="docutils literal notranslate"><span class="pre">GroupRemover</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.transform.GroupShuffler"><code class="docutils literal notranslate"><span class="pre">GroupShuffler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.transform.GroupAggregator"><code class="docutils literal notranslate"><span class="pre">GroupAggregator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupyr.transform.GroupResampler"><code class="docutils literal notranslate"><span class="pre">GroupResampler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
@@ -83,8 +110,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>API Reference</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,13 +122,13 @@
            <div itemprop="articleBody">
              
   <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h1>
 <p><em>Groupyr</em> contains estimator classes that are fully compliant
 with the <a class="reference external" href="https://scikit-learn.org">scikit-learn</a> ecosystem. Consequently,
 their initialization, <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">predict</span></code>, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, and <code class="docutils literal notranslate"><span class="pre">score</span></code>
 methods will be familiar to <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> users.</p>
 <section id="sparse-groups-lasso-estimators">
-<h2>Sparse Groups Lasso Estimators<a class="headerlink" href="#sparse-groups-lasso-estimators" title="Permalink to this headline"></a></h2>
+<h2>Sparse Groups Lasso Estimators<a class="headerlink" href="#sparse-groups-lasso-estimators" title="Permalink to this heading"></a></h2>
 <p>These are <em>groupyr</em>’s canonical estimators. <code class="docutils literal notranslate"><span class="pre">SGL</span></code> is intended for regression
 problems while <code class="docutils literal notranslate"><span class="pre">LogisticSGL</span></code> is intended for classification problems.</p>
 <dl class="py class">
@@ -112,7 +139,7 @@ problems while <code class="docutils literal notranslate"><span class="pre">Logi
 partitioned into groups using the proximal gradient descent (PGD)
 algorithm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>l1_ratio</strong><span class="classifier">float, default=1.0</span></dt><dd><p>Hyper-parameter : Combination between group lasso and lasso. l1_ratio=0
 gives the group lasso and l1_ratio=1 gives the lasso.</p>
@@ -156,16 +183,17 @@ of hyperparameters may not converge.</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="rcbd543aab8f7-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
+<div role="list" class="citation-list">
+<div class="citation" id="rcbd543aab8f7-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
 “A Sparse-Group Lasso,” Journal of Computational and Graphical
 Statistics, vol. 22:2, pp. 231-245, 2012
 DOI: 10.1080/10618600.2012.681250</p>
-</dd>
-</dl>
+</div>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>coef_</strong><span class="classifier">array of shape (n_features,)</span></dt><dd><p>Estimated coefficients for the linear predictor (<cite>X &#64; coef_ +
 intercept_</cite>).</p>
@@ -187,7 +215,7 @@ intercept_</cite>).</p>
 partitioned into groups using the proximal gradient descent (PGD)
 algorithm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>l1_ratio</strong><span class="classifier">float, default=1.0</span></dt><dd><p>Hyper-parameter : Combination between group lasso and lasso. l1_ratio=0
 gives the group lasso and l1_ratio=1 gives the lasso.</p>
@@ -231,16 +259,17 @@ of hyperparameters may not converge.</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="rd799dd0ca6ec-1"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
-<dd><p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
+<div role="list" class="citation-list">
+<div class="citation" id="rd799dd0ca6ec-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
+<p>Noah Simon, Jerome Friedman, Trevor Hastie &amp; Robert Tibshirani,
 “A Sparse-Group Lasso,” Journal of Computational and Graphical
 Statistics, vol. 22:2, pp. 231-245, 2012
 DOI: 10.1080/10618600.2012.681250</p>
-</dd>
-</dl>
+</div>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>classes_</strong><span class="classifier">ndarray of shape (n_classes, )</span></dt><dd><p>A list of class labels known to the classifier.</p>
 </dd>
@@ -258,7 +287,7 @@ intercept_</cite>).</p>
 
 </section>
 <section id="cross-validation-estimators">
-<h2>Cross-validation Estimators<a class="headerlink" href="#cross-validation-estimators" title="Permalink to this headline"></a></h2>
+<h2>Cross-validation Estimators<a class="headerlink" href="#cross-validation-estimators" title="Permalink to this heading"></a></h2>
 <p>These estimators have built-in <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-evaluating-estimator-performance">cross-validation</a>
 capabilities to find the best values of the hyperparameters <code class="docutils literal notranslate"><span class="pre">alpha</span></code> and
 <code class="docutils literal notranslate"><span class="pre">l1_ratio</span></code>. These are more efficient than using the canonical estimators
@@ -272,7 +301,7 @@ instead of a grid search.</p>
 <dd><p>Iterative SGL model fitting along a regularization path.</p>
 <p>See the scikit-learn glossary entry for <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator">cross-validation estimator</a></p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>l1_ratio</strong><span class="classifier">float or list of float, default=1.0</span></dt><dd><p>float between 0 and 1 passed to SGL (scaling between group lasso and
 lasso penalties). For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">0</span></code> the penalty is the group lasso
@@ -319,7 +348,7 @@ to false, no intercept will be used in calculations
 If True, the regressors X will be normalized before regression by
 subtracting the mean and dividing by the l2-norm.
 If you wish to standardize, please use
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.1)"><code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.2)"><code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
 </dd>
 <dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>The maximum number of iterations</p>
@@ -339,8 +368,8 @@ Possible inputs for cv are:</p>
 <li><p>an sklearn <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cv-splitter">CV splitter</a>,</p></li>
 <li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
 </ul>
-<p>For int/None inputs, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="(in scikit-learn v1.1)"><code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.KFold</span></code></a> is used.</p>
-<p>Refer to the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation" title="(in scikit-learn v1.1)"><span class="xref std std-ref">scikit-learn User Guide</span></a> for the various cross-validation
+<p>For int/None inputs, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="(in scikit-learn v1.2)"><code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.KFold</span></code></a> is used.</p>
+<p>Refer to the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation" title="(in scikit-learn v1.2)"><span class="xref std std-ref">scikit-learn User Guide</span></a> for the various cross-validation
 strategies that can be used here.</p>
 </dd>
 <dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
@@ -348,7 +377,7 @@ strategies that can be used here.</p>
 <dt><strong>verbose</strong><span class="classifier">bool or int, default=0</span></dt><dd><p>Amount of verbosity.</p>
 </dd>
 <dt><strong>n_jobs</strong><span class="classifier">int, default=None</span></dt><dd><p>Number of CPUs to use during the cross validation.
-<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v1.2.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v1.3.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
 <code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
 </dd>
 <dt><strong>tuning_strategy</strong><span class="classifier">[“grid”, “bayes”], default=”grid”</span></dt><dd><p>Hyperparameter tuning strategy to use. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
@@ -393,7 +422,7 @@ may be useful for debugging.</p>
 </dl>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>alpha_</strong><span class="classifier">float</span></dt><dd><p>The amount of penalization chosen by cross validation</p>
 </dd>
@@ -427,7 +456,7 @@ then this attribute is None.</p>
 <dd><p>Iterative Logistic SGL model fitting along a regularization path.</p>
 <p>See the scikit-learn glossary entry for <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cross-validation-estimator">cross-validation estimator</a></p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>l1_ratio</strong><span class="classifier">float or list of float, default=1.0</span></dt><dd><p>float between 0 and 1 passed to SGL (scaling between group lasso and
 lasso penalties). For <code class="docutils literal notranslate"><span class="pre">l1_ratio</span> <span class="pre">=</span> <span class="pre">0</span></code> the penalty is the group lasso
@@ -474,7 +503,7 @@ to false, no intercept will be used in calculations
 If True, the regressors X will be normalized before regression by
 subtracting the mean and dividing by the l2-norm.
 If you wish to standardize, please use
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.1)"><code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.2)"><code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
 </dd>
 <dt><strong>max_iter</strong><span class="classifier">int, default=1000</span></dt><dd><p>The maximum number of iterations</p>
@@ -494,8 +523,8 @@ Possible inputs for cv are:</p>
 <li><p>an sklearn <a class="reference external" href="https://scikit-learn.org/stable/glossary.html#term-cv-splitter">CV splitter</a>,</p></li>
 <li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
 </ul>
-<p>For int/None inputs, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="(in scikit-learn v1.1)"><code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.StratifiedKFold</span></code></a> is used.</p>
-<p>Refer to the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation" title="(in scikit-learn v1.1)"><span class="xref std std-ref">scikit-learn User Guide</span></a> for the various cross-validation
+<p>For int/None inputs, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="(in scikit-learn v1.2)"><code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.StratifiedKFold</span></code></a> is used.</p>
+<p>Refer to the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation" title="(in scikit-learn v1.2)"><span class="xref std std-ref">scikit-learn User Guide</span></a> for the various cross-validation
 strategies that can be used here.</p>
 </dd>
 <dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
@@ -503,7 +532,7 @@ strategies that can be used here.</p>
 <dt><strong>verbose</strong><span class="classifier">bool or int, default=False</span></dt><dd><p>Amount of verbosity.</p>
 </dd>
 <dt><strong>n_jobs</strong><span class="classifier">int, default=None</span></dt><dd><p>Number of CPUs to use during the cross validation.
-<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v1.2.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.parallel_backend" title="(in joblib v1.3.0.dev0)"><code class="docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code></a> context.
 <code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
 </dd>
 <dt><strong>tuning_strategy</strong><span class="classifier">[“grid”, “bayes”], default=”grid”</span></dt><dd><p>Hyperparameter tuning strategy to use. If <code class="docutils literal notranslate"><span class="pre">tuning_strategy</span> <span class="pre">==</span> <span class="pre">&quot;grid&quot;</span></code>,
@@ -548,7 +577,7 @@ may be useful for debugging.</p>
 </dl>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>alpha_</strong><span class="classifier">float</span></dt><dd><p>The amount of penalization chosen by cross validation</p>
 </dd>
@@ -581,7 +610,7 @@ then this attribute is None.</p>
 
 </section>
 <section id="dataset-generation">
-<h2>Dataset Generation<a class="headerlink" href="#dataset-generation" title="Permalink to this headline"></a></h2>
+<h2>Dataset Generation<a class="headerlink" href="#dataset-generation" title="Permalink to this heading"></a></h2>
 <p>Use these functions to generate synthetic sparse grouped data.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="groupyr.datasets.make_group_classification">
@@ -597,7 +626,7 @@ giant unshuffled classification problem of size
 <code class="docutils literal notranslate"><span class="pre">n_groups</span> <span class="pre">*</span> <span class="pre">n_features_per_group</span></code> and then distributes the returned
 features to each group. It then optionally shuffles each group.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_samples</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>The number of samples.</p>
 </dd>
@@ -663,7 +692,7 @@ by <cite>np.random</cite>.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array of shape [n_samples, n_features]</span></dt><dd><p>The generated samples.</p>
 </dd>
@@ -680,11 +709,11 @@ if <cite>useful_indices</cite> is True.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="(in scikit-learn v1.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_classification</span></code></a></dt><dd><p>non-group-sparse version</p>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="(in scikit-learn v1.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_classification</span></code></a></dt><dd><p>non-group-sparse version</p>
 </dd>
-<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="(in scikit-learn v1.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_blobs</span></code></a></dt><dd><p>simplified variant</p>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="(in scikit-learn v1.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_blobs</span></code></a></dt><dd><p>simplified variant</p>
 </dd>
-<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_multilabel_classification.html#sklearn.datasets.make_multilabel_classification" title="(in scikit-learn v1.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_multilabel_classification</span></code></a></dt><dd><p>unrelated generator for multilabel tasks</p>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_multilabel_classification.html#sklearn.datasets.make_multilabel_classification" title="(in scikit-learn v1.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_multilabel_classification</span></code></a></dt><dd><p>unrelated generator for multilabel tasks</p>
 </dd>
 </dl>
 </div>
@@ -692,12 +721,13 @@ if <cite>useful_indices</cite> is True.</p>
 <p>The algorithm is adapted from Guyon [1] and was designed to generate
 the “Madelon” dataset.</p>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r89cbf7c972e0-1"><span class="brackets">1</span></dt>
-<dd><p>I. Guyon, “Design of experiments for the NIPS 2003 variable
+<div role="list" class="citation-list">
+<div class="citation" id="r89cbf7c972e0-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>I. Guyon, “Design of experiments for the NIPS 2003 variable
 selection benchmark”, 2003.</p>
-</dd>
-</dl>
+</div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -713,7 +743,7 @@ giant unshuffled regression problem of size
 <code class="docutils literal notranslate"><span class="pre">n_groups</span> <span class="pre">*</span> <span class="pre">n_features_per_group</span></code> and then distributes the returned
 features to each group. It then optionally shuffles each group.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_samples</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>The number of samples.</p>
 </dd>
@@ -746,7 +776,7 @@ by <cite>np.random</cite>.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array of shape [n_samples, n_features]</span></dt><dd><p>The generated samples.</p>
 </dd>
@@ -762,7 +792,7 @@ by <cite>np.random</cite>.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="(in scikit-learn v1.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_regression</span></code></a></dt><dd><p>non-group-sparse version</p>
+<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="(in scikit-learn v1.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.datasets.make_regression</span></code></a></dt><dd><p>non-group-sparse version</p>
 </dd>
 </dl>
 </div>
@@ -770,7 +800,7 @@ by <cite>np.random</cite>.</p>
 
 </section>
 <section id="regularization-paths">
-<h2>Regularization Paths<a class="headerlink" href="#regularization-paths" title="Permalink to this headline"></a></h2>
+<h2>Regularization Paths<a class="headerlink" href="#regularization-paths" title="Permalink to this heading"></a></h2>
 <p>Use these functions to compute regression coefficients along a regularization path.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="groupyr.sgl_path">
@@ -778,7 +808,7 @@ by <cite>np.random</cite>.</p>
 <dd><p>Compute sparse group lasso path.</p>
 <p>We use the previous solution as the initial guess for subsequent alpha values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">{array-like, sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>Training data. Pass directly as Fortran-contiguous data to avoid
 unnecessary memory duplication.</p>
@@ -820,7 +850,7 @@ using only training data.</p>
 If True, the regressors X will be normalized before regression by
 subtracting the mean and dividing by the l2-norm.
 If you wish to standardize, please use
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
 </dd>
 <dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
@@ -834,7 +864,7 @@ caller when check_input=False.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>coefs</strong><span class="classifier">ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)</span></dt><dd><p>List of coefficients for the Logistic Regression model. If
 fit_intercept is set to True then the first dimension will be
@@ -864,7 +894,7 @@ n_features + 1, where the last item represents the intercept.</p>
 to speed up computations along the regularization path, making it faster
 than calling LogisticSGL for the different parameters without warm start.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">{array-like, sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>Training data. Pass directly as Fortran-contiguous data to avoid
 unnecessary memory duplication.</p>
@@ -906,7 +936,7 @@ using only training data.</p>
 If True, the regressors X will be normalized before regression by
 subtracting the mean and dividing by the l2-norm.
 If you wish to standardize, please use
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> before calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 on an estimator with <code class="docutils literal notranslate"><span class="pre">normalize=False</span></code>.</p>
 </dd>
 <dt><strong>copy_X</strong><span class="classifier">bool, default=True</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, X will be copied; else, it may be overwritten.</p>
@@ -920,7 +950,7 @@ caller when check_input=False.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>coefs</strong><span class="classifier">ndarray of shape (n_features, n_alphas) or (n_features + 1, n_alphas)</span></dt><dd><p>List of coefficients for the Logistic Regression model. If
 fit_intercept is set to True then the second dimension will be
@@ -937,7 +967,7 @@ n_features + 1, where the last item represents the intercept.</p>
 
 </section>
 <section id="group-transformers">
-<h2>Group Transformers<a class="headerlink" href="#group-transformers" title="Permalink to this headline"></a></h2>
+<h2>Group Transformers<a class="headerlink" href="#group-transformers" title="Permalink to this heading"></a></h2>
 <p>These classes perform group-wise transformations on their inputs.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="groupyr.transform.GroupExtractor">
@@ -947,7 +977,7 @@ n_features + 1, where the last item represents the intercept.</p>
 group indices, this transformer returns the columns of the feature
 matrix, <cite>X</cite>, that are in the desired subgroups.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to extract from feature matrix
 If int or sequence of ints, these will be treated as group indices.
@@ -987,7 +1017,7 @@ return the group intersection of labels in <code class="docutils literal notrans
 group indices, this transformer returns the columns of the feature
 matrix, <cite>X</cite>, that DO NOT include the unwanted subgroups.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to remove from feature matrix
 If int or sequence of ints, these will be treated as group indices.
@@ -1027,7 +1057,7 @@ return the group intersection of labels in <code class="docutils literal notrans
 group indices, this transformer returns the feature
 matrix, <cite>X</cite>, with the subset of groups shuffled.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>select</strong><span class="classifier">numpy.ndarray, int, or str, optional</span></dt><dd><p>subsequence of desired groups to shuffle in the feature matrix
 If int or sequence of ints, these will be treated as group indices.
@@ -1067,7 +1097,7 @@ return the group intersection of labels in <code class="docutils literal notrans
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupAggregator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupAggregator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupAggregator" title="Permalink to this definition"></a></dt>
 <dd><p>Aggregate each group of a feature matrix using one or more functions.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>func</strong><span class="classifier">function, str, list or dict</span></dt><dd><p>Function to use for aggregating the data. If a function, it must
 accept an <code class="docutils literal notranslate"><span class="pre">axis=1</span></code> parameter. If a string, it must be part of
@@ -1096,7 +1126,7 @@ keywords, it will be ignored and set to <code class="docutils literal notranslat
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Attributes</dt>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>n_features_in_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix input to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
 </dd>
@@ -1116,7 +1146,7 @@ keywords, it will be ignored and set to <code class="docutils literal notranslat
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">groupyr.transform.</span></span><span class="sig-name descname"><span class="pre">GroupResampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resample_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groupyr/transform.html#GroupResampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#groupyr.transform.GroupResampler" title="Permalink to this definition"></a></dt>
 <dd><p>Upsample or downsample each group.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>resample_to</strong><span class="classifier">int or float, default=1.0</span></dt><dd><p>If an int, the number of desired resampled features per group.
 If a float, the resampling ratio.</p>
@@ -1145,7 +1175,7 @@ is ‘linear’.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Attributes</dt>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>n_features_in_</strong><span class="classifier">int</span></dt><dd><p>The number of features in the feature matrix input to <code class="docutils literal notranslate"><span class="pre">fit()</span></code>.</p>
 </dd>

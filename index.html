@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.2.7 documentation</title>
+  <title>Groupyr: Sparse Group Lasso in Python &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,10 +18,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/js/copybutton.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -36,15 +36,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> groupyr
-            <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="#" class="icon icon-home">
+            groupyr
+              <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -76,8 +80,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li><em>Groupyr</em>: Sparse Group Lasso in Python</li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><em>Groupyr</em>: Sparse Group Lasso in Python</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,20 +92,20 @@
            <div itemprop="articleBody">
              
   <section id="groupyr-sparse-group-lasso-in-python">
-<h1><em>Groupyr</em>: Sparse Group Lasso in Python<a class="headerlink" href="#groupyr-sparse-group-lasso-in-python" title="Permalink to this headline"></a></h1>
+<h1><em>Groupyr</em>: Sparse Group Lasso in Python<a class="headerlink" href="#groupyr-sparse-group-lasso-in-python" title="Permalink to this heading"></a></h1>
 <p><em>Groupyr</em> is a scikit-learn compatible implementation of the sparse group lasso
 linear model. It is intended for high-dimensional supervised learning
 problems where related covariates can be assigned to predefined groups.</p>
 <section id="the-sparse-group-lasso">
-<h2>The Sparse Group Lasso<a class="headerlink" href="#the-sparse-group-lasso" title="Permalink to this headline"></a></h2>
-<p>The sparse group lasso <a class="footnote-reference brackets" href="#id11" id="id1">1</a> is a penalized regression approach that combines the
+<h2>The Sparse Group Lasso<a class="headerlink" href="#the-sparse-group-lasso" title="Permalink to this heading"></a></h2>
+<p>The sparse group lasso <a class="footnote-reference brackets" href="#id11" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a penalized regression approach that combines the
 group lasso with the normal lasso penalty to promote both global sparsity and
 group-wise sparsity. It estimates a target variable <span class="math notranslate nohighlight">\(\hat{y}\)</span> from a
 feature matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, using</p>
 <div class="math notranslate nohighlight">
 \[\hat{y} = \mathbf{X} \hat{\beta},\]</div>
 <p>where the coefficients in <span class="math notranslate nohighlight">\(\hat{\beta}\)</span> characterize the relationship
-between the features and the target and must satisfy <a class="footnote-reference brackets" href="#id11" id="id2">1</a></p>
+between the features and the target and must satisfy <a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <div class="math notranslate nohighlight">
 \[\hat{\beta} = \min_{\beta} \frac{1}{2}
 || y - \sum_{\ell = 1}^{G} \mathbf{X}^{(\ell)} \beta^{(\ell)} ||_2^2
@@ -121,11 +125,11 @@ and <span class="math notranslate nohighlight">\(\alpha=1\)</span> yielding the 
 </div>
 </section>
 <section id="id3">
-<h2><a class="reference external" href="install.html">Installation</a><a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
+<h2><a class="reference external" href="install.html">Installation</a><a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <p>See the <a class="reference external" href="install.html">installation guide</a> for installation instructions.</p>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
 <p><em>Groupyr</em> is compatible with the scikit-learn API and its estimators offer the
 same instantiate, <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">predict</span></code> workflow that will be familiar to
 scikit-learn users. See the <a class="reference external" href="api.html">API</a> and <a class="reference external" href="auto_examples/index.html">examples</a> for full details. Here, we describe only the key
@@ -159,21 +163,21 @@ evaluations are needed to arrive at the optimal hyperparameters. We provide
 <a class="reference external" href="auto_examples/index.html">examples</a> of both strategies.</p>
 </section>
 <section id="id5">
-<h2><a class="reference external" href="api.html">API Documentation</a><a class="headerlink" href="#id5" title="Permalink to this headline"></a></h2>
+<h2><a class="reference external" href="api.html">API Documentation</a><a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
 <p>See the <a class="reference external" href="api.html">API Documentation</a> for detailed documentation of the API.</p>
 </section>
 <section id="id8">
-<h2><a class="reference external" href="auto_examples/index.html">Examples</a><a class="headerlink" href="#id8" title="Permalink to this headline"></a></h2>
+<h2><a class="reference external" href="auto_examples/index.html">Examples</a><a class="headerlink" href="#id8" title="Permalink to this heading"></a></h2>
 <p>And look at the <a class="reference external" href="auto_examples/index.html">example gallery</a> for a set of introductory examples.</p>
 </section>
 <section id="citing-groupyr">
-<h2>Citing groupyr<a class="headerlink" href="#citing-groupyr" title="Permalink to this headline"></a></h2>
+<h2>Citing groupyr<a class="headerlink" href="#citing-groupyr" title="Permalink to this heading"></a></h2>
 <p>If you use <em>groupyr</em> in a scientific publication, we would appreciate
 citations. Please see our <a class="reference external" href="https://github.com/richford/groupyr#citing-groupyr">citation instructions</a> for the latest
 reference and a bibtex entry.</p>
 </section>
 <section id="acknowledgements">
-<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline"></a></h2>
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this heading"></a></h2>
 <p><em>Groupyr</em> development is supported through a grant from the <a class="reference external" href="https://www.moore.org/">Gordon and Betty
 Moore Foundation</a> and from the <a class="reference external" href="https://sloan.org/">Alfred P. Sloan
 Foundation</a> to the <a class="reference external" href="http://escience.washington.edu/">University of Washington eScience
@@ -181,31 +185,35 @@ Institute</a>, as well as <a class="reference external" href="https://projectrep
 Initiative grant 1RF1MH121868-01</a>
 to Ariel Rokem (University of Washington).</p>
 <p>The API design of <em>groupyr</em> was facilitated by the <a class="reference external" href="https://github.com/scikit-learn-contrib/project-template">scikit-learn project
-template</a> and it therefore borrows heavily from <a class="reference external" href="https://scikit-learn.org/stable/index.html">scikit-learn</a> <a class="footnote-reference brackets" href="#id12" id="id9">2</a>.
-<em>Groupyr</em> relies on the copt optimization library <a class="footnote-reference brackets" href="#id13" id="id10">3</a> for its solver. The
+template</a> and it therefore borrows heavily from <a class="reference external" href="https://scikit-learn.org/stable/index.html">scikit-learn</a> <a class="footnote-reference brackets" href="#id12" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.
+<em>Groupyr</em> relies on the copt optimization library <a class="footnote-reference brackets" href="#id13" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> for its solver. The
 <em>groupyr</em> logo is a flipped silhouette of an <a class="reference external" href="https://commons.wikimedia.org/wiki/File:Epinephelus_amblycephalus,_banded_grouper.jpg">image from J. E. Randall</a> and is
 licensed <a class="reference external" href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA</a>.</p>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
-<dl class="footnote brackets">
-<dt class="label" id="id11"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
-<dd><p>Simon, N., Friedman, J., Hastie, T., &amp; Tibshirani, R. (2013).
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p>Simon, N., Friedman, J., Hastie, T., &amp; Tibshirani, R. (2013).
 A sparse-group lasso. Journal of Computational and Graphical
 Statistics, 22(2), 231-245.</p>
-</dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id9">2</a></span></dt>
-<dd><p>Pedregosa et al. (2011). <a class="reference external" href="http://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html">Scikit-learn: Machine Learning in Python</a>.
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">2</a><span class="fn-bracket">]</span></span>
+<p>Pedregosa et al. (2011). <a class="reference external" href="http://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html">Scikit-learn: Machine Learning in Python</a>.
 Journal of Machine Learning Research, 12, 2825-2830;
 Buitnick et al. (2013). <a class="reference external" href="https://arxiv.org/abs/1309.0238">API design for machine learning software:
 experiences from the scikit-learn project</a>. ECML PKDD Workshop: Languages
 for Data Mining and Machine Learning, 108-122.</p>
-</dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id10">3</a></span></dt>
-<dd><p>Pedregosa et al. (2020). <a class="reference external" href="http://openopt.github.io/copt/">copt: composite optimization in Python</a>.
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">3</a><span class="fn-bracket">]</span></span>
+<p>Pedregosa et al. (2020). <a class="reference external" href="http://openopt.github.io/copt/">copt: composite optimization in Python</a>.
 DOI:10.5281/zenodo.1283339.</p>
-</dd>
-</dl>
+</aside>
+</aside>
 </section>
 </section>
 

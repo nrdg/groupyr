@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logistic Sparse Group Lasso for grouped sparse signals &mdash; groupyr 0.2.7 documentation</title>
+  <title>Logistic Sparse Group Lasso for grouped sparse signals &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,10 +18,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/js/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,15 +36,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> groupyr
-            <img src="../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            groupyr
+              <img src="../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -83,9 +87,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Examples</a> &raquo;</li>
-      <li>Logistic Sparse Group Lasso for grouped sparse signals</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Examples</a></li>
+      <li class="breadcrumb-item active">Logistic Sparse Group Lasso for grouped sparse signals</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto_examples/plot_classifier.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -97,16 +101,15 @@
              
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-classifier-py"><span class="std std-ref">here</span></a>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-plot-classifier-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="logistic-sparse-group-lasso-for-grouped-sparse-signals">
-<span id="sphx-glr-auto-examples-plot-classifier-py"></span><h1>Logistic Sparse Group Lasso for grouped sparse signals<a class="headerlink" href="#logistic-sparse-group-lasso-for-grouped-sparse-signals" title="Permalink to this headline"></a></h1>
+<span id="sphx-glr-auto-examples-plot-classifier-py"></span><h1>Logistic Sparse Group Lasso for grouped sparse signals<a class="headerlink" href="#logistic-sparse-group-lasso-for-grouped-sparse-signals" title="Permalink to this heading"></a></h1>
 <p>Estimates a Sparse Group Lasso logistic regression model on a simulated
 sparse signal. The estimated important features are compared with the
 ground-truth.</p>
-<img src="../_images/sphx_glr_plot_classifier_001.png" srcset="../_images/sphx_glr_plot_classifier_001.png" alt="Estimated coefficients with ground truth imporant features highlighted" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Indices of ground-truth informative features:
+<img src="../_images/sphx_glr_plot_classifier_001.png" srcset="../_images/sphx_glr_plot_classifier_001.png" alt="Estimated coefficients with ground truth imporant features highlighted" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Indices of ground-truth informative features:
 [200 201 203 205 208 209 211 212 214 217 240 243 244 245 246 251 252 256
  257 259 261 262 264 267 271 272 274 276 277 279]
 Indices of non-zero estimated coefs:
@@ -180,8 +183,8 @@ Indices of non-zero estimated coefs:
 <span class="nb">print</span><span class="p">(</span><a href="../api.html#groupyr.LogisticSGLCV" title="groupyr.LogisticSGLCV" class="sphx-glr-backref-module-groupyr sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model</span></a><span class="o">.</span><span class="n">chosen_features_</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  20.427 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-classifier-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  11.703 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-classifier-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/084669b45b226af6f637ab8457c8c5aa/plot_classifier.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_classifier.py</span></code></a></p>
 </div>

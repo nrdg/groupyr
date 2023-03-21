@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>groupyr.transform &mdash; groupyr 0.2.7 documentation</title>
+  <title>groupyr.transform &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -18,10 +17,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -33,15 +33,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> groupyr
-            <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            groupyr
+              <img src="../../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,9 +77,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>groupyr.transform</li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">groupyr.transform</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -101,7 +105,7 @@
 
 
 <span class="k">def</span> <span class="nf">isiterable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return True if obj is an iterable, False otherwise.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if obj is an iterable, False otherwise.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">_</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># noqa F841</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -173,7 +177,7 @@
 
 
 <div class="viewcode-block" id="GroupExtractor"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupExtractor">[docs]</a><span class="k">class</span> <span class="nc">GroupExtractor</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An sklearn-compatible group extractor.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An sklearn-compatible group extractor.</span>
 
 <span class="sd">    Given a sequence of all group indices and a subsequence of desired</span>
 <span class="sd">    group indices, this transformer returns the columns of the feature</span>
@@ -227,7 +231,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transform the input data, extracting the desired groups.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the input data, extracting the desired groups.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -248,7 +252,7 @@
         <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Select specified groups from the feature matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select specified groups from the feature matrix.</span>
 
 <span class="sd">        This method learns the new feature names and group indices. The</span>
 <span class="sd">        actual extraction of features is done in the ``transform`` method.</span>
@@ -284,7 +288,7 @@
 
 
 <div class="viewcode-block" id="GroupRemover"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupRemover">[docs]</a><span class="k">class</span> <span class="nc">GroupRemover</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An sklearn-compatible group remover.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An sklearn-compatible group remover.</span>
 
 <span class="sd">    Given a sequence of all group indices and a subsequence of unwanted</span>
 <span class="sd">    group indices, this transformer returns the columns of the feature</span>
@@ -338,7 +342,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transform the input data, removing the unwanted groups.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the input data, removing the unwanted groups.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -361,7 +365,7 @@
         <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove specified groups from the feature matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove specified groups from the feature matrix.</span>
 
 <span class="sd">        This method learns the new feature names and group indices. The</span>
 <span class="sd">        actual removal of features is done in the ``transform`` method.</span>
@@ -397,7 +401,7 @@
 
 
 <div class="viewcode-block" id="GroupShuffler"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupShuffler">[docs]</a><span class="k">class</span> <span class="nc">GroupShuffler</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Shuffle some groups of a feature matrix, leaving others as is.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shuffle some groups of a feature matrix, leaving others as is.</span>
 
 <span class="sd">    Given a sequence of all group indices and a subsequence of</span>
 <span class="sd">    group indices, this transformer returns the feature</span>
@@ -454,7 +458,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">select_intersection</span> <span class="o">=</span> <span class="n">select_intersection</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transform the input data, shuffling the desired groups.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the input data, shuffling the desired groups.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -476,7 +480,7 @@
         <span class="k">return</span> <span class="n">X</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Shuffle specified groups from the feature matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuffle specified groups from the feature matrix.</span>
 
 <span class="sd">        This method learns the new feature names and group indices. The</span>
 <span class="sd">        actual shuffling of features is done in the ``transform`` method.</span>
@@ -509,7 +513,7 @@
 
 
 <div class="viewcode-block" id="GroupAggregator"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupAggregator">[docs]</a><span class="k">class</span> <span class="nc">GroupAggregator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">_FeatureNameMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Aggregate each group of a feature matrix using one or more functions.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate each group of a feature matrix using one or more functions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -564,7 +568,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kw_args</span> <span class="o">=</span> <span class="n">kw_args</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a groupwise aggregation of the feature matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a groupwise aggregation of the feature matrix.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -592,7 +596,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">X_out</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Aggregate features in each group with a user-defined reduction function.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Aggregate features in each group with a user-defined reduction function.</span>
 
 <span class="sd">        This method learns the groups and number of features from the input data.</span>
 <span class="sd">        The actual group aggregation is done in the ``transform`` method.</span>
@@ -654,7 +658,7 @@
 
 
 <div class="viewcode-block" id="GroupResampler"><a class="viewcode-back" href="../../api.html#groupyr.transform.GroupResampler">[docs]</a><span class="k">class</span> <span class="nc">GroupResampler</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">_FeatureNameMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Upsample or downsample each group.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upsample or downsample each group.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -709,7 +713,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a resampled feature matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a resampled feature matrix.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -735,7 +739,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">X_out</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Learn the resampled feature names and groups.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Learn the resampled feature names and groups.</span>
 
 <span class="sd">        The actual resampling is done in the ``transform`` method.</span>
 

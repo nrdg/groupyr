@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; groupyr 0.2.7 documentation</title>
+  <title>Installation &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,10 +18,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/js/copybutton.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -36,15 +36,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> groupyr
-            <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            groupyr
+              <img src="_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,8 +85,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installation</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,7 +97,7 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <p><em>Groupyr</em> requires Python 3.6, 3.7, or 3.8 and depends on</p>
 <blockquote>
 <div><p>copt
@@ -104,31 +108,31 @@ scikit-optimize
 tqdm</p>
 </div></blockquote>
 <section id="installing-the-release-version">
-<h2>Installing the release version<a class="headerlink" href="#installing-the-release-version" title="Permalink to this headline"></a></h2>
+<h2>Installing the release version<a class="headerlink" href="#installing-the-release-version" title="Permalink to this heading"></a></h2>
 <p>The recommended way to install <em>groupyr</em> is from PyPI,</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install groupyr
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>groupyr
 </pre></div>
 </div>
 <p>This will install <em>groupyr</em> and all of its dependencies.</p>
 </section>
 <section id="installing-the-development-version">
-<h2>Installing the development version<a class="headerlink" href="#installing-the-development-version" title="Permalink to this headline"></a></h2>
+<h2>Installing the development version<a class="headerlink" href="#installing-the-development-version" title="Permalink to this heading"></a></h2>
 <p>The development version is less stable but may include new features.
 You can install the development version using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install git+https://github.com/richford/groupyr.git</span>
 </pre></div>
 </div>
 <p>Alternatively, you can clone the source code from the <a class="reference external" href="https://github.com/richford/groupyr">github repository</a>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone git@github.com:richford/groupyr.git
-<span class="gp">$ </span><span class="nb">cd</span> groupyr
-<span class="gp">$ </span>pip install .
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:richford/groupyr.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>groupyr
+<span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>.
 </pre></div>
 </div>
 <p>If you would like to contribute to <em>groupyr</em>, see the <a class="reference external" href="contributing.html">contributing guidelines</a>.</p>
 <p>Next, go to the <a class="reference external" href="user_guide.html">user guide</a> or see the <a class="reference external" href="auto_examples/index.html">example gallery</a> for further information on how to use <em>groupyr</em>.</p>
 </section>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
 <p>Installing <em>groupyr</em> using either of the methods above will install all of
 its dependencies: copt, numpy, scikit-learn, scipy, scikit-optimize, and
 tqdm.</p>

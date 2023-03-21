@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; groupyr 0.2.7 documentation</title>
+  <title>Examples &mdash; groupyr 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/groupyr.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx-dropdown.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-bootstrap.min.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,10 +18,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/js/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,15 +36,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> groupyr
-            <img src="../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            groupyr
+              <img src="../_static/groupyr-logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -83,8 +87,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Examples</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto_examples/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,53 +99,30 @@
            <div itemprop="articleBody">
              
   <section id="examples">
-<span id="general-examples"></span><span id="sphx-glr-auto-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
+<span id="general-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
 <p>These examples use the sparse group lasso and synthetic data to demonstrate
 how groupyr can be used to solve penalized regression problems with grouped
 covariates. Because the data is synthetically generated, we know the “ground
 truth” and can compare to the estimated important features chosen by the
 groupyr models.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal. The esti..."><figure class="align-default" id="id1">
-<img alt="Logistic Sparse Group Lasso for grouped sparse signals" src="../_images/sphx_glr_plot_classifier_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="plot_classifier.html#sphx-glr-auto-examples-plot-classifier-py"><span class="std std-ref">Logistic Sparse Group Lasso for grouped sparse signals</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal. The esti..."><img alt="" src="../_images/sphx_glr_plot_classifier_thumb.png" />
+<p><a class="reference internal" href="plot_classifier.html#sphx-glr-auto-examples-plot-classifier-py"><span class="std std-ref">Logistic Sparse Group Lasso for grouped sparse signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Logistic Sparse Group Lasso for grouped sparse signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Computes SGL path using the function sgl_path along the regularization parameter on a synthetic..."><img alt="" src="../_images/sphx_glr_plot_sgl_path_thumb.png" />
+<p><a class="reference internal" href="plot_sgl_path.html#sphx-glr-auto-examples-plot-sgl-path-py"><span class="std std-ref">Visualizing the SGL regularization path</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Visualizing the SGL regularization path</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example performs a rudimentary performance comparison of the groupyr and group-lasso packa..."><img alt="" src="../_images/sphx_glr_compare_group_lasso_performance_thumb.png" />
+<p><a class="reference internal" href="compare_group_lasso_performance.html#sphx-glr-auto-examples-compare-group-lasso-performance-py"><span class="std std-ref">Rudimentary performance comparison of groupyr and group-lasso</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Rudimentary performance comparison of groupyr and group-lasso</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso model on a simulated sparse signal with high group-level sparsit..."><img alt="" src="../_images/sphx_glr_plot_regressor_thumb.png" />
+<p><a class="reference internal" href="plot_regressor.html#sphx-glr-auto-examples-plot-regressor-py"><span class="std std-ref">Sparse Group Lasso for grouped sparse signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Sparse Group Lasso for grouped sparse signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal with high..."><img alt="" src="../_images/sphx_glr_plot_balanced_classifier_thumb.png" />
+<p><a class="reference internal" href="plot_balanced_classifier.html#sphx-glr-auto-examples-plot-balanced-classifier-py"><span class="std std-ref">Specifying a scoring criterion for model selection</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Specifying a scoring criterion for model selection</div>
+</div></div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Computes SGL path using the function sgl_path along the regularization parameter on a synthetic..."><figure class="align-default" id="id2">
-<img alt="Visualizing the SGL regularization path" src="../_images/sphx_glr_plot_sgl_path_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="plot_sgl_path.html#sphx-glr-auto-examples-plot-sgl-path-py"><span class="std std-ref">Visualizing the SGL regularization path</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="This example performs a rudimentary performance comparison of the groupyr and group-lasso packa..."><figure class="align-default" id="id3">
-<img alt="Rudimentary performance comparison of groupyr and group-lasso" src="../_images/sphx_glr_compare_group_lasso_performance_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="compare_group_lasso_performance.html#sphx-glr-auto-examples-compare-group-lasso-performance-py"><span class="std std-ref">Rudimentary performance comparison of groupyr and group-lasso</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso model on a simulated sparse signal with high group-level sparsit..."><figure class="align-default" id="id4">
-<img alt="Sparse Group Lasso for grouped sparse signals" src="../_images/sphx_glr_plot_regressor_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="plot_regressor.html#sphx-glr-auto-examples-plot-regressor-py"><span class="std std-ref">Sparse Group Lasso for grouped sparse signals</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="Estimates a Sparse Group Lasso logistic regression model on a simulated sparse signal with high..."><figure class="align-default" id="id5">
-<img alt="Specifying a scoring criterion for model selection" src="../_images/sphx_glr_plot_balanced_classifier_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="plot_balanced_classifier.html#sphx-glr-auto-examples-plot-balanced-classifier-py"><span class="std std-ref">Specifying a scoring criterion for model selection</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/07fcc19ba03226cd3d83d4e40ec44385/auto_examples_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_examples_python.zip</span></code></a></p>
 </div>
