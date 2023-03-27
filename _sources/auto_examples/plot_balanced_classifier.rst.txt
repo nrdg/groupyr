@@ -45,14 +45,14 @@ scoring shows a modest increase in both F1 score and accuracy.
 
     Model     Metric              Score
     -----------------------------------
-    default   accuracy            0.884
-    F1        accuracy            0.884
+    default   accuracy            0.920
+    F1        accuracy            0.876
 
-    default   F1 score            0.121
-    F1        F1 score            0.121
+    default   F1 score            0.231
+    F1        F1 score            0.205
 
-    default   balanced accuracy   0.565
-    F1        balanced accuracy   0.565
+    default   balanced accuracy   0.763
+    F1        balanced accuracy   0.839
 
 
 
@@ -203,7 +203,7 @@ scoring shows a modest increase in both F1 score and accuracy.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  49.968 seconds)
+   **Total running time of the script:** ( 1 minutes  4.410 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_balanced_classifier.py:
