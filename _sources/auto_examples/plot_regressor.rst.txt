@@ -45,10 +45,10 @@ the results of a Lasso model.
     test:  R^2 = 0.160, RMSE = 623.359
 
     SGL performance:
-    train: R^2 = 0.582, RMSE = 456.025
-    test:  R^2 = 0.355, RMSE = 546.471
+    train: R^2 = 0.575, RMSE = 460.063
+    test:  R^2 = 0.352, RMSE = 547.717
 
-    <matplotlib.legend.Legend object at 0x7f0cf23cad30>
+    <matplotlib.legend.Legend object at 0x7fee34689100>
 
 
 
@@ -141,7 +141,7 @@ the results of a Lasso model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  24.445 seconds)
+   **Total running time of the script:** ( 1 minutes  11.729 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_regressor.py:
