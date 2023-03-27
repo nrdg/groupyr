@@ -211,11 +211,11 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
                 coef = np.zeros(n_features)
 
         if loss == "huber":
-            f = cp.utils.HuberLoss(X, y)
+            f = cp.loss.HuberLoss(X, y)
         elif loss == "log":
-            f = cp.utils.LogLoss(X, y)
+            f = cp.loss.LogLoss(X, y)
         else:
-            f = cp.utils.SquareLoss(X, y)
+            f = cp.loss.SquareLoss(X, y)
 
         if self.include_solver_trace:
             self.solver_trace_ = cp.utils.Trace(f)
