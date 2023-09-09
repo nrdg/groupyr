@@ -1,3 +1,15 @@
+v0.3.2 (March 27, 2023)
+=======================
+  * Update copt to most recent. (#81)
+
+v0.3.1 (March 27, 2023)
+=======================
+
+
+v0.3.0 (March 21, 2023)
+=======================
+  * Resolve dependency versions  (#79)
+
 v0.2.7 (June 19, 2022)
 ======================
   * BF: Update joblib parallel args (#74)
