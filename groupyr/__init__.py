@@ -4,6 +4,7 @@ Groupyr is a Python library for penalized regression with grouped covariates.
 It provides scikit-learn compatible estimators, including cross-validation
 estimators. See https://richford.github.io/groupyr for more details.
 """
+
 from . import datasets  # noqa
 from . import utils  # noqa
 from .sgl import *  # noqa

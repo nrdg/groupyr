@@ -11,6 +11,7 @@ uses F1 score to choose hyperparameters. The model chosen through F1
 scoring shows a modest increase in both F1 score and accuracy.
 
 """
+
 import numpy as np
 from matplotlib import pyplot as plt
 from groupyr import LogisticSGLCV
