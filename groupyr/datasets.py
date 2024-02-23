@@ -1,4 +1,5 @@
 """Generate samples of synthetic data sets."""
+
 import numpy as np
 
 from sklearn.datasets import make_classification, make_regression

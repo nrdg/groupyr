@@ -1,4 +1,5 @@
 """Transform feature matrices with grouped covariates."""
+
 import logging
 import numpy as np
 

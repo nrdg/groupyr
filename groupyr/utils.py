@@ -1,4 +1,5 @@
 """Utility functions for SGL-based estimators."""
+
 import numpy as np
 
 from collections.abc import Sequence

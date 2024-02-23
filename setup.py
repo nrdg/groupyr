@@ -1,4 +1,5 @@
 """A scikit-learn compatible library for penalized regression with grouped data."""
+
 from setuptools import setup
 import string
 import os.path as op

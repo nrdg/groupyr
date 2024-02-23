@@ -8,6 +8,7 @@ group-level sparsity. The prediction is compared to the ground truth and to
 the results of a Lasso model.
 
 """
+
 import groupyr as gpr
 import matplotlib.pyplot as plt
 import numpy as np

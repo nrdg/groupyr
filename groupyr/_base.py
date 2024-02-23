@@ -1,4 +1,5 @@
 """Create base classes based on the sparse group lasso."""
+
 import contextlib
 import copt as cp
 import numpy as np

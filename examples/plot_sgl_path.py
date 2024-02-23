@@ -19,6 +19,7 @@ in the magnitudes of the other covariate groups.
 In practise it is necessary to tune alpha (and l1_ratio) to best fit the
 training data.
 """
+
 import groupyr as gpr
 import matplotlib.pyplot as plt
 import numpy as np

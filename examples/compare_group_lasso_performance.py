@@ -14,6 +14,7 @@ using
 pip install group-lasso
 ```
 """
+
 import groupyr as gpr
 import matplotlib.pyplot as plt
 import numpy as np

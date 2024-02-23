@@ -297,12 +297,12 @@ def test_GroupAggregator():
     X_ref = np.array([np.array([1, 4, 7, 9]) + i * 10 for i in range(10)])
     assert np.allclose(X_tr, X_ref)  # nosec
 
-    ga = GroupAggregator(func=["mean", np.max], groups=groups, group_names=group_names)
+    ga = GroupAggregator(func=["mean", np.amax], groups=groups, group_names=group_names)
     X_tr = ga.fit_transform(X)
     feature_names_ref = []
     for grp in group_names:
         feature_names_ref.append("__".join([grp, "mean"]))
-        feature_names_ref.append("__".join([grp, "max"]))
+        feature_names_ref.append("__".join([grp, "amax"]))
 
     assert ga.feature_names_out_ == feature_names_ref  # nosec
     X_ref = np.array([np.array([1, 2, 4, 5, 7, 8, 9, 9]) + i * 10 for i in range(10)])

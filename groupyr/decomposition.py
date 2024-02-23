@@ -1,4 +1,5 @@
 """Perform group-wise functional PCA of feature matrices with grouped covariates."""
+
 import inspect
 import numpy as np
 
