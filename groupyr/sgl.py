@@ -245,7 +245,7 @@ def _alpha_grid(
     n_samples = len(y)
     if Xy is None:
         X = check_array(X, accept_sparse=False, copy=(copy_X and fit_intercept))
-        X, y, _, _, _ = _preprocess_data(X, y, fit_intercept, normalize, copy=False)
+        X, y, _, _, _ = _preprocess_data(X, y, fit_intercept=fit_intercept, copy=False)
         Xy = safe_sparse_dot(X.T, y, dense_output=True)
 
     if Xy.ndim == 1:

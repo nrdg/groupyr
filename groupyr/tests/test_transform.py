@@ -302,7 +302,7 @@ def test_GroupAggregator():
     feature_names_ref = []
     for grp in group_names:
         feature_names_ref.append("__".join([grp, "mean"]))
-        feature_names_ref.append("__".join([grp, "max"]))
+        feature_names_ref.append("__".join([grp, "amax"]))
 
     assert ga.feature_names_out_ == feature_names_ref  # nosec
     X_ref = np.array([np.array([1, 2, 4, 5, 7, 8, 9, 9]) + i * 10 for i in range(10)])
