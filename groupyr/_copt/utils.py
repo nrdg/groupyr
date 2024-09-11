@@ -2,7 +2,6 @@ import numpy as np
 from scipy import sparse
 from scipy import optimize
 from datetime import datetime
-from sklearn.utils.extmath import safe_sparse_dot
 
 try:
     from numba import njit, prange
@@ -46,7 +45,7 @@ def build_func_grad(jac, fun, args, eps):
 
         def func_and_grad(x):
             f = fun(x, *args)
-            g = optimize._approx_fprime_helper(x, fun, eps, args=args, f0=f)
+            _ = optimize._approx_fprime_helper(x, fun, eps, args=args, f0=f)
 
     else:
 
