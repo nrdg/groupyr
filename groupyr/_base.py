@@ -1,7 +1,6 @@
 """Create base classes based on the sparse group lasso."""
 
 import contextlib
-from . import _copt as cp
 import numpy as np
 import warnings
 
@@ -17,6 +16,10 @@ from sklearn.utils.validation import (
     check_array,
     check_is_fitted,
 )
+
+from groupyr._copt.loss import SquareLoss, HuberLoss, LogLoss
+import groupyr._copt.utils as cp_utils
+from groupyr._copt.proximal_gradient import minimize_proximal_gradient
 
 from ._prox import SparseGroupL1
 from .utils import check_groups
@@ -212,14 +215,14 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
                 coef = np.zeros(n_features)
 
         if loss == "huber":
-            f = cp.loss.HuberLoss(X, y)
+            f = HuberLoss(X, y)
         elif loss == "log":
-            f = cp.loss.LogLoss(X, y)
+            f = LogLoss(X, y)
         else:
-            f = cp.loss.SquareLoss(X, y)
+            f = SquareLoss(X, y)
 
         if self.include_solver_trace:
-            self.solver_trace_ = cp.utils.Trace(f)
+            self.solver_trace_ = cp_utils.Trace(f)
         else:
             self.solver_trace_ = None
 
@@ -255,7 +258,7 @@ class SGLBaseEstimator(BaseEstimator, TransformerMixin):
             if self.suppress_solver_warnings:
                 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-            pgd = cp.minimize_proximal_gradient(
+            pgd = minimize_proximal_gradient(
                 f.f_grad,
                 coef,
                 sg1.prox,
